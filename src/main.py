@@ -1,12 +1,12 @@
 import uvicorn
 from fastapi import FastAPI, HTTPException
 
-from logs.logging_config import logger, serer_start_shutdown_logger
+from logs.logging_config import logger, server_start_shutdown_logger
 from schemas.exceptions_schemas import (BadPayloadResponse, BadRequestResponse,
                                         ForbiddenResponse, NotAuthResponse,
                                         NotFoundResponse, ServerErrorResponse)
 
-app = FastAPI(lifespan=serer_start_shutdown_logger)
+app = FastAPI(lifespan=server_start_shutdown_logger)
 
 
 @app.exception_handler(HTTPException)
