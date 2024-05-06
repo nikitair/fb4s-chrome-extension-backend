@@ -1,22 +1,12 @@
 import uvicorn
 from fastapi import FastAPI, HTTPException
 
-from logs.logging_config import logger
+from logs.logging_config import logger, serer_start_stop_logger
 from schemas.exceptions_schemas import (BadPayloadResponse, BadRequestResponse,
                                         ForbiddenResponse, NotAuthResponse,
                                         NotFoundResponse, ServerErrorResponse)
 
-app = FastAPI()
-
-
-@app.on_event("startup")
-async def startup_event():
-    logger.warning(" == SERVER STARTED ==")
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    logger.warning("== SERVER STOPPED ==")
+app = FastAPI(lifespan=serer_start_stop_logger)
 
 
 @app.exception_handler(HTTPException)
@@ -35,11 +25,12 @@ async def custom_http_exception_handler(request, exc):
             return BadPayloadResponse
         case 500:
             return ServerErrorResponse
-        
+
         case _:
             return await request.app.handle_exception(request, exc)
 
 # -------------------------------- VIEWS ---------------------------------------------------------------------------------------------------------
+
 
 @app.get('/')
 async def index_view():

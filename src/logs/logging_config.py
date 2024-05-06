@@ -1,13 +1,16 @@
 import logging
 import os
-from datetime import datetime
+from contextlib import asynccontextmanager
+from datetime import datetime, timezone
+
+from fastapi import FastAPI
 
 ROOT_DIR = os.getcwd()
 
 
 class UTCFormatter(logging.Formatter):
     def formatTime(self, record, datefmt=None):
-        dt = datetime.utcfromtimestamp(record.created)
+        dt = datetime.fromtimestamp(record.created, timezone.utc)
         if datefmt:
             return dt.strftime(datefmt)
         return dt.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3] + ' UTC'
@@ -27,7 +30,15 @@ th.setFormatter(formatter)
 logger.addHandler(th)
 
 # File output
-fh = logging.FileHandler(f"{ROOT_DIR}/logs/logs{datetime.utcnow().strftime('%Y-%m-%dT%H:%M')}.log")
+fh = logging.FileHandler(f"{ROOT_DIR}/logs/logs{datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M')}.log")
 fh.setLevel(logging.INFO)
 fh.setFormatter(formatter)
 logger.addHandler(fh)
+
+
+# Utils:
+@asynccontextmanager
+async def serer_start_stop_logger(app: FastAPI):
+    logger.warning(" == SERVER STARTED ==")
+    yield
+    logger.warning("== SERVER STOPPED ==")
