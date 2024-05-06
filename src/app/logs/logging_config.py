@@ -1,5 +1,8 @@
+import os
 import logging
 from datetime import datetime
+
+ROOT_DIR = os.getcwd()
 
 
 class UTCFormatter(logging.Formatter):
@@ -24,7 +27,7 @@ th.setFormatter(formatter)
 logger.addHandler(th)
 
 # File output
-fh = logging.FileHandler(f"logs{datetime.utcnow().strftime('%Y-%m-%dT%H:%M')}.log")
+fh = logging.FileHandler(f"/{ROOT_DIR}/src/app/logs/logs{datetime.utcnow().strftime('%Y-%m-%dT%H:%M')}.log")
 fh.setLevel(logging.INFO)
 fh.setFormatter(formatter)
 logger.addHandler(fh)

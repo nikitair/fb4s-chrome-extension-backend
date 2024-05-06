@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI, HTTPException
-from .schemas.exceptions_schemas import NotFoundResponse
+from .schemas.exceptions_schemas import NotFoundResponse, ServerErrorResponse
 from .logs.logging_config import logger
 
 app = FastAPI()
@@ -18,11 +18,18 @@ async def shutdown_event():
 
 @app.exception_handler(HTTPException)
 async def custom_http_exception_handler(request, exc):
-    if exc.status_code == 404:
-        return NotFoundResponse
-    return await request.app.handle_exception(request, exc)
+
+    match exc.status_code:
+        case 404:
+            return NotFoundResponse
+        case 500:
+            return ServerErrorResponse
+        
+        case _:
+            return await request.app.handle_exception(request, exc)
 
 
+# -------------------------------- VIEWS ---------------------------------------------------------------------------------------------------------
 @app.get('/')
 async def index_view():
     logger.info(f"{index_view.__name__} -- INDEX VIEW TRIGGERED")
