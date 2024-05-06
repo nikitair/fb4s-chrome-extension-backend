@@ -24,7 +24,7 @@ th.setFormatter(formatter)
 logger.addHandler(th)
 
 # File output
-fh = logging.FileHandler(f"logs/logs{datetime.utcnow().strftime('%Y-%m-%dT%H:%M')}.log")
+fh = logging.FileHandler(f"logs{datetime.utcnow().strftime('%Y-%m-%dT%H:%M')}.log")
 fh.setLevel(logging.INFO)
 fh.setFormatter(formatter)
 logger.addHandler(fh)

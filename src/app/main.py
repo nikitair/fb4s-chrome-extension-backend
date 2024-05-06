@@ -1,6 +1,7 @@
 import uvicorn
-from fastapi import FastAPI
-from logs.logging_config import logger
+from fastapi import FastAPI, HTTPException
+from .schemas.exceptions_schemas import NotFoundResponse
+from .logs.logging_config import logger
 
 app = FastAPI()
 
@@ -13,6 +14,13 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     logger.warning("== SERVER STOPPED ==")
+
+
+@app.exception_handler(HTTPException)
+async def custom_http_exception_handler(request, exc):
+    if exc.status_code == 404:
+        return NotFoundResponse
+    return await request.app.handle_exception(request, exc)
 
 
 @app.get('/')
