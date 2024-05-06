@@ -14,7 +14,7 @@ async def custom_http_exception_handler(request, exc):
 
     match exc.status_code:
         case 404:
-            return NotFoundResponse 
+            return NotFoundResponse
         case 400:
             return BadRequestResponse
         case 401:
@@ -34,11 +34,7 @@ async def custom_http_exception_handler(request, exc):
 
 @app.get('/')
 async def index_view():
-    logger.info(f"{index_view.__name__} -- INDEX VIEW TRIGGERED") 
-
-
-
-    
+    logger.info(f"{index_view.__name__} -- INDEX VIEW TRIGGERED")
     return {
         "service": "FB4S Automations",
         "success": True
@@ -47,5 +43,3 @@ async def index_view():
 if __name__ == "__main__":
     # dev server run
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
-
-print("hello")
