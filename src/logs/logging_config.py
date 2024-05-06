@@ -36,9 +36,12 @@ fh.setFormatter(formatter)
 logger.addHandler(fh)
 
 
-# Utils:
+# FastAPI Server Start / Shutdown logging lifespan manager
 @asynccontextmanager
-async def serer_start_stop_logger(app: FastAPI):
+async def serer_start_shutdown_logger(app: FastAPI):
+    """
+    Logs FastAPI server Start and Shutdown events
+    """
     logger.warning(" == SERVER STARTED ==")
     yield
     logger.warning("== SERVER STOPPED ==")
