@@ -1,12 +1,12 @@
 import uvicorn
 from fastapi import FastAPI, HTTPException
 
-from logs.logging_config import logger, serer_start_stop_logger
+from logs.logging_config import logger, serer_start_shutdown_logger
 from schemas.exceptions_schemas import (BadPayloadResponse, BadRequestResponse,
                                         ForbiddenResponse, NotAuthResponse,
                                         NotFoundResponse, ServerErrorResponse)
 
-app = FastAPI(lifespan=serer_start_stop_logger)
+app = FastAPI(lifespan=serer_start_shutdown_logger)
 
 
 @app.exception_handler(HTTPException)
@@ -14,7 +14,7 @@ async def custom_http_exception_handler(request, exc):
 
     match exc.status_code:
         case 404:
-            return NotFoundResponse
+            return NotFoundResponse 
         case 400:
             return BadRequestResponse
         case 401:
@@ -34,7 +34,11 @@ async def custom_http_exception_handler(request, exc):
 
 @app.get('/')
 async def index_view():
-    logger.info(f"{index_view.__name__} -- INDEX VIEW TRIGGERED")
+    logger.info(f"{index_view.__name__} -- INDEX VIEW TRIGGERED") 
+
+
+
+    
     return {
         "service": "FB4S Automations",
         "success": True
