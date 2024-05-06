@@ -38,7 +38,7 @@ logger.addHandler(fh)
 
 # FastAPI Server Start / Shutdown logging lifespan manager
 @asynccontextmanager
-async def serer_start_shutdown_logger(app: FastAPI):
+async def server_start_shutdown_logger(app: FastAPI):
     """
     Logs FastAPI server Start and Shutdown events
     """
