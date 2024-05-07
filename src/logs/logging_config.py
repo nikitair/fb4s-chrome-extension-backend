@@ -30,7 +30,7 @@ th.setFormatter(formatter)
 logger.addHandler(th)
 
 # File output
-fh = logging.FileHandler(f"{ROOT_DIR}/logs/logs{datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M')}.log")
+fh = logging.FileHandler(f"{ROOT_DIR}/src/logs/logs{datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M')}.log")
 fh.setLevel(logging.INFO)
 fh.setFormatter(formatter)
 logger.addHandler(fh)
