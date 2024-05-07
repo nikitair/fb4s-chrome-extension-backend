@@ -1,4 +1,9 @@
-from db.postgres.postgres_handler import PostgresHandler
+from db.postgres.postgres_handler import PostgresQueryHandler
 
-postgres = PostgresHandler(True)
-postgres.ssh_tunnel_connector()
+postgres = PostgresQueryHandler()
+
+
+print(
+    postgres.select_executor(query="SELECT * FROM fub.fub_users")
+)
+
