@@ -1,6 +1,6 @@
 import os
-import psycopg2
-import sshtunnel
+# import psycopg2
+# import sshtunnel
 from logs.logging_config import logger
 from dotenv import load_dotenv
 
@@ -22,19 +22,15 @@ class PostgresHandler:
     ssh_server_host = os.getenv("SSH_SERVER_HOST", "")
     ssh_server_password = os.getenv("SSH_SERVER_PASSWORD", "")
 
-
     def __init__(self, ssh_tunnel_mode: bool = False) -> None:
         self.ssh_tunnel_mode = ssh_tunnel_mode
         logger.info(f"{self.__class__.__name__} ( {self.__init__.__name__} ) -- CLASS INITIALIZED | SSH TUNNEL MODE - {self.ssh_tunnel_mode}")
 
-    
     def __str__(self) -> str:
         return f"{self.__class__.__name__}"
-    
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}"
-
 
     def ssh_tunnel_connector(self):
         ...

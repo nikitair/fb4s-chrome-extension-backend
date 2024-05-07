@@ -1,0 +1,42 @@
+name: Test and Coverage
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run tests with coverage
+      run: |
+        coverage=$(pytest --cov-report=xml --cov=path_to_your_fastapi_app | grep -oP 'percentage="\K[^"]+')
+        echo "::set-output name=coverage::$coverage"
+
+  coverage_check:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check coverage
+      run: |
+        coverage=${{ needs.test.outputs.coverage }}
+        if (( $(echo "$coverage < 70" | bc -l) )); then
+          echo "Test coverage is less than 70% ($coverage%)"
+          exit 1
+        fi
