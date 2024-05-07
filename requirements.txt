@@ -1,9 +1,19 @@
-python-dotenv
+# server
 fastapi
+
+# configurations
+python-dotenv
+
+# clean code
 isort
 flake8 
 flake8-print 
 flake8-builtins
+
+# unit tests
 pytest-asyncio
+pytest-cov
+
+# database
 psycopg-binary
 sshtunnel

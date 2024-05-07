@@ -1,0 +1,5 @@
+[run]
+omit =
+    */src/schemas/*
+    */src/sandbox.py
+    */src/logs/*
