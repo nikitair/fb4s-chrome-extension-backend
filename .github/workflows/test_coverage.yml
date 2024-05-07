@@ -25,7 +25,7 @@ jobs:
 
     - name: Run tests with coverage
       run: |
-        coverage=$(pytest --cov-report=xml --cov=path_to_your_fastapi_app | grep -oP 'percentage="\K[^"]+')
+        coverage=$(pytest --cov-report=xml --cov=src | grep -oP 'percentage="\K[^"]+')
         echo "::set-output name=coverage::$coverage"
 
   coverage_check:
