@@ -17,3 +17,4 @@ pytest-cov
 # database
 psycopg-binary
 sshtunnel
+asyncpg

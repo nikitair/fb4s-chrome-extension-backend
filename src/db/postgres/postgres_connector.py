@@ -1,6 +1,7 @@
 import os
 
-import psycopg2
+# import psycopg2
+import asyncpg
 from dotenv import load_dotenv
 
 # from sshtunnel import SSHTunnelForwarder
@@ -36,13 +37,13 @@ class PostgresConnector:
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}"
 
-    def connector(self, func):
+    async def connector(self, func):
         logger.debug(f"{self.__class__.__name__} ( {self.connector.__name__} ) -- CONNECTING TO POSTGRES")
 
-        def wrapper(*args, **kwargs):
+        async def wrapper(*args, **kwargs):
             conn = None
             try:
-                conn = psycopg2.connect(
+                conn = await asyncpg.connect(
                     dbname=self.database,
                     user=self.user,
                     password=self.password,
@@ -55,11 +56,11 @@ class PostgresConnector:
 
             if conn:
                 try:
-                    return func(conn, *args, **kwargs)
+                    return await func(conn, *args, **kwargs)
                 except Exception:
                     logger.exception(f"{self.__class__.__name__} ( {self.connector.__name__} ) -- !!! POSTGRES QUERY EXECUTION ERROR")
                 finally:
-                    conn.close()
+                    await conn.close()
                     logger.debug(f"{self.__class__.__name__} ( {self.connector.__name__} ) -- CLOSED POSTGRES CONNECTION")
 
-        return wrapper
+        return await wrapper

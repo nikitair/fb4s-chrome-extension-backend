@@ -11,12 +11,12 @@ class PostgresQueryHandler:
         logger.info(f"{self.__class__.__name__} ( {self.__init__.__name__} ) -- CLASS INITIALIZED")
 
     @connector
-    def select_executor(self, connector, query: str, params: list = []):
+    async def select_executor(self, connector, query: str, params: list = []):
         logger.info(f"{self.__class__.__name__} ( {self.select_executor.__name__} ) -- EXECUTING SQL SELECT QUERY - {query} | PARAMS - {params}")
-        cursor = connector.cursor()
-        cursor.execute(
+        cursor = await connector.cursor()
+        await cursor.execute(
             query,
             params
         )
-        data = cursor.fetchall()
+        data = await cursor.fetchall()
         return data
