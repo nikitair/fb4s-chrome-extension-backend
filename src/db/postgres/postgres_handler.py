@@ -25,6 +25,19 @@ class PostgresHandler:
 
     def __init__(self, ssh_tunnel_mode: bool = False) -> None:
         self.ssh_tunnel_mode = ssh_tunnel_mode
+        logger.info(f"{self.__class__.__name__} ( {self.__init__.__name__} ) -- CLASS INITIALIZED | SSH TUNNEL MODE - {self.ssh_tunnel_mode}")
 
-        logger.info(f"{self.__class__.__name__} | {self.__init__.__name__} -- CLASS INITIALIZED WITH SSH TUNNEL MODE - {self.ssh_tunnel_mode}")
+    
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}"
+    
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}"
+
+
+    def ssh_tunnel_connector(self):
+        ...
+
+    def direct_connector(self):
+        ...
