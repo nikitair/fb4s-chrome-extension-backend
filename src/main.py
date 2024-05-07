@@ -9,6 +9,9 @@ from schemas.exceptions_schemas import (BadPayloadResponse, BadRequestResponse,
 app = FastAPI(lifespan=server_start_shutdown_logger)
 
 
+# TODO: 
+# - override HTTPS exceptions 
+# - rewrite unit tests according to it
 @app.exception_handler(HTTPException)
 async def custom_http_exception_handler(request, exc):
 
