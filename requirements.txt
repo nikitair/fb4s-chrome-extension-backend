@@ -3,6 +3,7 @@ fastapi
 
 # configurations
 python-dotenv
+loguru
 
 # clean code
 isort
@@ -17,3 +18,4 @@ pytest-cov
 # database
 psycopg-binary
 sshtunnel
+asyncpg

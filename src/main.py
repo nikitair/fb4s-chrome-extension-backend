@@ -1,10 +1,27 @@
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from contextlib import asynccontextmanager
+from loguru import logger
 
-from logs.logging_config import logger, server_start_shutdown_logger
+# from logs.legacy_logging_config import logger, server_start_shutdown_logger
+from logs import logging_config as log
 from schemas.exceptions_schemas import (BadPayloadResponse, BadRequestResponse,
                                         ForbiddenResponse, NotAuthResponse,
                                         NotFoundResponse, ServerErrorResponse)
+
+log.CustomLogger()
+
+
+# FastAPI Server Start / Shutdown logging lifespan manager
+@asynccontextmanager
+async def server_start_shutdown_logger(app: FastAPI):
+    """
+    Logs FastAPI server Start and Shutdown events
+    """
+    logger.warning(" == SERVER STARTED ==")
+    yield
+    logger.warning("== SERVER STOPPED ==")
+
 
 app = FastAPI(lifespan=server_start_shutdown_logger)
 

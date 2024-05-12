@@ -1,39 +1,27 @@
-import os
-# import psycopg2
-# import sshtunnel
-from logs.logging_config import logger
-from dotenv import load_dotenv
+from loguru import logger
 
-load_dotenv()
+from db.postgres.postgres_connector import PostgresConnector
+# from logs.legacy_logging_config import logger
+from logs.logging_config import CustomLogger
+
+CustomLogger()
+
+postgres_connector_obj = PostgresConnector()
+connector = postgres_connector_obj.connector
 
 
-class PostgresHandler:
+class PostgresQueryHandler:
 
-    database = os.getenv("POSTGRES_DATABASE", "")
-    host = os.getenv("POSTGRES_HOST", "")
-    port = int(os.getenv("POSTGRES_PORT", 0))
-    user = os.getenv("POSTGRES_USER", "")
-    password = os.getenv("POSTGRES_PASSWORD", "")
+    def __init__(self) -> None:
+        logger.info(f"{self.__class__.__name__} ( {self.__init__.__name__} ) -- CLASS INITIALIZED")
 
-    ssh_postgres_port = os.getenv("SSH_POSTGRES_PORT", "")
-
-    ssh_mode = bool(os.getenv("SSH_MODE", 0))
-    ssh_server_port = int(os.getenv("SSH_SERVER_PORT", 0))
-    ssh_server_host = os.getenv("SSH_SERVER_HOST", "")
-    ssh_server_password = os.getenv("SSH_SERVER_PASSWORD", "")
-
-    def __init__(self, ssh_tunnel_mode: bool = False) -> None:
-        self.ssh_tunnel_mode = ssh_tunnel_mode
-        logger.info(f"{self.__class__.__name__} ( {self.__init__.__name__} ) -- CLASS INITIALIZED | SSH TUNNEL MODE - {self.ssh_tunnel_mode}")
-
-    def __str__(self) -> str:
-        return f"{self.__class__.__name__}"
-
-    def __repr__(self) -> str:
-        return f"{self.__class__.__name__}"
-
-    def ssh_tunnel_connector(self):
-        ...
-
-    def direct_connector(self):
-        ...
+    @connector
+    def select_executor(self, connector, query: str, params: list = []):
+        logger.info(f"{self.__class__.__name__} ( {self.select_executor.__name__} ) -- EXECUTING SQL SELECT QUERY - {query} | PARAMS - {params}")
+        cursor = connector.cursor()
+        cursor.execute(
+            query,
+            params
+        )
+        data = cursor.fetchall()
+        return data

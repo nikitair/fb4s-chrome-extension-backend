@@ -1,47 +1,22 @@
-import logging
 import os
-from contextlib import asynccontextmanager
-from datetime import datetime, timezone
-
-from fastapi import FastAPI
+from loguru import logger
 
 ROOT_DIR = os.getcwd()
 
 
-class UTCFormatter(logging.Formatter):
-    def formatTime(self, record, datefmt=None):
-        dt = datetime.fromtimestamp(record.created, timezone.utc)
-        if datefmt:
-            return dt.strftime(datefmt)
-        return dt.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3] + ' UTC'
+class CustomLogger:
 
-
-# Logging configuration
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
-# Custom UTC formatter
-formatter = UTCFormatter('%(asctime)s - %(levelname)s - %(message)s')
-
-# Terminal output
-th = logging.StreamHandler()
-th.setLevel(logging.INFO)
-th.setFormatter(formatter)
-logger.addHandler(th)
-
-# File output
-fh = logging.FileHandler(f"{ROOT_DIR}/src/logs/logs{datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M')}.log")
-fh.setLevel(logging.INFO)
-fh.setFormatter(formatter)
-logger.addHandler(fh)
-
-
-# FastAPI Server Start / Shutdown logging lifespan manager
-@asynccontextmanager
-async def server_start_shutdown_logger(app: FastAPI):
-    """
-    Logs FastAPI server Start and Shutdown events
-    """
-    logger.warning(" == SERVER STARTED ==")
-    yield
-    logger.warning("== SERVER STOPPED ==")
+    def __init__(self) -> None:
+        logger.add(
+            sink=f"{ROOT_DIR}/src/logs/logs{{time:YYYY-MM-DD_HH-mm}}.log",
+            format="""
+                <green>{time:YYYY-MM-DD HH:mm:ss UTC}</green> |
+                <level>{level}</level> --
+                <cyan>{message}</cyan> --
+                <level>{module}:{function}</level>
+            """,
+            level="DEBUG",
+            enqueue=True,
+            rotation="500 MB"
+        )
+        logger.info("CustomLogger CLASS INITIALIZED")
