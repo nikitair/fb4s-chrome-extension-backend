@@ -1,11 +1,14 @@
+import os
 from loguru import logger
+
+ROOT_DIR = os.getcwd()
 
 
 class CustomLogger:
 
     def __init__(self) -> None:
         logger.add(
-            sink="logs{time:YYYY-MM-DD_HH-mm}.log",
+            sink=f"{ROOT_DIR}/src/logs/logs{{time:YYYY-MM-DD_HH-mm}}.log",
             format="""
                 <green>{time:YYYY-MM-DD HH:mm:ss UTC}</green> |
                 <level>{level}</level> --

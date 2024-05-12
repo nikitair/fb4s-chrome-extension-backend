@@ -1,9 +1,9 @@
 import logging
 import os
-# from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 
-# from fastapi import FastAPI
+from fastapi import FastAPI
 
 ROOT_DIR = os.getcwd()
 
@@ -36,12 +36,12 @@ fh.setFormatter(formatter)
 logger.addHandler(fh)
 
 
-# # FastAPI Server Start / Shutdown logging lifespan manager
-# @asynccontextmanager
-# async def server_start_shutdown_logger(app: FastAPI):
-#     """
-#     Logs FastAPI server Start and Shutdown events
-#     """
-#     logger.warning(" == SERVER STARTED ==")
-#     yield
-#     logger.warning("== SERVER STOPPED ==")
+# FastAPI Server Start / Shutdown logging lifespan manager
+@asynccontextmanager
+async def server_start_shutdown_logger(app: FastAPI):
+    """
+    Logs FastAPI server Start and Shutdown events
+    """
+    logger.warning(" == SERVER STARTED ==")
+    yield
+    logger.warning("== SERVER STOPPED ==")
