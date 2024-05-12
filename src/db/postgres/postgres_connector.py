@@ -3,9 +3,13 @@ import os
 import psycopg2
 # import asyncpg
 from dotenv import load_dotenv
+from loguru import logger
 
 # from sshtunnel import SSHTunnelForwarder
-from logs.legacy_logging_config import logger
+# from logs.legacy_logging_config import logger
+from logs.logging_config import CustomLogger
+
+CustomLogger()
 
 load_dotenv()
 

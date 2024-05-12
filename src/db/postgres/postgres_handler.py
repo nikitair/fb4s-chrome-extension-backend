@@ -1,5 +1,10 @@
+from loguru import logger
+
 from db.postgres.postgres_connector import PostgresConnector
-from logs.legacy_logging_config import logger
+# from logs.legacy_logging_config import logger
+from logs.logging_config import CustomLogger
+
+CustomLogger()
 
 postgres_connector_obj = PostgresConnector()
 connector = postgres_connector_obj.connector

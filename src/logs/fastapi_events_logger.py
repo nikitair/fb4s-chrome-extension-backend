@@ -1,9 +1,11 @@
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
 from logging_config import CustomLogger
 from loguru import logger
-from contextlib import asynccontextmanager
-from fastapi import FastAPI
 
 CustomLogger()
+
 
 # FastAPI Server Start / Shutdown logging lifespan manager
 @asynccontextmanager
