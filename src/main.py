@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI, HTTPException
 
-from logs.logging_config import logger, server_start_shutdown_logger
+from logs.legacy_logging_config import logger, server_start_shutdown_logger
 from schemas.exceptions_schemas import (BadPayloadResponse, BadRequestResponse,
                                         ForbiddenResponse, NotAuthResponse,
                                         NotFoundResponse, ServerErrorResponse)

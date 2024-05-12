@@ -3,6 +3,7 @@ fastapi
 
 # configurations
 python-dotenv
+loguru
 
 # clean code
 isort
