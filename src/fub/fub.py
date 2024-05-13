@@ -3,6 +3,7 @@ import base64
 import requests
 
 from logs.logging_config import logger
+from fub import utils
 
 
 class FUB:
@@ -159,5 +160,96 @@ class FUB:
 
         except Exception as ex:
             logger.exception(f"{self.__class__.__name__} ( {self.delete_note.__name__} ) -- !!! FUB API ERROR - {ex}")
+
+        return data
+
+
+    def get_task(self, task_id: int):
+        logger.info(f"{self.__class__.__name__} ( {self.get_task.__name__} ) -- GETTING TASK WITH ID: {task_id}")
+        url = f"{self.base_url}tasks/{task_id}"
+        headers = {
+            "accept": "application/json",
+            "authorization": f"Basic {self.api_key}"
+        }
+
+        data = None
+
+        try:
+            response = requests.get(url, headers=headers)
+            logger.info(f"{self.__class__.__name__} ( {self.get_task.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+
+            data = response.json()
+            logger.debug(f"{self.__class__.__name__} ( {self.get_task.__name__} ) -- FUB API DATA - {data}")
+
+        except Exception as ex:
+            logger.exception(f"{self.__class__.__name__} ( {self.get_task.__name__} ) -- !!! FUB API ERROR - {ex}")
+
+        return data
+    
+
+    def create_task(
+            self,
+            buyer_id: int,
+            team_member_id: int,
+            task_name: str,
+            dueDate: str = utils.get_today_date(),
+            dueDateTime: str = utils.get_default_task_dueDateTime(),
+            remindSecondsBefore: int = 360000
+                ):
+
+        logger.info(f"{self.__class__.__name__} ( {self.create_task.__name__} ) -- CREATING TASK - TM_ID: {team_member_id}; BUYER_ID: {buyer_id}; TASK_NAME: {task_name}")
+        url = f"{self.base_url}tasks"
+        headers = {
+            "accept": "application/json",
+            "authorization": f"Basic {self.api_key}"
+        }
+        payload = {
+            "personId": buyer_id,
+            "assignedUserId": team_member_id,
+            "name": task_name,
+            "type": "Follow Up",
+            "isCompleted": False,
+            "dueDate": dueDate,
+            "dueDateTime": dueDateTime,
+            "remindSecondsBefore": remindSecondsBefore
+        }
+
+        data = None
+
+        try:
+            response = requests.post(url, headers=headers, json=payload)
+            logger.info(f"{self.__class__.__name__} ( {self.create_task.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+
+            data = response.json()
+            logger.debug(f"{self.__class__.__name__} ( {self.create_task.__name__} ) -- FUB API DATA - {data}")
+
+        except Exception as ex:
+            logger.exception(f"{self.__class__.__name__} ( {self.create_task.__name__} ) -- !!! FUB API ERROR - {ex}")
+
+        return data
+    
+
+    def add_tag(self, person_id, tags: list[str]):
+        logger.info(f"{self.__class__.__name__} ( {self.add_tag.__name__} ) -- ADDING TAGS: {tags} TO PERSON {person_id}")
+        url = f"{self.base_url}people/{person_id}?mergeTags=true/"
+        headers = {
+            "accept": "application/json",
+            "authorization": f"Basic {self.api_key}"
+        }
+        payload = {
+            "tags": tags 
+        }
+
+        data = None
+
+        try:
+            response = requests.put(url, headers=headers, json=payload)
+            logger.info(f"{self.__class__.__name__} ( {self.add_tag.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+
+            data = response.json()
+            logger.debug(f"{self.__class__.__name__} ( {self.add_tag.__name__} ) -- FUB API DATA - {data}")
+
+        except Exception as ex:
+            logger.exception(f"{self.__class__.__name__} ( {self.get_people.__name__} ) -- !!! FUB API ERROR - {ex}")
 
         return data
