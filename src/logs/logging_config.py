@@ -1,6 +1,7 @@
 import os
-from loguru import logger
 import time
+
+from loguru import logger
 
 ROOT_DIR = os.getcwd()
 

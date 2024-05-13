@@ -1,6 +1,7 @@
+from contextlib import asynccontextmanager
+
 import uvicorn
 from fastapi import FastAPI, HTTPException
-from contextlib import asynccontextmanager
 
 from logs.logging_config import logger
 # from logs.legacy_logging_config import logger, server_start_shutdown_logger

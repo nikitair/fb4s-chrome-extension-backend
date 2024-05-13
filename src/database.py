@@ -1,7 +1,9 @@
 import os
+
 from dotenv import load_dotenv
+
+from db.mysql.m_handler import MySQLHandler
 from db.postgres.p_handler import PostgresHandler
-from db.mysql.m_handler import MySQLHandler 
 
 load_dotenv()
 
