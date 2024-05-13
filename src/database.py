@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
-from logs.logging_config import logger
-from db.postgres.postgres_handler import PostgresHandler
+# from logs.logging_config import logger
+from db.postgres.handler import PostgresHandler
 
 load_dotenv()
 

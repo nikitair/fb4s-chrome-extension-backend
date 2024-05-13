@@ -19,3 +19,4 @@ pytest-cov
 psycopg-binary
 sshtunnel
 asyncpg
+pymysql
