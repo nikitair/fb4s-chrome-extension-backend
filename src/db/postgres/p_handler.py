@@ -1,11 +1,11 @@
 import sys
 
-import pymysql
+import psycopg2
 
 from logs.logging_config import logger
 
 
-class MySQLHandler:
+class PostgresHandler:
 
     def __init__(self, database: str, user: str, password: str, host: str, port: int):
         self.database = database
@@ -14,7 +14,7 @@ class MySQLHandler:
         self.host = host
         self.port = port
 
-        self.connection = None # pymysql connector object
+        self.connection = None # psycopg2 connector object
 
         logger.debug(f"{self.__class__.__name__} ({self.__init__.__name__}) -- CLASS INITIALIZED")
 
@@ -31,22 +31,35 @@ class MySQLHandler:
         conn = None
 
         try:
-            conn = pymysql.connect(
-                database=self.database,
+            conn = psycopg2.connect(
+                dbname=self.database,
                 user=self.user,
                 password=self.password,
                 host=self.host,
                 port=self.port
             )
             self.connection = conn
-            logger.debug(f"{self.__class__.__name__} ({self.connect.__name__}) -- CONNECTED TO MYSQL")
+            logger.debug(f"{self.__class__.__name__} ({self.connect.__name__}) -- CONNECTED TO POSTGRES")
         except Exception as ex:
-            logger.exception(f"{self.__class__.__name__} ({self.connect.__name__}) -- !!! FAILED CONNECTING TO MYSQL - {ex}")
+            logger.exception(f"{self.__class__.__name__} ({self.connect.__name__}) -- !!! FAILED CONNECTING TO POSTGRES - {ex}")
 
     def disconnect(self):
         if self.connection:
             self.connection.close()
-            logger.debug(f"{self.__class__.__name__} ({self.disconnect.__name__}) -- CLOSED MYSQL CONNECTION")
+            logger.debug(f"{self.__class__.__name__} ({self.disconnect.__name__}) -- CLOSED POSTGRES CONNECTION")
+
+
+    def execute_with_connection(self, func, *args, **kwargs):
+        """
+        Executes the given function with an active connection.
+        Automatically opens and closes the connection.
+        """
+        try:
+            self.connect()
+            result = func(*args, **kwargs)
+            return result
+        finally:
+            self.disconnect()
 
 
     def select_executor(self, query: str, params: list = []):
