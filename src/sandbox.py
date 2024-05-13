@@ -1,8 +1,10 @@
-import asyncio
+import os
+from dotenv import load_dotenv
+from fub.fub import FUB
 
-from db.postgres.p_handler import PostgresQueryHandler
+load_dotenv()
 
-postgres = PostgresQueryHandler()
-res = postgres.select_executor(query="SELECT * FROM fub.fub_users")
-print(res)
 
+fub = FUB(api_key=os.getenv("FUB_API_KEY"))
+
+fub.get_people()

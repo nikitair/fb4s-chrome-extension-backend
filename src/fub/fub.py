@@ -12,14 +12,16 @@ class FUB:
         logger.info(f"{self.__class__.__name__} ( {self.__init__.__name__} ) -- CLASS INITIALIZED")
 
     
-    def get_people(self, people_ids: list[str]):
+    def get_people(self):
         url = "https://api.followupboss.com/v1/people?sort=created&limit=10&offset=0&includeTrash=false&includeUnclaimed=false"
 
         headers = {
             "accept": "application/json",
-            "authorization": "Basic ZmthXzA3RVh4VlhMNVhWc3lCYXU0TUVPTnNVYXVXUFFzbEJNV2Y6"
+            "authorization": f"Basic {self.api_key}"
         }
+        print(1)
 
         response = requests.get(url, headers=headers)
 
+        print(2)
         print(response.text)
