@@ -32,7 +32,7 @@ class MySQLHandler:
 
         try:
             conn = pymysql.connect(
-                dbname=self.database,
+                database=self.database,
                 user=self.user,
                 password=self.password,
                 host=self.host,
