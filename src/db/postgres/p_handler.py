@@ -6,6 +6,37 @@ from logs.logging_config import logger
 
 
 class PostgresHandler:
+    """
+    How to use:
+
+    postgres = PostgresHandler(
+        database=database,
+        user=user,
+        password=password,
+        host=host,
+        port=port
+    )
+
+    --------------------------------------------------------- 
+
+    # Use Case 1 (Manual connection / disconnection):
+
+    postgres.connect()
+    postgres.select_executor(
+        query="SELECT * FROM fub.fub_users LIMIT 1"
+    )
+    postgres.disconnect()
+
+    ---------------------------------------------------------
+
+    # Use Case 2 (Automatic connection / disconnection): s
+
+    postgres.execute_with_connection(
+        func = postgres.select_executor,
+        query = "SELECT * FROM fub.fub_users WHERE id = %s",
+        params = [10]
+    )
+    """
 
     def __init__(self, database: str, user: str, password: str, host: str, port: int):
         self.database = database
