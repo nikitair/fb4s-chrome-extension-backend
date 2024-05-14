@@ -1,13 +1,9 @@
 from contextlib import asynccontextmanager
 
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 
-from logs.logging_config import logger
-# from logs.legacy_logging_config import logger, server_start_shutdown_logger
-from schemas.exceptions_schemas import (BadPayloadResponse, BadRequestResponse,
-                                        ForbiddenResponse, NotAuthResponse,
-                                        NotFoundResponse, ServerErrorResponse)
+from config.logging_config import logger
 
 
 # FastAPI Server Start / Shutdown logging lifespan manager
@@ -22,32 +18,6 @@ async def server_start_shutdown_logger(app: FastAPI):
 
 
 app = FastAPI(lifespan=server_start_shutdown_logger)
-
-
-# TODO:
-# - override HTTPS exceptions
-# - rewrite unit tests according to it
-@app.exception_handler(HTTPException)
-async def custom_http_exception_handler(request, exc):
-
-    match exc.status_code:
-        case 404:
-            return NotFoundResponse
-        case 400:
-            return BadRequestResponse
-        case 401:
-            return NotAuthResponse
-        case 403:
-            return ForbiddenResponse
-        case 415:
-            return BadPayloadResponse
-        case 500:
-            return ServerErrorResponse
-
-        case _:
-            return await request.app.handle_exception(request, exc)
-
-# -------------------------------- VIEWS ---------------------------------------------------------------------------------------------------------
 
 
 @app.get('/')

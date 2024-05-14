@@ -2,7 +2,7 @@ import sys
 
 import psycopg2
 
-from logs.logging_config import logger
+from config.logging_config import logger
 
 
 class PostgresHandler:
@@ -136,7 +136,6 @@ class PostgresHandler:
 
         finally:
              if cursor: cursor.close()
-
 
     def delete_executor(self, query: str, params: list):
         """

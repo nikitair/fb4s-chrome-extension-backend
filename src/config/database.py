@@ -1,5 +1,5 @@
 import os
-
+from db.mysql.m_sql import MySQLQueries
 from dotenv import load_dotenv
 
 from db.mysql.m_handler import MySQLHandler
@@ -37,6 +37,8 @@ mysql = MySQLHandler(
     port=MYSQL_PORT
 )
 
+mysql_queries = MySQLQueries
+
 
 if __name__ == "__main__":
     # postgres.connect()
@@ -45,13 +47,12 @@ if __name__ == "__main__":
     # )
     # postgres.disconnect()
 
-    postgres.execute_with_connection(
-        func = postgres.select_executor,
-        query = "SELECT * FROM fub.fub_users LIMIT 1"
-    )
-
-    # mysql.connect()
-    # mysql.select_executor(
-    #     query="SELECT * FROM tbl_customers LIMIT 1"
+    # postgres.execute_with_connection(
+    #     func = postgres.select_executor,
+    #     query = "SELECT * FROM fub.fub_users LIMIT 1"
     # )
-    # mysql.disconnect()
+
+    mysql.execute_with_connection(
+        mysql.select_executor,
+        query=mysql_queries.sent_weekly_outreach_emails
+    )

@@ -2,7 +2,7 @@ import sys
 
 import pymysql
 
-from logs.logging_config import logger
+from config.logging_config import logger
 
 
 class MySQLHandler:
