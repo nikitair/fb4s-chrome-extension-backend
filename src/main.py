@@ -20,4 +20,5 @@ async def index_view():
 
 if __name__ == "__main__":
     # dev server run
+    # module : app
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
