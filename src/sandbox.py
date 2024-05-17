@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 
-from fub.fub import FUB
+from services.fub import FUB
 
 load_dotenv()
 

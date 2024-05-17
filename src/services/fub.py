@@ -3,10 +3,10 @@ import base64
 import requests
 
 from config.logging_config import logger
-from fub import utils
+from utils import fub
 
 
-class FUB:
+class FUBService:
 
     def __init__(self, api_key: str, base_url: str):
         self.api_key = base64.b64encode(api_key.encode()).decode()
@@ -186,8 +186,8 @@ class FUB:
             buyer_id: int,
             team_member_id: int,
             task_name: str,
-            dueDate: str = utils.get_today_date(),
-            dueDateTime: str = utils.get_default_task_dueDateTime(),
+            dueDate: str = fub.get_today_date(),
+            dueDateTime: str = fub.get_default_task_dueDateTime(),
             remindSecondsBefore: int = 360000
                 ):
 
