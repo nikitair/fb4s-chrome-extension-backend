@@ -1,31 +1,21 @@
-from contextlib import asynccontextmanager
-
 import uvicorn
 from fastapi import FastAPI
 
+from config.app import server_start_shutdown_logger
 from config.logging_config import logger
-
-
-# FastAPI Server Start / Shutdown logging lifespan manager
-@asynccontextmanager
-async def server_start_shutdown_logger(app: FastAPI):
-    """
-    Logs FastAPI server Start and Shutdown events
-    """
-    logger.warning(" == SERVER STARTED ==")
-    yield
-    logger.warning("== SERVER STOPPED ==")
-
+from routers.fub import fub_router
 
 app = FastAPI(lifespan=server_start_shutdown_logger)
+app.include_router(router=fub_router, prefix='/fub', tags=['fub'])
 
 
 @app.get('/')
 async def index_view():
     logger.info(f"{index_view.__name__} -- INDEX VIEW TRIGGERED")
     return {
+        "success": True,
         "service": "FB4S Automations",
-        "success": True
+        "router": "root"
     }
 
 if __name__ == "__main__":
