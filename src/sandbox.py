@@ -1,8 +1,12 @@
-import asyncio
+import os
 
-from db.postgres.postgres_handler import PostgresQueryHandler
+from dotenv import load_dotenv
 
-postgres = PostgresQueryHandler()
-res = postgres.select_executor(query="SELECT * FROM fub.fub_users")
-print(res)
+from services.fub import FUB
 
+load_dotenv()
+
+
+fub = FUB(api_key=os.getenv("FUB_API_KEY"), base_url=os.getenv("https://api.followupboss.com/v1/"))
+
+fub.get_people()

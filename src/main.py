@@ -1,63 +1,21 @@
 import uvicorn
-from fastapi import FastAPI, HTTPException
-from contextlib import asynccontextmanager
-from loguru import logger
+from fastapi import FastAPI
 
-# from logs.legacy_logging_config import logger, server_start_shutdown_logger
-from logs import logging_config as log
-from schemas.exceptions_schemas import (BadPayloadResponse, BadRequestResponse,
-                                        ForbiddenResponse, NotAuthResponse,
-                                        NotFoundResponse, ServerErrorResponse)
-
-log.CustomLogger()
-
-
-# FastAPI Server Start / Shutdown logging lifespan manager
-@asynccontextmanager
-async def server_start_shutdown_logger(app: FastAPI):
-    """
-    Logs FastAPI server Start and Shutdown events
-    """
-    logger.warning(" == SERVER STARTED ==")
-    yield
-    logger.warning("== SERVER STOPPED ==")
-
+from config.app import server_start_shutdown_logger
+from config.logging_config import logger
+from routers.fub import fub_router
 
 app = FastAPI(lifespan=server_start_shutdown_logger)
-
-
-# TODO:
-# - override HTTPS exceptions
-# - rewrite unit tests according to it
-@app.exception_handler(HTTPException)
-async def custom_http_exception_handler(request, exc):
-
-    match exc.status_code:
-        case 404:
-            return NotFoundResponse
-        case 400:
-            return BadRequestResponse
-        case 401:
-            return NotAuthResponse
-        case 403:
-            return ForbiddenResponse
-        case 415:
-            return BadPayloadResponse
-        case 500:
-            return ServerErrorResponse
-
-        case _:
-            return await request.app.handle_exception(request, exc)
-
-# -------------------------------- VIEWS ---------------------------------------------------------------------------------------------------------
+app.include_router(router=fub_router, prefix='/fub', tags=['fub'])
 
 
 @app.get('/')
 async def index_view():
     logger.info(f"{index_view.__name__} -- INDEX VIEW TRIGGERED")
     return {
+        "success": True,
         "service": "FB4S Automations",
-        "success": True
+        "router": "root"
     }
 
 if __name__ == "__main__":

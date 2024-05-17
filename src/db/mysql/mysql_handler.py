@@ -1,42 +1,11 @@
 import sys
 
-import psycopg2
+import pymysql
 
 from config.logging_config import logger
 
 
-class PostgresHandler:
-    """
-    How to use:
-
-    postgres = PostgresHandler(
-        database=database,
-        user=user,
-        password=password,
-        host=host,
-        port=port
-    )
-
-    --------------------------------------------------------- 
-
-    # Use Case 1 (Manual connection / disconnection):
-
-    postgres.connect()
-    postgres.select_executor(
-        query="SELECT * FROM fub.fub_users LIMIT 1"
-    )
-    postgres.disconnect()
-
-    ---------------------------------------------------------
-
-    # Use Case 2 (Automatic connection / disconnection): s
-
-    postgres.execute_with_connection(
-        func = postgres.select_executor,
-        query = "SELECT * FROM fub.fub_users WHERE id = %s",
-        params = [10]
-    )
-    """
+class MySQLHandler:
 
     def __init__(self, database: str, user: str, password: str, host: str, port: int):
         self.database = database
@@ -45,7 +14,7 @@ class PostgresHandler:
         self.host = host
         self.port = port
 
-        self.connection = None # psycopg2 connector object
+        self.connection = None # pymysql connector object
 
         logger.debug(f"{self.__class__.__name__} ({self.__init__.__name__}) -- CLASS INITIALIZED")
 
@@ -62,22 +31,22 @@ class PostgresHandler:
         conn = None
 
         try:
-            conn = psycopg2.connect(
-                dbname=self.database,
+            conn = pymysql.connect(
+                database=self.database,
                 user=self.user,
                 password=self.password,
                 host=self.host,
                 port=self.port
             )
             self.connection = conn
-            logger.debug(f"{self.__class__.__name__} ({self.connect.__name__}) -- CONNECTED TO POSTGRES")
+            logger.debug(f"{self.__class__.__name__} ({self.connect.__name__}) -- CONNECTED TO MYSQL")
         except Exception as ex:
-            logger.exception(f"{self.__class__.__name__} ({self.connect.__name__}) -- !!! FAILED CONNECTING TO POSTGRES - {ex}")
+            logger.exception(f"{self.__class__.__name__} ({self.connect.__name__}) -- !!! FAILED CONNECTING TO MYSQL - {ex}")
 
     def disconnect(self):
         if self.connection:
             self.connection.close()
-            logger.debug(f"{self.__class__.__name__} ({self.disconnect.__name__}) -- CLOSED POSTGRES CONNECTION")
+            logger.debug(f"{self.__class__.__name__} ({self.disconnect.__name__}) -- CLOSED MYSQL CONNECTION")
 
 
     def execute_with_connection(self, func, *args, **kwargs):
@@ -136,6 +105,7 @@ class PostgresHandler:
 
         finally:
              if cursor: cursor.close()
+
 
     def delete_executor(self, query: str, params: list):
         """
