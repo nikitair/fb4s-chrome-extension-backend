@@ -1,28 +1,27 @@
 import os
 import time
 from datetime import datetime
-
 from loguru import logger
 
 ROOT_DIR = os.getcwd()
 
-class CustomLogger():
-    def __init__(self) -> None:
-        log_filename = datetime.now().strftime("logs_%Y-%m-%dT%H:%M.log")
 
-        logger.add(
-            sink=f"{ROOT_DIR}/src/logs/{log_filename}",
-            format="""<green>{time:YYYY-MM-DD HH:mm:ss}</green> UTC - <level>{level}</level> - {message} || <level>{module}</level>""",
-            level="DEBUG",
-            rotation="20 MB",
-            enqueue=True,
-            catch=True 
-        )
+log_config = {
+    "handlers": [
+        {
+            "sink": f"{ROOT_DIR}/src/logs/app.log",
+            "format": "{time:YYYY-MM-DD HH:mm} UTC - {level} - {name}:{function}:{line} - {message}",
+            "level": "DEBUG",
+            "rotation": "50 MB",
+            "enqueue": True,
+            "catch": True
+        }
+    ]
+}
 
-        # Set the timezone to UTC
-        os.environ['TZ'] = 'UTC'
-        time.tzset() 
-
-        # logger.debug("CustomLogger CLASS INITIALIZED")
-
-CustomLogger()
+def configure_logger():
+    # Set the timezone to UTC
+    os.environ['TZ'] = 'UTC'
+    time.tzset()
+    logger.configure(**log_config)
+    return True

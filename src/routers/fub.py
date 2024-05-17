@@ -6,7 +6,7 @@ from schemas.default import DefaultResponse
 fub_router = APIRouter()
 
 @fub_router.get("/", response_model=DefaultResponse)
-def fub_index_view():
+async def fub_index_view():
     logger.info(f"{fub_index_view.__name__} -- FUB INDEX VIEW TRIGGERED")
     return {
         "success": True,
