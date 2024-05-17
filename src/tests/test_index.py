@@ -5,7 +5,7 @@ def test_index_get(test_client):
     response = test_client.get('/')
     assert response.request.method == "GET"
     assert response.status_code == 200
-    assert response.json() == {"service": "FB4S Automations", "success": True}
+    assert response.json() == {"service": "FB4S Automations", "success": True, "router": "root"}
 
 
 def test_index_get_query_params(test_client):
@@ -15,7 +15,7 @@ def test_index_get_query_params(test_client):
     
     # check query params
     assert response.url.query == b'value=1&bool=true'
-    assert response.json() == {"service": "FB4S Automations", "success": True}
+    assert response.json() == {"service": "FB4S Automations", "success": True, "router": "root"}
 
 
 def test_index_post(test_client):
