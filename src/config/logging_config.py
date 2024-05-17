@@ -14,7 +14,7 @@ class CustomLogger():
             sink=f"{ROOT_DIR}/src/logs/{log_filename}",
             format="""<green>{time:YYYY-MM-DD HH:mm:ss}</green> UTC - <level>{level}</level> - {message} || <level>{module}</level>""",
             level="DEBUG",
-            rotation="500 MB",
+            rotation="20 MB",
             enqueue=True,
             catch=True 
         )
@@ -23,6 +23,6 @@ class CustomLogger():
         os.environ['TZ'] = 'UTC'
         time.tzset() 
 
-        logger.debug("CustomLogger CLASS INITIALIZED")
+        # logger.debug("CustomLogger CLASS INITIALIZED")
 
 CustomLogger()
