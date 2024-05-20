@@ -1,5 +1,5 @@
 import sys
-import asyncio
+from sshtunnel import SSHTunnelForwarder
 import psycopg2
 import asyncpg
 
@@ -47,6 +47,7 @@ class PostgresHandler:
         self.port = port
 
         self.connection = None
+        self.ssh_tunnel = None
 
         logger.debug(f"{self.__class__.__name__} ({self.__init__.__name__}) -- CLASS INITIALIZED")
 
@@ -56,8 +57,31 @@ class PostgresHandler:
     def __repr__(self) -> str:
         return f"{self.__class__.__name__} ({self.database})"
 
-    def connect(self):
+    def connect(self, 
+                ssh_mode=False, 
+                ssh_server_host: str = None, 
+                ssh_server_port: int = 22, 
+                ssh_username: str = None, 
+                ssh_key_path: str = None,
+                local_bind_address=(None, 0),
+                remote_bind_address: tuple = (None, 0)):
         try:
+            if ssh_mode:
+                if not ssh_username or not ssh_key_path:
+                    raise ValueError("SSH username and key path must be provided for SSH mode")
+                
+                self.ssh_tunnel = SSHTunnelForwarder(
+                    (ssh_server_host, ssh_server_port),
+                    ssh_username=ssh_username,
+                    ssh_pkey=ssh_key_path,
+                    remote_bind_address=remote_bind_address,
+                    local_bind_address=local_bind_address
+                )
+                self.ssh_tunnel.start()
+                self.host = 'localhost'
+                self.port = self.ssh_tunnel.local_bind_port
+                logger.debug(f"{self.__class__.__name__} ({self.connect.__name__}) -- SSH TUNNEL ESTABLISHED")
+
             self.connection = psycopg2.connect(
                 dbname=self.database,
                 user=self.user,
@@ -73,6 +97,10 @@ class PostgresHandler:
         if self.connection:
             self.connection.close()
             logger.debug(f"{self.__class__.__name__} ({self.disconnect.__name__}) -- CLOSED POSTGRES CONNECTION")
+        if self.ssh_tunnel:
+            self.ssh_tunnel.stop()
+            logger.debug(f"{self.__class__.__name__} ({self.disconnect.__name__}) -- CLOSED SSH TUNNEL")
+
 
     def execute_with_connection(self, func, *args, **kwargs):
         try:
