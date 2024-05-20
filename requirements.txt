@@ -17,7 +17,7 @@ pytest-cov
 
 # database
 sshtunnel
-psycopg-binary
+psycopg2-binary
 asyncpg
 pymysql
 aiomysql
