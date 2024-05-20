@@ -14,13 +14,11 @@ async def server_lifespan(app: FastAPI):
     """
     Logs FastAPI server Start and Shutdown events
     """
+    configure_logger()
 
     # set timezone to UTC
     os.environ['TZ'] = 'UTC'
     time.tzset()
-
-    # configure logger
-    configure_logger()
 
     # log server start
     logger.warning(" == SERVER STARTED ==")
