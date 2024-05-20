@@ -3,8 +3,7 @@ import time
 from datetime import datetime
 from loguru import logger
 
-ROOT_DIR = os.getcwd()
-
+from . import ROOT_DIR
 
 log_config = {
     "handlers": [
@@ -20,8 +19,5 @@ log_config = {
 }
 
 def configure_logger():
-    # Set the timezone to UTC
-    os.environ['TZ'] = 'UTC'
-    time.tzset()
     logger.configure(**log_config)
     return True

@@ -3,7 +3,7 @@ import os
 from datetime import datetime, timezone
 from logging.handlers import RotatingFileHandler
 
-ROOT_DIR = os.getcwd()
+from . import ROOT_DIR
 
 
 class UTCFormatter(logging.Formatter):
