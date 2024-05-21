@@ -1,17 +1,12 @@
 import uvicorn
-from fastapi import FastAPI
-
-from config.app import server_start_shutdown_logger
 from config.logging_config import logger
-from routers.fub import fub_router
 
-app = FastAPI(lifespan=server_start_shutdown_logger)
-app.include_router(router=fub_router, prefix='/fub', tags=['fub'])
+from config.app import app
 
 
 @app.get('/')
 async def index_view():
-    logger.info(f"{index_view.__name__} -- INDEX VIEW TRIGGERED")
+    logger.debug(f"{index_view.__name__} -- INDEX VIEW TRIGGERED")
     return {
         "success": True,
         "service": "FB4S Automations",
@@ -19,6 +14,7 @@ async def index_view():
     }
 
 if __name__ == "__main__":
-    # dev server run
     # module : app
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    # uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+
+    uvicorn.run("main:app", host="0.0.0.0", port=5003, reload=True)

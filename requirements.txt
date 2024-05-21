@@ -16,7 +16,8 @@ pytest-asyncio
 pytest-cov
 
 # database
-psycopg-binary
 sshtunnel
+psycopg2-binary
 asyncpg
 pymysql
+aiomysql

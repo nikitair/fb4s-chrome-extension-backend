@@ -1,12 +1,14 @@
-import os
-
-from dotenv import load_dotenv
-
-from services.fub import FUB
-
-load_dotenv()
+from config.database import (
+    postgres, SSH_TUNNEL_MODE, SSH_KEY_PATH, SSH_TUNNEL_SERVER_HOST, SSH_TUNNEL_SERVER_PORT,
+    LOCAL_PORT, SSH_TUNNEL_SERVER_USERNAME, POSTGRES_HOST, POSTGRES_PORT
+    
+    )
 
 
-fub = FUB(api_key=os.getenv("FUB_API_KEY"), base_url=os.getenv("https://api.followupboss.com/v1/"))
+postgres.connect()
 
-fub.get_people()
+
+postgres.select_executor(
+    query="SELECT * FROM fub.fub_users LIMIT 1"
+)
+postgres.disconnect()

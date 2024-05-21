@@ -8,6 +8,14 @@ from db.postgres.postgres_handler import PostgresHandler
 
 load_dotenv()
 
+LOCAL_PORT = int(os.getenv("LOCAL_PORT", 0))
+
+SSH_TUNNEL_MODE = bool(int(os.getenv("SSH_TUNNEL_MODE", 0)))
+SSH_TUNNEL_SERVER_USERNAME = os.getenv("SSH_TUNNEL_SERVER_USERNAME", "")
+SSH_TUNNEL_SERVER_HOST = os.getenv("SSH_TUNNEL_SERVER_HOST", "")
+SSH_TUNNEL_SERVER_PORT = int(os.getenv("SSH_TUNNEL_SERVER_PORT", 0))
+SSH_KEY_PATH = os.getenv("SSH_KEY_PATH", "")
+
 POSTGRES_DATABASE = os.getenv("POSTGRES_DATABASE", "")
 POSTGRES_USER = os.getenv("POSTGRES_USER", "")
 POSTGRES_HOST = os.getenv("POSTGRES_HOST", "")
@@ -42,18 +50,15 @@ mysql_queries = MySQLQueries
 
 
 if __name__ == "__main__":
-    # postgres.connect()
-    # postgres.select_executor(
-    #     query="SELECT * FROM fub.fub_users LIMIT 1"
-    # )
-    # postgres.disconnect()
-
-    # postgres.execute_with_connection(
-    #     func = postgres.select_executor,
-    #     query = "SELECT * FROM fub.fub_users LIMIT 1"
-    # )
-
-    mysql.execute_with_connection(
-        mysql.select_executor,
-        query=mysql_queries.sent_weekly_outreach_emails
+    postgres.connect(
+        ssh_mode=SSH_TUNNEL_MODE,
+        ssh_key_path=SSH_KEY_PATH,
+        ssh_server_host=SSH_TUNNEL_SERVER_HOST,
+        ssh_server_port=SSH_TUNNEL_SERVER_PORT
     )
+
+
+    postgres.select_executor(
+        query="SELECT * FROM fub.fub_users LIMIT 1"
+    )
+    postgres.disconnect()
