@@ -45,17 +45,3 @@ mysql = MySQLHandler(
 )
 
 mysql_queries = MySQLQueries
-
-if __name__ == "__main__":
-    # postgres.connect(
-    #     ssh_mode=SSH_TUNNEL_MODE,
-    #     ssh_key_path=SSH_KEY_PATH,
-    #     ssh_server_host=SSH_TUNNEL_SERVER_HOST,
-    #     ssh_server_port=SSH_TUNNEL_SERVER_PORT
-    # )
-    #
-    # postgres.select_executor(
-    #     query="SELECT * FROM fub.fub_users LIMIT 1"
-    # )
-    # postgres.disconnect()
-    ...
