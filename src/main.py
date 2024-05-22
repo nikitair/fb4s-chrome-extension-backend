@@ -4,7 +4,7 @@ from config.app import app
 from config.logging_config import logger
 
 
-@app.get('/')
+@app.get('/', tags=['index'])
 async def index_view():
     logger.debug(f"{index_view.__name__} -- INDEX VIEW TRIGGERED")
     return {
