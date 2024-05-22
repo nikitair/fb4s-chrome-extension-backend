@@ -58,3 +58,4 @@ if __name__ == "__main__":
     #     query="SELECT * FROM fub.fub_users LIMIT 1"
     # )
     # postgres.disconnect()
+    ...
