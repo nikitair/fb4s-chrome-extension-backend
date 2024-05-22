@@ -1,5 +1,7 @@
-from utils.lead_auto_assignment import na_formatter
+from utils import lead_auto_assignment as utils
 from config.logging_config import logger
+
+from config.database import mysql, mysql_queries
 
 
 def lead_auto_assignment(payload: dict):
@@ -17,7 +19,7 @@ def lead_auto_assignment(payload: dict):
         }
     }
 
-    formatted_payload = na_formatter(payload)
+    formatted_payload = utils.na_formatter(payload)
     logger.info(f"LEAD TO ASSIGN - {formatted_payload}")
 
     postalcode: str = payload["postalcode"]
@@ -27,6 +29,28 @@ def lead_auto_assignment(payload: dict):
     listing_categories: str = payload["listing_categories"]
     buyer_name: str = payload["buyer_name"]
     buyer_email: str = payload["buyer_email"]
+    buyer_city: str = payload["buyer_city"]
+    buyer_province: str = payload["buyer_province"]
     cold_lead: str = payload["cold_lead"]
+
+    # define values to process
+    if cold_lead:
+        province = buyer_province
+        city = buyer_city
+        postalcode = ""
+    else:
+        province = listing_province if listing_province else buyer_province
+        city = listing_city if listing_city else buyer_city
+
+    postalcode = utils.format_postalcode(postalcode)
+
+    logger.debug(f"POLYGON SEARCH PARAMETERS: CITY - {city}; PROVINCE - {province}; POSTALCODE - {postalcode}")
+
+    # evaluate buyer name
+    sql_result = mysql.execute_with_connection(
+        func=mysql.select_executor,
+        query=mysql_queries.get_buyer_firstname_by_email,
+        params=[buyer_email]
+    )
 
     return response

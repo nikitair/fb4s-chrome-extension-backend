@@ -2,9 +2,9 @@ import os
 
 from dotenv import load_dotenv
 
-from db.mysql.mysql_handler import MySQLHandler
-from db.mysql.mysql_sql import MySQLQueries
-from db.postgres.postgres_handler import PostgresHandler
+from database.mysql.mysql_handler import AsyncMySQLHandler
+from database.mysql.mysql_sql import MySQLQueries
+from database.postgres.postgres_handler import AsyncPostgresHandler
 
 load_dotenv()
 
@@ -28,7 +28,7 @@ MYSQL_HOST = os.getenv("MYSQL_HOST", "")
 MYSQL_PORT = int(os.getenv("MYSQL_PORT", 0))
 MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
 
-postgres = PostgresHandler(
+postgres = AsyncPostgresHandler(
     database=POSTGRES_DATABASE,
     user=POSTGRES_USER,
     password=POSTGRES_PASSWORD,
@@ -36,7 +36,7 @@ postgres = PostgresHandler(
     port=POSTGRES_PORT
 )
 
-mysql = MySQLHandler(
+mysql = AsyncMySQLHandler(
     database=MYSQL_DATABASE,
     user=MYSQL_USER,
     password=MYSQL_PASSWORD,
@@ -47,14 +47,14 @@ mysql = MySQLHandler(
 mysql_queries = MySQLQueries
 
 if __name__ == "__main__":
-    postgres.connect(
-        ssh_mode=SSH_TUNNEL_MODE,
-        ssh_key_path=SSH_KEY_PATH,
-        ssh_server_host=SSH_TUNNEL_SERVER_HOST,
-        ssh_server_port=SSH_TUNNEL_SERVER_PORT
-    )
-
-    postgres.select_executor(
-        query="SELECT * FROM fub.fub_users LIMIT 1"
-    )
-    postgres.disconnect()
+    # postgres.connect(
+    #     ssh_mode=SSH_TUNNEL_MODE,
+    #     ssh_key_path=SSH_KEY_PATH,
+    #     ssh_server_host=SSH_TUNNEL_SERVER_HOST,
+    #     ssh_server_port=SSH_TUNNEL_SERVER_PORT
+    # )
+    #
+    # postgres.select_executor(
+    #     query="SELECT * FROM fub.fub_users LIMIT 1"
+    # )
+    # postgres.disconnect()
