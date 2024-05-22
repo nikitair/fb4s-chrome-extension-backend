@@ -1,6 +1,6 @@
 from fastapi import Request, Response
 
-from config.logging_config import logger
+from config.legacy_logging_config import legacy_logger as logger
 
 
 async def log_middleware(request: Request, call_next):
