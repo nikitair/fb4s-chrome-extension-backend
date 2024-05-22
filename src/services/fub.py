@@ -11,10 +11,10 @@ class FUBService:
     def __init__(self, api_key: str, base_url: str):
         self.api_key = base64.b64encode(api_key.encode()).decode()
         self.base_url = base_url
-        logger.debug(f"{self.__class__.__name__} ( {self.__init__.__name__} ) -- CLASS INITIALIZED")
+        logger.debug(f"({self.__class__.__name__}) - CLASS INITIALIZED")
 
     def get_people_list(self):
-        logger.info(f"{self.__class__.__name__} ( {self.get_people_list.__name__} ) -- GETTING PEOPLE LIST")
+        logger.info(f"({self.__class__.__name__}) - GETTING PEOPLE LIST")
         url = f"{self.base_url}people?sort=created&limit=10&offset=0&includeTrash=false&includeUnclaimed=false"
         headers = {
             "accept": "application/json",
@@ -26,19 +26,19 @@ class FUBService:
         try:
             response = requests.get(url, headers=headers)
             logger.info(
-                f"{self.__class__.__name__} ( {self.get_people_list.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+                f"({self.__class__.__name__}) - FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
-            logger.debug(f"{self.__class__.__name__} ( {self.get_people_list.__name__} ) -- FUB API DATA - {data}")
+            logger.debug(f"({self.__class__.__name__}) - FUB API DATA - {data}")
 
         except Exception as ex:
             logger.exception(
-                f"{self.__class__.__name__} ( {self.get_people_list.__name__} ) -- !!! FUB API ERROR - {ex}")
+                f"({self.__class__.__name__})- !!! FUB API ERROR - {ex}")
 
         return data
 
     def get_people(self, person_id: int):
-        logger.info(f"{self.__class__.__name__} ( {self.get_people.__name__} ) -- GETTING PERSON WITH ID: {person_id}")
+        logger.info(f"({self.__class__.__name__}) - GETTING PERSON WITH ID: {person_id}")
         url = f"{self.base_url}people/{person_id}"
         headers = {
             "accept": "application/json",
@@ -50,18 +50,18 @@ class FUBService:
         try:
             response = requests.get(url, headers=headers)
             logger.info(
-                f"{self.__class__.__name__} ( {self.get_people.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+                f"({self.__class__.__name__}) - FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
-            logger.debug(f"{self.__class__.__name__} ( {self.get_people.__name__} ) -- FUB API DATA - {data}")
+            logger.debug(f"({self.__class__.__name__}) - FUB API DATA - {data}")
 
         except Exception as ex:
-            logger.exception(f"{self.__class__.__name__} ( {self.get_people.__name__} ) -- !!! FUB API ERROR - {ex}")
+            logger.exception(f"({self.__class__.__name__}) - !!! FUB API ERROR - {ex}")
 
         return data
 
     def get_note(self, note_id: int):
-        logger.info(f"{self.__class__.__name__} ( {self.get_note.__name__} ) -- GETTING NOTE WITH ID: {note_id}")
+        logger.info(f"({self.__class__.__name__}) - GETTING NOTE WITH ID: {note_id}")
         url = f"{self.base_url}notes/{note_id}"
         headers = {
             "accept": "application/json",
@@ -73,18 +73,18 @@ class FUBService:
         try:
             response = requests.get(url, headers=headers)
             logger.info(
-                f"{self.__class__.__name__} ( {self.get_note.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+                f"({self.__class__.__name__}) - FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
-            logger.debug(f"{self.__class__.__name__} ( {self.get_note.__name__} ) -- FUB API DATA - {data}")
+            logger.debug(f"({self.__class__.__name__}) - FUB API DATA - {data}")
 
         except Exception as ex:
-            logger.exception(f"{self.__class__.__name__} ( {self.get_note.__name__} ) -- !!! FUB API ERROR - {ex}")
+            logger.exception(f"({self.__class__.__name__}) - !!! FUB API ERROR - {ex}")
 
         return data
 
     def create_note(self, person_id: int, note_subject: str, note_body: str):
-        logger.info(f"{self.__class__.__name__} ( {self.create_note.__name__} ) -- CREATING NOTE - \
+        logger.info(f"({self.__class__.__name__}) - CREATING NOTE - \
                     PERSON_ID: {person_id}; SUBJECT: {note_subject}; BODY: {note_body}")
         url = f"{self.base_url}notes"
         headers = {
@@ -103,18 +103,18 @@ class FUBService:
         try:
             response = requests.post(url, headers=headers, json=payload)
             logger.info(
-                f"{self.__class__.__name__} ( {self.create_note.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+                f"({self.__class__.__name__}) - FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
-            logger.debug(f"{self.__class__.__name__} ( {self.create_note.__name__} ) -- FUB API DATA - {data}")
+            logger.debug(f"({self.__class__.__name__}) - FUB API DATA - {data}")
 
         except Exception as ex:
-            logger.exception(f"{self.__class__.__name__} ( {self.create_note.__name__} ) -- !!! FUB API ERROR - {ex}")
+            logger.exception(f"({self.__class__.__name__}) - !!! FUB API ERROR - {ex}")
 
         return data
 
     def update_note(self, note_id: int, person_id: int, note_subject: str, note_body: str):
-        logger.info(f"{self.__class__.__name__} ( {self.update_note.__name__} ) -- UPDATING NOTE WITH ID: {note_id} - \
+        logger.info(f"({self.__class__.__name__}) - UPDATING NOTE WITH ID: {note_id} - \
                     PERSON_ID: {person_id}; SUBJECT: {note_subject}; BODY: {note_body}")
         url = f"{self.base_url}notes/{note_id}"
         headers = {
@@ -133,18 +133,18 @@ class FUBService:
         try:
             response = requests.put(url, headers=headers, json=payload)
             logger.info(
-                f"{self.__class__.__name__} ( {self.update_note.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+                f"({self.__class__.__name__}) - FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
-            logger.debug(f"{self.__class__.__name__} ( {self.update_note.__name__} ) -- FUB API DATA - {data}")
+            logger.debug(f"({self.__class__.__name__}) - FUB API DATA - {data}")
 
         except Exception as ex:
-            logger.exception(f"{self.__class__.__name__} ( {self.update_note.__name__} ) -- !!! FUB API ERROR - {ex}")
+            logger.exception(f"({self.__class__.__name__}) - !!! FUB API ERROR - {ex}")
 
         return data
 
     def delete_note(self, note_id: int):
-        logger.info(f"{self.__class__.__name__} ( {self.delete_note.__name__} ) -- DELETING NOTE WITH ID: {note_id}")
+        logger.info(f"({self.__class__.__name__}) - DELETING NOTE WITH ID: {note_id}")
         url = f"{self.base_url}notes/{note_id}"
         headers = {
             "accept": "application/json",
@@ -156,18 +156,18 @@ class FUBService:
         try:
             response = requests.delete(url, headers=headers)
             logger.info(
-                f"{self.__class__.__name__} ( {self.delete_note.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+                f"({self.__class__.__name__}) - FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
-            logger.debug(f"{self.__class__.__name__} ( {self.delete_note.__name__} ) -- FUB API DATA - {data}")
+            logger.debug(f"({self.__class__.__name__}) - FUB API DATA - {data}")
 
         except Exception as ex:
-            logger.exception(f"{self.__class__.__name__} ( {self.delete_note.__name__} ) -- !!! FUB API ERROR - {ex}")
+            logger.exception(f"({self.__class__.__name__}) - !!! FUB API ERROR - {ex}")
 
         return data
 
     def get_task(self, task_id: int):
-        logger.info(f"{self.__class__.__name__} ( {self.get_task.__name__} ) -- GETTING TASK WITH ID: {task_id}")
+        logger.info(f"({self.__class__.__name__}) - GETTING TASK WITH ID: {task_id}")
         url = f"{self.base_url}tasks/{task_id}"
         headers = {
             "accept": "application/json",
@@ -179,13 +179,13 @@ class FUBService:
         try:
             response = requests.get(url, headers=headers)
             logger.info(
-                f"{self.__class__.__name__} ( {self.get_task.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+                f"({self.__class__.__name__}) - FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
-            logger.debug(f"{self.__class__.__name__} ( {self.get_task.__name__} ) -- FUB API DATA - {data}")
+            logger.debug(f"({self.__class__.__name__}) - FUB API DATA - {data}")
 
         except Exception as ex:
-            logger.exception(f"{self.__class__.__name__} ( {self.get_task.__name__} ) -- !!! FUB API ERROR - {ex}")
+            logger.exception(f"({self.__class__.__name__}) - !!! FUB API ERROR - {ex}")
 
         return data
 
@@ -199,7 +199,7 @@ class FUBService:
             remindSecondsBefore: int = 360000
     ):
 
-        logger.info(f"{self.__class__.__name__} ( {self.create_task.__name__} ) -- CREATING TASK - \
+        logger.info(f"({self.__class__.__name__}) - CREATING TASK - \
                     TM_ID: {team_member_id}; BUYER_ID: {buyer_id}; TASK_NAME: {task_name}")
         url = f"{self.base_url}tasks"
         headers = {
@@ -222,19 +222,19 @@ class FUBService:
         try:
             response = requests.post(url, headers=headers, json=payload)
             logger.info(
-                f"{self.__class__.__name__} ( {self.create_task.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+                f"({self.__class__.__name__}) - FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
-            logger.debug(f"{self.__class__.__name__} ( {self.create_task.__name__} ) -- FUB API DATA - {data}")
+            logger.debug(f"({self.__class__.__name__}) - FUB API DATA - {data}")
 
         except Exception as ex:
-            logger.exception(f"{self.__class__.__name__} ( {self.create_task.__name__} ) -- !!! FUB API ERROR - {ex}")
+            logger.exception(f"({self.__class__.__name__}) - !!! FUB API ERROR - {ex}")
 
         return data
 
     def add_tag(self, person_id, tags: list[str]):
         logger.info(
-            f"{self.__class__.__name__} ( {self.add_tag.__name__} ) -- ADDING TAGS: {tags} TO PERSON {person_id}")
+            f"({self.__class__.__name__}) - ADDING TAGS: {tags} TO PERSON {person_id}")
         url = f"{self.base_url}people/{person_id}?mergeTags=true/"
         headers = {
             "accept": "application/json",
@@ -249,12 +249,12 @@ class FUBService:
         try:
             response = requests.put(url, headers=headers, json=payload)
             logger.info(
-                f"{self.__class__.__name__} ( {self.add_tag.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+                f"({self.__class__.__name__}) - FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
-            logger.debug(f"{self.__class__.__name__} ( {self.add_tag.__name__} ) -- FUB API DATA - {data}")
+            logger.debug(f"({self.__class__.__name__}) - FUB API DATA - {data}")
 
         except Exception as ex:
-            logger.exception(f"{self.__class__.__name__} ( {self.get_people.__name__} ) -- !!! FUB API ERROR - {ex}")
+            logger.exception(f"({self.__class__.__name__}) - !!! FUB API ERROR - {ex}")
 
         return data

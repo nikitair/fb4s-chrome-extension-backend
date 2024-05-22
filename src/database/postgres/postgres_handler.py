@@ -48,9 +48,8 @@ class PostgresHandler:
         self.port = port
 
         self.connection = None
-        self.ssh_tunnel = None
 
-        logger.debug(f"{self.__class__.__name__} ({self.__init__.__name__}) -- CLASS INITIALIZED")
+        logger.debug(f"({self.__class__.__name__}) - CLASS INITIALIZED")
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__} ({self.database})"
@@ -58,31 +57,8 @@ class PostgresHandler:
     def __repr__(self) -> str:
         return f"{self.__class__.__name__} ({self.database})"
 
-    def connect(self,
-                ssh_mode=False,
-                ssh_server_host: str = None,
-                ssh_server_port: int = 22,
-                ssh_username: str = None,
-                ssh_key_path: str = None,
-                local_bind_address=(None, 0),
-                remote_bind_address: tuple = (None, 0)):
+    def connect(self):
         try:
-            if ssh_mode:
-                if not ssh_username or not ssh_key_path:
-                    raise ValueError("SSH username and key path must be provided for SSH mode")
-
-                self.ssh_tunnel = SSHTunnelForwarder(
-                    (ssh_server_host, ssh_server_port),
-                    ssh_username=ssh_username,
-                    ssh_pkey=ssh_key_path,
-                    remote_bind_address=remote_bind_address,
-                    local_bind_address=local_bind_address
-                )
-                self.ssh_tunnel.start()
-                self.host = 'localhost'
-                self.port = self.ssh_tunnel.local_bind_port
-                logger.debug(f"{self.__class__.__name__} ({self.connect.__name__}) -- SSH TUNNEL ESTABLISHED")
-
             self.connection = psycopg2.connect(
                 dbname=self.database,
                 user=self.user,
@@ -90,18 +66,15 @@ class PostgresHandler:
                 host=self.host,
                 port=self.port
             )
-            logger.debug(f"{self.__class__.__name__} ({self.connect.__name__}) -- CONNECTED TO POSTGRES")
+            logger.debug(f"({self.__class__.__name__}) - CONNECTED TO POSTGRES")
         except Exception as ex:
             logger.exception(
-                f"{self.__class__.__name__} ({self.connect.__name__}) -- !!! FAILED CONNECTING TO POSTGRES - {ex}")
+                f"({self.__class__.__name__}) - !!! FAILED CONNECTING TO POSTGRES - {ex}")
 
     def disconnect(self):
         if self.connection:
             self.connection.close()
-            logger.debug(f"{self.__class__.__name__} ({self.disconnect.__name__}) -- CLOSED POSTGRES CONNECTION")
-        if self.ssh_tunnel:
-            self.ssh_tunnel.stop()
-            logger.debug(f"{self.__class__.__name__} ({self.disconnect.__name__}) -- CLOSED SSH TUNNEL")
+            logger.debug(f"({self.__class__.__name__}) - CLOSED POSTGRES CONNECTION")
 
     def execute_with_connection(self, func, *args, **kwargs):
         try:
@@ -113,7 +86,7 @@ class PostgresHandler:
 
     def select_executor(self, query: str, params: list = []):
         logger.info(
-            f"{self.__class__.__name__} ({self.select_executor.__name__}) -- EXECUTING SELECT QUERY: {query} - PARAMS: {params}")
+            f"({self.__class__.__name__}) - EXECUTING SELECT QUERY: {query} - PARAMS: {params}")
 
         data = None
 
@@ -121,37 +94,37 @@ class PostgresHandler:
             cursor = self.connection.cursor()
             cursor.execute(query, tuple(params))
             data = cursor.fetchall()
-            logger.debug(f"{self.__class__.__name__} ({self.select_executor.__name__}) -- SQL RESULT: {data}")
+            logger.debug(f"({self.__class__.__name__}) - SQL RESULT: {data}")
 
         except Exception as ex:
             logger.exception(
-                f"{self.__class__.__name__} ({self.select_executor.__name__}) -- !!! FAILED EXECUTING SQL QUERY - {ex}")
+                f"({self.__class__.__name__}) - !!! FAILED EXECUTING SQL QUERY - {ex}")
 
         finally:
             return data
 
     def insert_executor(self, query: str, params: list[tuple]):
         logger.info(
-            f"{self.__class__.__name__} ({self.insert_executor.__name__}) -- EXECUTING INSERT QUERY: {query} - INSERT PARAMS: {params}")
+            f"({self.__class__.__name__}) - EXECUTING INSERT QUERY: {query} - INSERT PARAMS: {params}")
 
         cursor = None
         try:
             cursor = self.connection.cursor()
             cursor.executemany(query, params)
             self.connection.commit()
-            logger.info(f"{self.__class__.__name__} ({self.insert_executor.__name__}) -- BULK INSERT SUCCESSFUL")
+            logger.info(f"({self.__class__.__name__}) - BULK INSERT SUCCESSFUL")
 
         except Exception as ex:
             self.connection.rollback()
             logger.exception(
-                f"{self.__class__.__name__} ({self.insert_executor.__name__}) -- !!! FAILED INSERTION - {ex}")
+                f"({self.__class__.__name__}) - !!! FAILED INSERTION - {ex}")
 
         finally:
             if cursor: cursor.close()
 
     def delete_executor(self, query: str, params: list, safe: bool = True):
         logger.warning(
-            f"{self.__class__.__name__} ({self.delete_executor.__name__}) -- EXECUTING DELETE QUERY: {query} - PARAMS: {params}")
+            f"({self.__class__.__name__}) - EXECUTING DELETE QUERY: {query} - PARAMS: {params}")
 
         user_answer = 'y'
 
@@ -164,12 +137,12 @@ class PostgresHandler:
                 cursor = self.connection.cursor()
                 cursor.execute(query, params)
                 self.connection.commit()
-                logger.info(f"{self.__class__.__name__} ({self.delete_executor.__name__}) -- DELETE SUCCESSFUL")
+                logger.info(f"({self.__class__.__name__}) - DELETE SUCCESSFUL")
 
             except Exception as ex:
                 self.connection.rollback()
                 logger.exception(
-                    f"{self.__class__.__name__} ({self.delete_executor.__name__}) -- !!! FAILED DELETION - {ex}")
+                    f"({self.__class__.__name__}) - !!! FAILED DELETION - {ex}")
 
             finally:
                 cursor.close()
@@ -195,15 +168,15 @@ class AsyncPostgresHandler(PostgresHandler):
                 host=self.host,
                 port=self.port
             )
-            logger.debug(f"{self.__class__.__name__} ({self.connect.__name__}) -- CONNECTED TO POSTGRES")
+            logger.debug(f"({self.__class__.__name__}) - CONNECTED TO POSTGRES")
         except Exception as ex:
             logger.exception(
-                f"{self.__class__.__name__} ({self.connect.__name__}) -- !!! FAILED CONNECTING TO POSTGRES - {ex}")
+                f"({self.__class__.__name__}) - !!! FAILED CONNECTING TO POSTGRES - {ex}")
 
     async def disconnect(self):
         if self.connection:
             await self.connection.close()
-            logger.debug(f"{self.__class__.__name__} ({self.disconnect.__name__}) -- CLOSED POSTGRES CONNECTION")
+            logger.debug(f"({self.__class__.__name__}) - CLOSED POSTGRES CONNECTION")
 
     async def execute_with_connection(self, func, *args, **kwargs):
         try:
@@ -215,36 +188,36 @@ class AsyncPostgresHandler(PostgresHandler):
 
     async def select_executor(self, query: str, params: list = []):
         logger.info(
-            f"{self.__class__.__name__} ({self.select_executor.__name__}) -- EXECUTING SELECT QUERY: {query} - PARAMS: {params}")
+            f"({self.__class__.__name__}) - EXECUTING SELECT QUERY: {query} - PARAMS: {params}")
 
         data = None
 
         try:
             data = await self.connection.fetch(query, *params)
-            logger.debug(f"{self.__class__.__name__} ({self.select_executor.__name__}) -- SQL RESULT: {data}")
+            logger.debug(f"({self.__class__.__name__}) - SQL RESULT: {data}")
 
         except Exception as ex:
             logger.exception(
-                f"{self.__class__.__name__} ({self.select_executor.__name__}) -- !!! FAILED EXECUTING SQL QUERY - {ex}")
+                f"({self.__class__.__name__}) - !!! FAILED EXECUTING SQL QUERY - {ex}")
 
         finally:
             return data
 
     async def insert_executor(self, query: str, params: list[tuple]):
         logger.info(
-            f"{self.__class__.__name__} ({self.insert_executor.__name__}) -- EXECUTING INSERT QUERY: {query} - INSERT PARAMS: {params}")
+            f"({self.__class__.__name__}) - EXECUTING INSERT QUERY: {query} - INSERT PARAMS: {params}")
 
         try:
             await self.connection.executemany(query, params)
-            logger.info(f"{self.__class__.__name__} ({self.insert_executor.__name__}) -- BULK INSERT SUCCESSFUL")
+            logger.info(f"({self.__class__.__name__}) - BULK INSERT SUCCESSFUL")
 
         except Exception as ex:
             logger.exception(
-                f"{self.__class__.__name__} ({self.insert_executor.__name__}) -- !!! FAILED INSERTION - {ex}")
+                f"({self.__class__.__name__}) - !!! FAILED INSERTION - {ex}")
 
     async def delete_executor(self, query: str, params: list, safe: bool = True):
         logger.warning(
-            f"{self.__class__.__name__} ({self.delete_executor.__name__}) -- EXECUTING DELETE QUERY: {query} - PARAMS: {params}")
+            f"({self.__class__.__name__}) - EXECUTING DELETE QUERY: {query} - PARAMS: {params}")
 
         user_answer = 'y'
 
@@ -254,10 +227,10 @@ class AsyncPostgresHandler(PostgresHandler):
         if user_answer.strip().lower() == 'y':
             try:
                 await self.connection.execute(query, *params)
-                logger.info(f"{self.__class__.__name__} ({self.delete_executor.__name__}) -- DELETE SUCCESSFUL")
+                logger.info(f"({self.__class__.__name__}) - DELETE SUCCESSFUL")
 
             except Exception as ex:
                 logger.exception(
-                    f"{self.__class__.__name__} ({self.delete_executor.__name__}) -- !!! FAILED DELETION - {ex}")
+                    f"({self.__class__.__name__}) - !!! FAILED DELETION - {ex}")
         else:
             sys.stdout.write("Aborted Deletion")
