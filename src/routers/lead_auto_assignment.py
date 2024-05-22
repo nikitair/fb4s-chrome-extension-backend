@@ -22,7 +22,7 @@ async def las_index_view():
 @las_router.post("/assign_lead", response_model=LASResponse)
 async def las_assign_lead_view(request: LASRequest):
     raw_payload: dict = request.dict()
-    logger.info(f"RAW PAYLOAD - {raw_payload}")
+    logger.debug(f"RAW PAYLOAD - {raw_payload}")
 
     result: dict = lead_auto_assignment(raw_payload)
 
