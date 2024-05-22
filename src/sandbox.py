@@ -1,9 +1,7 @@
-from config.database import (
-    postgres, SSH_TUNNEL_MODE, SSH_KEY_PATH, SSH_TUNNEL_SERVER_HOST, SSH_TUNNEL_SERVER_PORT,
-    LOCAL_PORT, SSH_TUNNEL_SERVER_USERNAME, POSTGRES_HOST, POSTGRES_PORT
-    
-    )
-
+from config.database import (LOCAL_PORT, POSTGRES_HOST, POSTGRES_PORT,
+                             SSH_KEY_PATH, SSH_TUNNEL_MODE,
+                             SSH_TUNNEL_SERVER_HOST, SSH_TUNNEL_SERVER_PORT,
+                             SSH_TUNNEL_SERVER_USERNAME, postgres)
 
 postgres.connect()
 

@@ -3,13 +3,14 @@ import time
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
-from config.logging_config import logger, configure_logger
+from starlette.middleware.base import BaseHTTPMiddleware
+
+from config.logging_config import configure_logger, logger
 from config.middleware import log_middleware
 from routers.fub import fub_router
-from routers.textingduncan import td_router
 from routers.leadautoassignment import las_router
+from routers.textingduncan import td_router
 
-from starlette.middleware.base import BaseHTTPMiddleware
 
 # FastAPI Server Start / Shutdown lifespan manager
 @asynccontextmanager

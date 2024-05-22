@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+
 from schemas.default import DefaultResponse
 
 las_router = APIRouter()

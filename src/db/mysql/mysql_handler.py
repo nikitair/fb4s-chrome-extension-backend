@@ -1,8 +1,11 @@
-import sys
-import pymysql
 import asyncio
+import sys
+
 import aiomysql
+import pymysql
+
 from config.logging_config import logger
+
 
 class MySQLHandler:
     """
