@@ -1,5 +1,5 @@
 from config.database import mysql, mysql_queries
-from config.logging_config import logger
+from config.loguru_logger import logger
 from utils import lead_auto_assignment as utils
 
 

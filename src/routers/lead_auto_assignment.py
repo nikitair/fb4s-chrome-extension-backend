@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from config.logging_config import logger
+from config.loguru_logger import logger
 from schemas.index import DefaultResponse
 from schemas.lead_auto_assignment import LASRequest, LASResponse
 from services.lead_auto_assignment import lead_auto_assignment

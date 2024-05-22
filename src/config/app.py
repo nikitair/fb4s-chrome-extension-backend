@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from config.logging_config import configure_logger, logger
+from config.loguru_logger import configure_logger, logger
 from config.middleware import log_middleware
 from routers.fub import fub_router
 from routers.lead_auto_assignment import las_router

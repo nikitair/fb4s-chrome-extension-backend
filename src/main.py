@@ -1,7 +1,7 @@
 import uvicorn
 
 from config.app import app
-from config.logging_config import logger
+from config.loguru_logger import logger
 
 
 @app.get('/', tags=['index'])

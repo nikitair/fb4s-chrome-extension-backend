@@ -4,7 +4,7 @@ import asyncpg
 import psycopg2
 from sshtunnel import SSHTunnelForwarder
 
-from config.logging_config import logger
+from config.loguru_logger import logger
 
 
 class PostgresHandler:
