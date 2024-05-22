@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from schemas.default import DefaultResponse
+from schemas.index import DefaultResponse
 
 td_router = APIRouter()
 
