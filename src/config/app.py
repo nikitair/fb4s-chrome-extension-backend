@@ -15,7 +15,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 @asynccontextmanager
 async def server_lifespan(app: FastAPI):
     """
-    Logs FastAPI server Start and Shutdown events
+    FastAPI server Start and Shutdown events handler
     """
     configure_logger()
 
