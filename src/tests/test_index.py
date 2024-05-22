@@ -12,7 +12,7 @@ def test_index_get_query_params(test_client):
     response = test_client.get('/?value=1&bool=true')
     assert response.request.method == "GET"
     assert response.status_code == 200
-    
+
     # check query params
     assert response.url.query == b'value=1&bool=true'
     assert response.json() == {"service": "FB4S Automations", "success": True, "router": "root"}

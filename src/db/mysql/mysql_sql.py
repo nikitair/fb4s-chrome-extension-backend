@@ -1,6 +1,4 @@
-
 class MySQLQueries:
-
     sent_weekly_outreach_emails = """
 SELECT
   *

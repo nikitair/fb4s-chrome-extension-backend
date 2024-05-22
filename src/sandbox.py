@@ -5,7 +5,6 @@ from config.database import (LOCAL_PORT, POSTGRES_HOST, POSTGRES_PORT,
 
 postgres.connect()
 
-
 postgres.select_executor(
     query="SELECT * FROM fub.fub_users LIMIT 1"
 )

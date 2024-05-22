@@ -25,13 +25,15 @@ class FUBService:
 
         try:
             response = requests.get(url, headers=headers)
-            logger.info(f"{self.__class__.__name__} ( {self.get_people_list.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+            logger.info(
+                f"{self.__class__.__name__} ( {self.get_people_list.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
             logger.debug(f"{self.__class__.__name__} ( {self.get_people_list.__name__} ) -- FUB API DATA - {data}")
 
         except Exception as ex:
-            logger.exception(f"{self.__class__.__name__} ( {self.get_people_list.__name__} ) -- !!! FUB API ERROR - {ex}")
+            logger.exception(
+                f"{self.__class__.__name__} ( {self.get_people_list.__name__} ) -- !!! FUB API ERROR - {ex}")
 
         return data
 
@@ -47,7 +49,8 @@ class FUBService:
 
         try:
             response = requests.get(url, headers=headers)
-            logger.info(f"{self.__class__.__name__} ( {self.get_people.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+            logger.info(
+                f"{self.__class__.__name__} ( {self.get_people.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
             logger.debug(f"{self.__class__.__name__} ( {self.get_people.__name__} ) -- FUB API DATA - {data}")
@@ -69,7 +72,8 @@ class FUBService:
 
         try:
             response = requests.get(url, headers=headers)
-            logger.info(f"{self.__class__.__name__} ( {self.get_note.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+            logger.info(
+                f"{self.__class__.__name__} ( {self.get_note.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
             logger.debug(f"{self.__class__.__name__} ( {self.get_note.__name__} ) -- FUB API DATA - {data}")
@@ -98,7 +102,8 @@ class FUBService:
 
         try:
             response = requests.post(url, headers=headers, json=payload)
-            logger.info(f"{self.__class__.__name__} ( {self.create_note.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+            logger.info(
+                f"{self.__class__.__name__} ( {self.create_note.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
             logger.debug(f"{self.__class__.__name__} ( {self.create_note.__name__} ) -- FUB API DATA - {data}")
@@ -127,7 +132,8 @@ class FUBService:
 
         try:
             response = requests.put(url, headers=headers, json=payload)
-            logger.info(f"{self.__class__.__name__} ( {self.update_note.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+            logger.info(
+                f"{self.__class__.__name__} ( {self.update_note.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
             logger.debug(f"{self.__class__.__name__} ( {self.update_note.__name__} ) -- FUB API DATA - {data}")
@@ -149,7 +155,8 @@ class FUBService:
 
         try:
             response = requests.delete(url, headers=headers)
-            logger.info(f"{self.__class__.__name__} ( {self.delete_note.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+            logger.info(
+                f"{self.__class__.__name__} ( {self.delete_note.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
             logger.debug(f"{self.__class__.__name__} ( {self.delete_note.__name__} ) -- FUB API DATA - {data}")
@@ -171,7 +178,8 @@ class FUBService:
 
         try:
             response = requests.get(url, headers=headers)
-            logger.info(f"{self.__class__.__name__} ( {self.get_task.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+            logger.info(
+                f"{self.__class__.__name__} ( {self.get_task.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
             logger.debug(f"{self.__class__.__name__} ( {self.get_task.__name__} ) -- FUB API DATA - {data}")
@@ -189,7 +197,7 @@ class FUBService:
             dueDate: str = fub.get_today_date(),
             dueDateTime: str = fub.get_default_task_dueDateTime(),
             remindSecondsBefore: int = 360000
-                ):
+    ):
 
         logger.info(f"{self.__class__.__name__} ( {self.create_task.__name__} ) -- CREATING TASK - \
                     TM_ID: {team_member_id}; BUYER_ID: {buyer_id}; TASK_NAME: {task_name}")
@@ -213,7 +221,8 @@ class FUBService:
 
         try:
             response = requests.post(url, headers=headers, json=payload)
-            logger.info(f"{self.__class__.__name__} ( {self.create_task.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+            logger.info(
+                f"{self.__class__.__name__} ( {self.create_task.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
             logger.debug(f"{self.__class__.__name__} ( {self.create_task.__name__} ) -- FUB API DATA - {data}")
@@ -224,7 +233,8 @@ class FUBService:
         return data
 
     def add_tag(self, person_id, tags: list[str]):
-        logger.info(f"{self.__class__.__name__} ( {self.add_tag.__name__} ) -- ADDING TAGS: {tags} TO PERSON {person_id}")
+        logger.info(
+            f"{self.__class__.__name__} ( {self.add_tag.__name__} ) -- ADDING TAGS: {tags} TO PERSON {person_id}")
         url = f"{self.base_url}people/{person_id}?mergeTags=true/"
         headers = {
             "accept": "application/json",
@@ -238,7 +248,8 @@ class FUBService:
 
         try:
             response = requests.put(url, headers=headers, json=payload)
-            logger.info(f"{self.__class__.__name__} ( {self.add_tag.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
+            logger.info(
+                f"{self.__class__.__name__} ( {self.add_tag.__name__} ) -- FUB API STATUS CODE - {response.status_code}")
 
             data = response.json()
             logger.debug(f"{self.__class__.__name__} ( {self.add_tag.__name__} ) -- FUB API DATA - {data}")

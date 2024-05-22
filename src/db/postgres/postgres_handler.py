@@ -58,11 +58,11 @@ class PostgresHandler:
     def __repr__(self) -> str:
         return f"{self.__class__.__name__} ({self.database})"
 
-    def connect(self, 
-                ssh_mode=False, 
-                ssh_server_host: str = None, 
-                ssh_server_port: int = 22, 
-                ssh_username: str = None, 
+    def connect(self,
+                ssh_mode=False,
+                ssh_server_host: str = None,
+                ssh_server_port: int = 22,
+                ssh_username: str = None,
                 ssh_key_path: str = None,
                 local_bind_address=(None, 0),
                 remote_bind_address: tuple = (None, 0)):
@@ -70,7 +70,7 @@ class PostgresHandler:
             if ssh_mode:
                 if not ssh_username or not ssh_key_path:
                     raise ValueError("SSH username and key path must be provided for SSH mode")
-                
+
                 self.ssh_tunnel = SSHTunnelForwarder(
                     (ssh_server_host, ssh_server_port),
                     ssh_username=ssh_username,
@@ -92,7 +92,8 @@ class PostgresHandler:
             )
             logger.debug(f"{self.__class__.__name__} ({self.connect.__name__}) -- CONNECTED TO POSTGRES")
         except Exception as ex:
-            logger.exception(f"{self.__class__.__name__} ({self.connect.__name__}) -- !!! FAILED CONNECTING TO POSTGRES - {ex}")
+            logger.exception(
+                f"{self.__class__.__name__} ({self.connect.__name__}) -- !!! FAILED CONNECTING TO POSTGRES - {ex}")
 
     def disconnect(self):
         if self.connection:
@@ -101,7 +102,6 @@ class PostgresHandler:
         if self.ssh_tunnel:
             self.ssh_tunnel.stop()
             logger.debug(f"{self.__class__.__name__} ({self.disconnect.__name__}) -- CLOSED SSH TUNNEL")
-
 
     def execute_with_connection(self, func, *args, **kwargs):
         try:
@@ -112,7 +112,8 @@ class PostgresHandler:
             self.disconnect()
 
     def select_executor(self, query: str, params: list = []):
-        logger.info(f"{self.__class__.__name__} ({self.select_executor.__name__}) -- EXECUTING SELECT QUERY: {query} - PARAMS: {params}")
+        logger.info(
+            f"{self.__class__.__name__} ({self.select_executor.__name__}) -- EXECUTING SELECT QUERY: {query} - PARAMS: {params}")
 
         data = None
 
@@ -123,14 +124,16 @@ class PostgresHandler:
             logger.debug(f"{self.__class__.__name__} ({self.select_executor.__name__}) -- SQL RESULT: {data}")
 
         except Exception as ex:
-            logger.exception(f"{self.__class__.__name__} ({self.select_executor.__name__}) -- !!! FAILED EXECUTING SQL QUERY - {ex}")
-        
+            logger.exception(
+                f"{self.__class__.__name__} ({self.select_executor.__name__}) -- !!! FAILED EXECUTING SQL QUERY - {ex}")
+
         finally:
             return data
 
     def insert_executor(self, query: str, params: list[tuple]):
-        logger.info(f"{self.__class__.__name__} ({self.insert_executor.__name__}) -- EXECUTING INSERT QUERY: {query} - INSERT PARAMS: {params}")
-        
+        logger.info(
+            f"{self.__class__.__name__} ({self.insert_executor.__name__}) -- EXECUTING INSERT QUERY: {query} - INSERT PARAMS: {params}")
+
         cursor = None
         try:
             cursor = self.connection.cursor()
@@ -140,19 +143,21 @@ class PostgresHandler:
 
         except Exception as ex:
             self.connection.rollback()
-            logger.exception(f"{self.__class__.__name__} ({self.insert_executor.__name__}) -- !!! FAILED INSERTION - {ex}")
+            logger.exception(
+                f"{self.__class__.__name__} ({self.insert_executor.__name__}) -- !!! FAILED INSERTION - {ex}")
 
         finally:
             if cursor: cursor.close()
 
     def delete_executor(self, query: str, params: list, safe: bool = True):
-        logger.warning(f"{self.__class__.__name__} ({self.delete_executor.__name__}) -- EXECUTING DELETE QUERY: {query} - PARAMS: {params}")
+        logger.warning(
+            f"{self.__class__.__name__} ({self.delete_executor.__name__}) -- EXECUTING DELETE QUERY: {query} - PARAMS: {params}")
 
         user_answer = 'y'
 
         if safe:
             user_answer = input("! Confirm Deletion [y / n] >> ")
-        
+
         if user_answer.strip().lower() == 'y':
             cursor = None
             try:
@@ -163,7 +168,8 @@ class PostgresHandler:
 
             except Exception as ex:
                 self.connection.rollback()
-                logger.exception(f"{self.__class__.__name__} ({self.delete_executor.__name__}) -- !!! FAILED DELETION - {ex}")
+                logger.exception(
+                    f"{self.__class__.__name__} ({self.delete_executor.__name__}) -- !!! FAILED DELETION - {ex}")
 
             finally:
                 cursor.close()
@@ -191,7 +197,8 @@ class AsyncPostgresHandler(PostgresHandler):
             )
             logger.debug(f"{self.__class__.__name__} ({self.connect.__name__}) -- CONNECTED TO POSTGRES")
         except Exception as ex:
-            logger.exception(f"{self.__class__.__name__} ({self.connect.__name__}) -- !!! FAILED CONNECTING TO POSTGRES - {ex}")
+            logger.exception(
+                f"{self.__class__.__name__} ({self.connect.__name__}) -- !!! FAILED CONNECTING TO POSTGRES - {ex}")
 
     async def disconnect(self):
         if self.connection:
@@ -207,7 +214,8 @@ class AsyncPostgresHandler(PostgresHandler):
             await self.disconnect()
 
     async def select_executor(self, query: str, params: list = []):
-        logger.info(f"{self.__class__.__name__} ({self.select_executor.__name__}) -- EXECUTING SELECT QUERY: {query} - PARAMS: {params}")
+        logger.info(
+            f"{self.__class__.__name__} ({self.select_executor.__name__}) -- EXECUTING SELECT QUERY: {query} - PARAMS: {params}")
 
         data = None
 
@@ -216,23 +224,27 @@ class AsyncPostgresHandler(PostgresHandler):
             logger.debug(f"{self.__class__.__name__} ({self.select_executor.__name__}) -- SQL RESULT: {data}")
 
         except Exception as ex:
-            logger.exception(f"{self.__class__.__name__} ({self.select_executor.__name__}) -- !!! FAILED EXECUTING SQL QUERY - {ex}")
-        
+            logger.exception(
+                f"{self.__class__.__name__} ({self.select_executor.__name__}) -- !!! FAILED EXECUTING SQL QUERY - {ex}")
+
         finally:
             return data
 
     async def insert_executor(self, query: str, params: list[tuple]):
-        logger.info(f"{self.__class__.__name__} ({self.insert_executor.__name__}) -- EXECUTING INSERT QUERY: {query} - INSERT PARAMS: {params}")
-        
+        logger.info(
+            f"{self.__class__.__name__} ({self.insert_executor.__name__}) -- EXECUTING INSERT QUERY: {query} - INSERT PARAMS: {params}")
+
         try:
             await self.connection.executemany(query, params)
             logger.info(f"{self.__class__.__name__} ({self.insert_executor.__name__}) -- BULK INSERT SUCCESSFUL")
 
         except Exception as ex:
-            logger.exception(f"{self.__class__.__name__} ({self.insert_executor.__name__}) -- !!! FAILED INSERTION - {ex}")
+            logger.exception(
+                f"{self.__class__.__name__} ({self.insert_executor.__name__}) -- !!! FAILED INSERTION - {ex}")
 
     async def delete_executor(self, query: str, params: list, safe: bool = True):
-        logger.warning(f"{self.__class__.__name__} ({self.delete_executor.__name__}) -- EXECUTING DELETE QUERY: {query} - PARAMS: {params}")
+        logger.warning(
+            f"{self.__class__.__name__} ({self.delete_executor.__name__}) -- EXECUTING DELETE QUERY: {query} - PARAMS: {params}")
 
         user_answer = 'y'
 
@@ -245,6 +257,7 @@ class AsyncPostgresHandler(PostgresHandler):
                 logger.info(f"{self.__class__.__name__} ({self.delete_executor.__name__}) -- DELETE SUCCESSFUL")
 
             except Exception as ex:
-                logger.exception(f"{self.__class__.__name__} ({self.delete_executor.__name__}) -- !!! FAILED DELETION - {ex}")
+                logger.exception(
+                    f"{self.__class__.__name__} ({self.delete_executor.__name__}) -- !!! FAILED DELETION - {ex}")
         else:
             sys.stdout.write("Aborted Deletion")
