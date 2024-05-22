@@ -1,6 +1,8 @@
-from services.fub import FUBService
 import os
-from dotenv import  load_dotenv
+
+from dotenv import load_dotenv
+
+from services.fub import FUBService
 
 load_dotenv()
 

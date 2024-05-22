@@ -1,4 +1,5 @@
 import logging
+
 from . import ROOT_DIR
 
 legacy_logger = logging.getLogger(__name__)

@@ -1,7 +1,6 @@
-from utils import lead_auto_assignment as utils
-from config.logging_config import logger
-
 from config.database import mysql, mysql_queries
+from config.logging_config import logger
+from utils import lead_auto_assignment as utils
 
 
 def lead_auto_assignment(payload: dict):
