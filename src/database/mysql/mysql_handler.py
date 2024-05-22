@@ -4,7 +4,8 @@ import sys
 import aiomysql
 import pymysql
 
-from config.loguru_logger import logger
+# from config.loguru_logger import logger
+from config.logging_config import logger
 
 
 class MySQLHandler:

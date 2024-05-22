@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 
-# from config.logging_config import logger
 from schemas.index import DefaultResponse
 
 fub_router = APIRouter()

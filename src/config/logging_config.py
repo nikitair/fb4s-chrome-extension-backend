@@ -1,9 +1,9 @@
-import os
 import logging
-
-from . import ROOT_DIR, LOGTRAIL_API_KEY
+import os
 
 from logtail import LogtailHandler
+
+from . import LOGTRAIL_API_KEY, ROOT_DIR
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

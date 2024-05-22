@@ -5,7 +5,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from config.loguru_logger import configure_logger, logger
+# from config.loguru_logger import configure_logger, logger
+from config.logging_config import logger
 from config.middleware import log_middleware
 from routers.fub import fub_router
 from routers.lead_auto_assignment import las_router
@@ -18,7 +19,6 @@ async def server_lifespan(app: FastAPI):
     """
     FastAPI server Start and Shutdown events handler
     """
-    configure_logger()
 
     # set timezone to UTC
     os.environ['TZ'] = 'UTC'
