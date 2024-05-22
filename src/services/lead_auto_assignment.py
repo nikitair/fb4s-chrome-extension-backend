@@ -1,4 +1,4 @@
-from utils.leadautoassignment import na_formatter
+from utils.lead_auto_assignment import na_formatter
 from config.logging_config import logger
 
 
