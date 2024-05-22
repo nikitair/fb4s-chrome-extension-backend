@@ -47,10 +47,10 @@ def lead_auto_assignment(payload: dict):
     logger.debug(f"POLYGON SEARCH PARAMETERS: CITY - {city}; PROVINCE - {province}; POSTALCODE - {postalcode}")
 
     # evaluate buyer name
-    # sql_result = mysql.execute_with_connection(
-    #     func=mysql.select_executor,
-    #     query=mysql_queries.get_buyer_firstname_by_email,
-    #     params=[buyer_email]
-    # )
+    sql_result = mysql.execute_with_connection(
+        func=mysql.select_executor,
+        query=mysql_queries.get_buyer_firstname_by_email,
+        params=[buyer_email]
+    )
 
     return response

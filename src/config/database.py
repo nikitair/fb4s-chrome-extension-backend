@@ -2,9 +2,9 @@ import os
 
 from dotenv import load_dotenv
 
-from database.mysql.mysql_handler import AsyncMySQLHandler
+from database.mysql.mysql_handler import MySQLHandler
 from database.mysql.mysql_sql import MySQLQueries
-from database.postgres.postgres_handler import AsyncPostgresHandler
+from database.postgres.postgres_handler import PostgresHandler
 
 load_dotenv()
 
@@ -28,7 +28,7 @@ MYSQL_HOST = os.getenv("MYSQL_HOST", "")
 MYSQL_PORT = int(os.getenv("MYSQL_PORT", 0))
 MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
 
-postgres = AsyncPostgresHandler(
+postgres = PostgresHandler(
     database=POSTGRES_DATABASE,
     user=POSTGRES_USER,
     password=POSTGRES_PASSWORD,
@@ -36,7 +36,7 @@ postgres = AsyncPostgresHandler(
     port=POSTGRES_PORT
 )
 
-mysql = AsyncMySQLHandler(
+mysql = MySQLHandler(
     database=MYSQL_DATABASE,
     user=MYSQL_USER,
     password=MYSQL_PASSWORD,
