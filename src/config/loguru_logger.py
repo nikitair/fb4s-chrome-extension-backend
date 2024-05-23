@@ -1,13 +1,11 @@
 import os
-import time
-from datetime import datetime
-
 from loguru import logger
-
 from . import ROOT_DIR
 
+log_file_path = os.path.join(ROOT_DIR, "src", "logs", "app.log")
+
 app_log_config = {
-    "sink": f"{ROOT_DIR}/src/logs/app.log",
+    "sink": log_file_path,
     "format": "{time:YYYY-MM-DD HH:mm} UTC - {level} - {name}:{function}:{line} - {message}",
     "level": "DEBUG",
     "rotation": "100 MB",
@@ -15,22 +13,5 @@ app_log_config = {
     "catch": True,
 }
 
-server_log_config = {
-
-    "sink": f"{ROOT_DIR}/src/logs/server.log",
-    "format": "{time:YYYY-MM-DD HH:mm} UTC - {level} - {name}:{function}:{line} - {message}",
-    "level": "INFO",
-    "rotation": "50 MB",
-    "enqueue": True,
-    "catch": True
-}
-
-
-def configure_logger():
-    logger.remove()
-    logger.add(**app_log_config)
-    logger.debug("LOGGER CONFIGURED")
-
-# def configure_server_logger():
-#     logger.remove()
-#     logger.add(**server_log_config)
+logger = logger.bind()
+logger.add(**app_log_config)
