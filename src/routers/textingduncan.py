@@ -27,7 +27,7 @@ async def send_sms_view(request: SendSMS):
     result = {
         "success": False,
         "to_phone_number": to_number,
-        "sms_body": sms_body
+        "sms_message": sms_body
     }
 
     is_sent = services.send_sms(to_number, sms_body)
