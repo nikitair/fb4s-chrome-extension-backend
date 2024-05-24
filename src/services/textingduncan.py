@@ -4,6 +4,11 @@ from utils import textingduncan as utils
 from . import fub, twilio
 
 
+def send_sms(to_number: str, sms_body: str):
+    sms_sending_result = twilio.send_sms(to_number, sms_body)
+    return sms_sending_result.get("success", False)
+
+
 def fub_note_created(note_id: int) -> dict:
     result = {
         "sms_text": None,

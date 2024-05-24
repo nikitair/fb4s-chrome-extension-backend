@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 from config.logging_config import logger
 from schemas.index import DefaultResponse
-from schemas.textingduncan import FUBNoteCreated, FUBNoteCreatedResponse
+from schemas.textingduncan import FUBNoteCreated, FUBNoteCreatedResponse, SendSMS, SendSMSResponse
 from services import textingduncan as services
 
 td_router = APIRouter()
@@ -17,7 +17,31 @@ async def td_index_view():
     }
 
 
-@td_router.post("/fub/note-created/", response_model=FUBNoteCreatedResponse)
+@td_router.post("/sms/send-sms/", response_model=SendSMSResponse)
+async def send_sms_view(request: SendSMS):
+    payload = dict(request)
+    logger.debug(f"PAYLOAD RECEIVED - {payload}")
+    to_number = payload.get("to_number")
+    sms_body = payload.get("sms_body")
+
+    result = {
+        "success": False,
+        "to_phone_number": to_number,
+        "sms_body": sms_body
+    }
+
+    is_sent = services.send_sms(to_number, sms_body)
+
+    if is_sent:
+        logger.info(f"SMS SUCCESSFULLY SENT TO - {to_number}")
+        result["success"] = True
+    else:
+        logger.error(f"! FAILED SENDING SMS TO - {to_number}")
+
+    return result
+
+
+@td_router.post("/sms/fub/note-created/", response_model=FUBNoteCreatedResponse)
 async def td_fub_note_created_webhook(request: FUBNoteCreated):
     result = dict()
     payload = dict(request)
@@ -32,3 +56,6 @@ async def td_fub_note_created_webhook(request: FUBNoteCreated):
         "success": result.get("sms_sent", False),
         "data": result
         }
+
+
+

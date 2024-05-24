@@ -9,9 +9,15 @@ class FUBNoteCreated(BaseModel):
     uri: str
 
 
-class SendSMSSchema(BaseModel):
+class SendSMS(BaseModel):
     to_number: str
     sms_body: str
+
+
+class SendSMSResponse(BaseModel):
+    success: bool
+    to_phone_number: str | None = None
+    sms_message: str | None = None
 
 
 class NoteProcessing(BaseModel):
