@@ -1,5 +1,7 @@
 import os
+
 from loguru import logger
+
 from . import ROOT_DIR
 
 log_file_path = os.path.join(ROOT_DIR, "src", "logs", "app.log")
