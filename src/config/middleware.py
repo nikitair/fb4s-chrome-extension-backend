@@ -17,8 +17,7 @@ async def log_middleware(request: Request, call_next):
 
     response: Response = await call_next(request)
     response_data = {
-        'status_code': response.status_code,
-        'data': response.body
+        'status_code': response.status_code
     }
     logger.info(f"SERVER RESPONSE - {response_data}")
 

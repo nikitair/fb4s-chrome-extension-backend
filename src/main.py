@@ -1,9 +1,12 @@
 import uvicorn
-from config.app import templates
+import os
+# from config.app import templates
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
 
 from config.app import app
 # from config.loguru_logger import logger
-from config.logging_config import logger
+# from config.logging_confe3ig import logger
 
 
 @app.get('/', tags=['index'])
@@ -16,8 +19,10 @@ async def index_view():
 
 
 @app.get('/.env', tags=['index'])
-async def feel_free_view():
-    return templates.TemplateResponse("index.html", {"request": None}, status_code=402)
+async def feel_free_view(request: Request):
+    template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
+    templates = Jinja2Templates(directory=template_dir)
+    return templates.TemplateResponse("feel_free.html", {"request": request}, status_code=402)
 
 
 if __name__ == "__main__":
