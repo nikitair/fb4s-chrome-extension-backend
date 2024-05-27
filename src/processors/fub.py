@@ -3,7 +3,6 @@ import base64
 import requests
 
 from config.loguru_logger import logger
-from utils import fub
 
 
 class FUBProcessor:

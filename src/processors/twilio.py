@@ -1,4 +1,3 @@
-import os
 
 from dotenv import load_dotenv
 from twilio.rest import Client
@@ -40,7 +39,7 @@ class TwilioProcessor:
             result["sms_id"] = sms.sid
 
         except Exception:
-            logger.exception(f"(Twilio) - !!! TWILIO ERROR")
+            logger.exception("(Twilio) - !!! TWILIO ERROR")
 
         return result
 
@@ -53,7 +52,7 @@ class TwilioProcessor:
             # status = self.client.messages(sid).fetch().error_code
             logger.info(f"(Twilio) - DELIVERY STATUS - {status}")
         except Exception:
-            logger.exception(f"(Twilio) - !!! TWILIO ERROR")
+            logger.exception("(Twilio) - !!! TWILIO ERROR")
 
         return True if status == "delivered" else False
 

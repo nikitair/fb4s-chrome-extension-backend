@@ -1,4 +1,3 @@
-from .conftest import test_client
 
 
 def test_index_get(test_client):
