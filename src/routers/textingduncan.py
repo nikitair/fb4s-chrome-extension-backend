@@ -43,19 +43,24 @@ async def send_sms_view(request: SendSMS):
 
 @td_router.post("/sms/fub/note-created/", response_model=FUBNoteCreatedResponse)
 async def td_fub_note_created_webhook(request: FUBNoteCreated):
+    """
+    {
+    'eventId': '3f692eb1-cd1d-411b-a3eb-9c811c22bc92',
+    'eventCreated': '2024-05-27T12:14:14+00:00',
+    'event': 'notesCreated',
+    'resourceIds': [30189],
+    'uri': 'https://api.followupboss.com/v1/notes/30189'}
+    """
     result = dict()
     payload = dict(request)
     logger.debug(f"RAW PAYLOAD - {payload}")
 
-    note_ids = payload["resourceIds"]
-    if note_ids:
-        result = services.fub_note_created(note_ids[0])
+    note_ids: list = payload["resourceIds"]
+    if note_ids and isinstance(note_ids, list):
+        result = services.fub_note_created(list(set(note_ids))[-1])
         logger.info(f"NOTE PROCESSING RESPONSE DATA - {result}")
 
     return {
         "success": result.get("sms_sent", False),
         "data": result
-        }
-
-
-
+    }

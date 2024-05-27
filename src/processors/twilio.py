@@ -59,8 +59,3 @@ class TwilioProcessor:
 
     def __str__(self):
         return self.__class__.__name__
-
-
-if __name__ == "__main__":
-    twilio = TwilioProcessor()
-    ...
