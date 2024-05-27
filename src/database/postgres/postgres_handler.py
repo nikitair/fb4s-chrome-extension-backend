@@ -49,6 +49,7 @@ class PostgresHandler:
         self.port = port
 
         self.connection = None
+        self.tunnel = None
 
         logger.debug(f"({self.__class__.__name__}) - CLASS INITIALIZED")
 
@@ -58,15 +59,37 @@ class PostgresHandler:
     def __repr__(self) -> str:
         return f"{self.__class__.__name__} ({self.database})"
 
-    def connect(self):
+    def connect(self,
+                ssh_mode=False,
+                ssh_host=None,
+                ssh_port=None,
+                ssh_username=None,
+                ssh_key_path=None,
+                local_port=None):
         try:
-            self.connection = psycopg2.connect(
-                dbname=self.database,
-                user=self.user,
-                password=self.password,
-                host=self.host,
-                port=self.port
-            )
+            if ssh_mode:
+                logger.info(f"({self.__class__.__name__}) - SSH TUNNEL MODE")
+
+                self.tunnel = SSHTunnelForwarder(
+                    (ssh_host, ssh_port),
+                    ssh_username=ssh_username,
+                    ssh_pkey=ssh_key_path,
+                    remote_bind_address=(self.host, self.port),
+                    local_bind_address=("localhost", local_port)
+                )
+                self.tunnel.start()
+                logger.debug(f"({self.__class__.__name__}) - SSH TUNNEL ESTABLISHED")
+
+                self.connection = psycopg2.connect(dbname=self.database, user=self.user,
+                                                   password=self.password, host="localhost", port=local_port)
+            else:
+                self.connection = psycopg2.connect(
+                    dbname=self.database,
+                    user=self.user,
+                    password=self.password,
+                    host=self.host,
+                    port=self.port
+                )
             logger.debug(f"({self.__class__.__name__}) - CONNECTED TO POSTGRES")
         except Exception as ex:
             logger.exception(
@@ -76,6 +99,9 @@ class PostgresHandler:
         if self.connection:
             self.connection.close()
             logger.debug(f"({self.__class__.__name__}) - CLOSED POSTGRES CONNECTION")
+        if self.tunnel:
+            self.tunnel.stop()
+            logger.debug(f"({self.__class__.__name__}) - CLOSED SSH TUNNEL")
 
     def execute_with_connection(self, func, *args, **kwargs):
         try:
