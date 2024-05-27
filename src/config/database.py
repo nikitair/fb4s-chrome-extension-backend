@@ -45,3 +45,4 @@ mysql = MySQLHandler(
 )
 
 mysql_queries = MySQLQueries
+
