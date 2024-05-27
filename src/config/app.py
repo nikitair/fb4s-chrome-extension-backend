@@ -1,6 +1,8 @@
 import os
 import time
 from contextlib import asynccontextmanager
+from fastapi.templating import Jinja2Templates
+from . import ROOT_DIR
 
 from fastapi import FastAPI
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -46,3 +48,8 @@ app.include_router(fub_router)
 app.include_router(router=fub_router, prefix='/fub', tags=['fub'])
 app.include_router(router=td_router, prefix='/textingduncan', tags=['Texting Duncan'])
 app.include_router(router=las_router, prefix='/las', tags=['Lead Auto Assignment'])
+
+
+# register templates
+templates_dir = os.path.join(ROOT_DIR, "templates")
+templates = Jinja2Templates(directory=templates_dir)
