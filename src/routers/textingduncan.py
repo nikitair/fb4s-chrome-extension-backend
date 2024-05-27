@@ -2,7 +2,8 @@ from fastapi import APIRouter
 
 from config.logging_config import logger
 from schemas.index import DefaultResponse
-from schemas.textingduncan import FUBNoteCreated, FUBNoteCreatedResponse, SendSMS, SendSMSResponse
+from schemas.textingduncan import (FUBNoteCreated, FUBNoteCreatedResponse,
+                                   SendSMS, SendSMSResponse)
 from services import textingduncan as services
 
 td_router = APIRouter()
