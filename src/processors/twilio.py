@@ -15,7 +15,7 @@ class TwilioProcessor:
         self.auth_token = auth_token
         self.from_phone_number = from_phone_number
         self.client = Client(self.sid, self.auth_token)
-        logger.info("(Twilio) - CLASS INITIALIZED")
+        logger.debug("(Twilio) - CLASS INITIALIZED")
 
     def send_sms(self, phone_number, message):
         phone_number = utils.format_phone_number(phone_number)
