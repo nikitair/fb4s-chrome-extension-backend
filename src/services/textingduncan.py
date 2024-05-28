@@ -1,7 +1,7 @@
 from config.logging_config import logger
 from utils import textingduncan as utils
 
-from . import fub, twilio, retool
+from . import fub, retool, twilio
 
 
 def send_sms(to_number: str, sms_body: str):
@@ -66,7 +66,13 @@ def fub_note_created(note_id: int) -> dict:
     return result
 
 
-def send_mailwizz_campaign_sms(campaign_special_id: int, to_phone_number: str, campaign_day: int, jerk_realtor_name: str = None, tm_name: str = None, mls: str = None):
+def send_mailwizz_campaign_sms(campaign_special_id: int, 
+                               to_phone_number: str, 
+                               campaign_day: int, 
+                               jerk_realtor_name: str = None, 
+                               tm_name: str = None, 
+                               mls: str = None) -> str | None:
+    
     logger.info(f"PROCESSING MAILWIZZ CAMPAIGN DATA")
 
     # getting sms template if exists

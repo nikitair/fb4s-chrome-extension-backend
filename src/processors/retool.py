@@ -1,6 +1,8 @@
-from config.logging_config import logger
 import os
+
 import requests
+
+from config.logging_config import logger
 
 
 class RetoolProcessor:

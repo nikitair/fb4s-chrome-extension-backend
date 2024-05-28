@@ -1,10 +1,12 @@
-import uvicorn
 import os
+
+import uvicorn
+from fastapi import Request
 # from config.app import templates
 from fastapi.templating import Jinja2Templates
-from fastapi import Request
 
 from config.app import app
+
 # from config.loguru_logger import logger
 # from config.logging_confe3ig import logger
 

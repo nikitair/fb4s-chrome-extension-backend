@@ -1,10 +1,9 @@
 import os
 import time
 from contextlib import asynccontextmanager
-from fastapi.templating import Jinja2Templates
-from . import ROOT_DIR
 
 from fastapi import FastAPI
+from fastapi.templating import Jinja2Templates
 from starlette.middleware.base import BaseHTTPMiddleware
 
 # from config.loguru_logger import configure_logger, logger
@@ -13,6 +12,8 @@ from config.middleware import log_middleware
 from routers.fub import fub_router
 from routers.lead_auto_assignment import las_router
 from routers.textingduncan import td_router
+
+from . import ROOT_DIR
 
 
 # FastAPI Server Start / Shutdown lifespan manager
