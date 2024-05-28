@@ -9,3 +9,6 @@ test-coverage:
 
 test-coverage-html:
 	pytest --cov=src --cov-report=html
+
+clear:
+	find . | grep -E "(/__pycache__$|\.pyc$|\.pyo$)" | xargs rm -rf
