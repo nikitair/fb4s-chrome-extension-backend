@@ -69,8 +69,8 @@ async def fub_note_created_webhook(request: FUBNoteCreated):
 
 
 
-@td_router.post("/sms/mailwizz", response_class=MailWizzWebhookResponse)
-async def mailwizz_webhook_view(request: MailWizzWebhook):
+@td_router.post("/sms/mailwizz")
+async def mailwizz_webhook_view(request: MailWizzWebhook) -> MailWizzWebhookResponse:
 
     result = {
         "success": False,
