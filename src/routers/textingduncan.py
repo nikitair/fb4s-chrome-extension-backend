@@ -4,7 +4,7 @@ from fastapi import Request
 from config.logging_config import logger
 from schemas.index import DefaultResponse
 from schemas.textingduncan import (FUBNoteCreated, FUBNoteCreatedResponse,
-                                   SendSMS, SendSMSResponse)
+                                   SendSMS, SendSMSResponse, MailWizzWebhook, MailWizzWebhookResponse)
 from services import textingduncan as services
 
 td_router = APIRouter()
@@ -69,15 +69,16 @@ async def fub_note_created_webhook(request: FUBNoteCreated):
 
 
 
-@td_router.post("/sms/mailwizz", response_class=DefaultResponse)
-async def mailwizz_webhook_view(request: Request):
+@td_router.post("/sms/mailwizz", response_class=MailWizzWebhookResponse)
+async def mailwizz_webhook_view(request: MailWizzWebhook):
 
     result = {
-        "success": False
+        "success": False,
+        "sms_template": None
     }
 
-    payload = await request.json() 
-    logger.info(f"{mailwizz_webhook_view.__name__} -- PAYLOAD RECEIVED - {payload}")
+    payload = dict(request)
+    logger.info(f"PAYLOAD RECEIVED - {payload}")
 
     campaign_special_id = payload["campaign_special_id"]
     to_phone_number = payload["phone_number"]
@@ -98,6 +99,6 @@ async def mailwizz_webhook_view(request: Request):
     )
     if service_result:
         result["success"] = True
+        result["sms_template"] = service_result
 
     return result
-

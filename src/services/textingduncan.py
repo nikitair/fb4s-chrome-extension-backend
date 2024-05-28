@@ -75,8 +75,8 @@ def send_mailwizz_campaign_sms(campaign_special_id: int, to_phone_number: str, c
     if retool_response["success"] is True:
 
         # sending sms
-        template: str = retool_response["sms_template"]
-        logger.debug(f"RAW SMS TEMPLATE - {template}")
+        sms_template: str = retool_response["sms_template"]
+        logger.debug(f"RAW SMS TEMPLATE - {sms_template}")
 
         # Jerk Realtors Logic:
         if campaign_special_id == 9:
@@ -88,14 +88,15 @@ def send_mailwizz_campaign_sms(campaign_special_id: int, to_phone_number: str, c
 
             match campaign_day:
                 case 1:
-                    template = template.replace('zzzzz', tm_name)
-                    template = template.replace('xxxxx', mls)
+                    sms_template = sms_template.replace('zzzzz', tm_name)
+                    sms_template = sms_template.replace('xxxxx', mls)
 
                 case 2:
-                    template = template.replace('yyyyy', jerk_realtor_name)
+                    sms_template = sms_template.replace('yyyyy', jerk_realtor_name)
 
                 case _:
                     pass
         
-        logger.info(f"SMS TEMPLATE TO SEND - {template}; RECEIVER - {to_phone_number}")
-        return send_sms(to_phone_number, template)
+        logger.info(f"SMS TEMPLATE TO SEND - {sms_template}; RECEIVER - {to_phone_number}")
+        sms_sending_result = send_sms(to_phone_number, sms_template)
+        return sms_template if sms_sending_result else None

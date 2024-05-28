@@ -32,3 +32,17 @@ class NoteProcessing(BaseModel):
 class FUBNoteCreatedResponse(BaseModel):
     success: bool
     data: NoteProcessing
+
+
+class MailWizzWebhook(BaseModel):
+    campaign_special_id: int
+    to_phone_number: str 
+    campaign_day: int
+    jerk_realtor_name: str | None = None
+    tm_name: str | None = None
+    mls: str | None = None
+
+
+class MailWizzWebhookResponse(BaseModel):
+    success: bool
+    sms_template: str | None = None
