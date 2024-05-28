@@ -36,7 +36,7 @@ class FUBNoteCreatedResponse(BaseModel):
 
 class MailWizzWebhook(BaseModel):
     campaign_special_id: int
-    to_phone_number: str 
+    to_phone_number: str
     campaign_day: int
     jerk_realtor_name: str | None = None
     tm_name: str | None = None

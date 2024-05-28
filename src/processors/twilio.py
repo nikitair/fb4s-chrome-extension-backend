@@ -35,7 +35,8 @@ class TwilioProcessor:
             )
             logger.info(f"(TWILIO) - SID - {sms.sid}; STATUS - {sms.status}")
 
-            result["success"] = True if sms.status in ("delivered", "queued", "sending", "sent", "receiving", "received", "accepted") else False
+            result["success"] = True if sms.status in (
+                "delivered", "queued", "sending", "sent", "receiving", "received", "accepted") else False
             result["sms_id"] = sms.sid
 
         except Exception:

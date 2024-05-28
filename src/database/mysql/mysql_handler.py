@@ -10,7 +10,7 @@ from config.logging_config import logger
 class MySQLHandler:
     """
     MySQL handler.
-    
+
     How to use:
 
     mysql = MySQLHandler(
@@ -78,7 +78,8 @@ class MySQLHandler:
     def disconnect(self):
         if self.connection:
             self.connection.close()
-            logger.debug(f"({self.__class__.__name__}) - CLOSED MYSQL CONNECTION")
+            logger.debug(
+                f"({self.__class__.__name__}) - CLOSED MYSQL CONNECTION")
 
     def execute_with_connection(self, func, *args, **kwargs):
         """
@@ -126,7 +127,8 @@ class MySQLHandler:
             cursor = self.connection.cursor()
             cursor.executemany(query, params)
             self.connection.commit()
-            logger.info(f"({self.__class__.__name__}) - BULK INSERT SUCCESSFUL")
+            logger.info(
+                f"({self.__class__.__name__}) - BULK INSERT SUCCESSFUL")
         except Exception as ex:
             self.connection.rollback()
             logger.exception(
@@ -190,7 +192,8 @@ class AsyncMySQLHandler(MySQLHandler):
         if self.pool:
             self.pool.close()
             await self.pool.wait_closed()
-            logger.debug(f"({self.__class__.__name__}) - CLOSED MYSQL CONNECTION")
+            logger.debug(
+                f"({self.__class__.__name__}) - CLOSED MYSQL CONNECTION")
 
     async def execute_with_connection(self, func, *args, **kwargs):
         """
@@ -219,7 +222,8 @@ class AsyncMySQLHandler(MySQLHandler):
                 try:
                     await cursor.execute(query, params)
                     data = await cursor.fetchall()
-                    logger.debug(f"({self.__class__.__name__})- SQL RESULT: {data}")
+                    logger.debug(
+                        f"({self.__class__.__name__})- SQL RESULT: {data}")
                 except Exception as ex:
                     logger.exception(
                         f"({self.__class__.__name__})- !!! FAILED EXECUTING SQL QUERY - {ex}")
@@ -258,7 +262,8 @@ class AsyncMySQLHandler(MySQLHandler):
                 async with conn.cursor() as cursor:
                     try:
                         await cursor.execute(query, params)
-                        logger.info(f"({self.__class__.__name__}) - DELETE SUCCESSFUL")
+                        logger.info(
+                            f"({self.__class__.__name__}) - DELETE SUCCESSFUL")
                     except Exception as ex:
                         logger.exception(
                             f"({self.__class__.__name__}) - !!! FAILED DELETION - {ex}")

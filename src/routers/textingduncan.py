@@ -68,7 +68,6 @@ async def fub_note_created_webhook(request: FUBNoteCreated):
     }
 
 
-
 @td_router.post("/sms/mailwizz")
 async def mailwizz_webhook_view(request: MailWizzWebhook) -> MailWizzWebhookResponse:
 
@@ -90,8 +89,8 @@ async def mailwizz_webhook_view(request: MailWizzWebhook) -> MailWizzWebhookResp
     mls = payload.get("mls", "N/A")
 
     service_result = services.send_mailwizz_campaign_sms(
-        campaign_special_id, 
-        to_phone_number, 
+        campaign_special_id,
+        to_phone_number,
         campaign_day,
         jerk_realtor_name,
         tm_name,

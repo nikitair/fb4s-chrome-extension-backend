@@ -8,7 +8,8 @@ from . import LOGTRAIL_API_KEY, ROOT_DIR
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-formatter = logging.Formatter('%(asctime)s UTC - %(levelname)s - %(module)s:%(funcName)s:%(lineno)d - %(message)s')
+formatter = logging.Formatter(
+    '%(asctime)s UTC - %(levelname)s - %(module)s:%(funcName)s:%(lineno)d - %(message)s')
 
 logs_file_path = os.path.join(ROOT_DIR, "src", "logs", "app.log")
 

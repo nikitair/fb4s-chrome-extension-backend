@@ -40,15 +40,18 @@ app = FastAPI(
 )
 
 # middleware registration
-app.add_middleware(middleware_class=BaseHTTPMiddleware, dispatch=log_middleware)
+app.add_middleware(middleware_class=BaseHTTPMiddleware,
+                   dispatch=log_middleware)
 
 # include routers
 app.include_router(fub_router)
 
 # routers registration
 app.include_router(router=fub_router, prefix='/fub', tags=['fub'])
-app.include_router(router=td_router, prefix='/textingduncan', tags=['Texting Duncan'])
-app.include_router(router=las_router, prefix='/las', tags=['Lead Auto Assignment'])
+app.include_router(router=td_router, prefix='/textingduncan',
+                   tags=['Texting Duncan'])
+app.include_router(router=las_router, prefix='/las',
+                   tags=['Lead Auto Assignment'])
 
 
 # register templates
