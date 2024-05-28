@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from fastapi import Request
 
 from config.logging_config import logger
 from schemas.index import DefaultResponse
@@ -43,7 +44,7 @@ async def send_sms_view(request: SendSMS):
 
 
 @td_router.post("/sms/fub/note-created/", response_model=FUBNoteCreatedResponse)
-async def td_fub_note_created_webhook(request: FUBNoteCreated):
+async def fub_note_created_webhook(request: FUBNoteCreated):
     """
     {
     'eventId': '3f692eb1-cd1d-411b-a3eb-9c811c22bc92',
@@ -65,3 +66,38 @@ async def td_fub_note_created_webhook(request: FUBNoteCreated):
         "success": result.get("sms_sent", False),
         "data": result
     }
+
+
+
+@td_router.post("/sms/mailwizz", response_class=DefaultResponse)
+async def mailwizz_webhook_view(request: Request):
+
+    result = {
+        "success": False
+    }
+
+    payload = await request.json() 
+    logger.info(f"{mailwizz_webhook_view.__name__} -- PAYLOAD RECEIVED - {payload}")
+
+    campaign_special_id = payload["campaign_special_id"]
+    to_phone_number = payload["phone_number"]
+    campaign_day = payload["campaign_day"]
+
+    # Jerk Realtors Logic
+    jerk_realtor_name = payload.get("jerk_realtor_name", "Realtor")
+    tm_name = payload.get("tm_name", "Willow Graznow")
+    mls = payload.get("mls", "N/A")
+
+    service_result = services.send_mailwizz_campaign_sms(
+        campaign_special_id, 
+        to_phone_number, 
+        campaign_day,
+        jerk_realtor_name,
+        tm_name,
+        mls
+    )
+    if service_result:
+        result["success"] = True
+
+    return result
+

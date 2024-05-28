@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 
 from processors.fub import FUBProcessor
 from processors.twilio import TwilioProcessor
+from processors.retool import RetoolProcessor
 
 load_dotenv()
 
@@ -24,3 +25,5 @@ twilio = TwilioProcessor(
     auth_token=TWILIO_AUTH_TOKEN,
     from_phone_number=TWILIO_FROM_NUMBER
 )
+
+retool = RetoolProcessor()

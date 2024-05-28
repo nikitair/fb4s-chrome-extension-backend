@@ -1,7 +1,7 @@
 from config.logging_config import logger
 from utils import textingduncan as utils
 
-from . import fub, twilio
+from . import fub, twilio, retool
 
 
 def send_sms(to_number: str, sms_body: str):
@@ -64,3 +64,38 @@ def fub_note_created(note_id: int) -> dict:
         result["sms_text"] = note_message
     
     return result
+
+
+def send_mailwizz_campaign_sms(campaign_special_id: int, to_phone_number: str, campaign_day: int, jerk_realtor_name: str = None, tm_name: str = None, mls: str = None):
+    logger.info(f"PROCESSING MAILWIZZ CAMPAIGN DATA")
+
+    # getting sms template if exists
+    retool_response = retool.get_sms_template(campaign_special_id, campaign_day)
+
+    if retool_response["success"] is True:
+
+        # sending sms
+        template: str = retool_response["sms_template"]
+        logger.debug(f"RAW SMS TEMPLATE - {template}")
+
+        # Jerk Realtors Logic:
+        if campaign_special_id == 9:
+            logger.info(f"JERK REALTORS LOGIC")
+
+            logger.info(f"TM NAME - {tm_name}")
+            logger.info(f"MLS - {mls}")
+            logger.info(f"JR NAME - {jerk_realtor_name}")
+
+            match campaign_day:
+                case 1:
+                    template = template.replace('zzzzz', tm_name)
+                    template = template.replace('xxxxx', mls)
+
+                case 2:
+                    template = template.replace('yyyyy', jerk_realtor_name)
+
+                case _:
+                    pass
+        
+        logger.info(f"SMS TEMPLATE TO SEND - {template}; RECEIVER - {to_phone_number}")
+        return send_sms(to_phone_number, template)
