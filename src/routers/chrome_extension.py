@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from schemas import chrome_extension as schemas
+# from schemas import chrome_extension as schemas
 from schemas.index import DefaultResponse
 
 
@@ -14,3 +14,9 @@ async def chrome_extension_index():
         "router": "Chrome Extension",
     }
     
+
+@ce_router.get("/buyer")
+async def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, profile_ikey: str = None):
+    return {
+        "message": "Under Development"
+    }
