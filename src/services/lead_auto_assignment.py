@@ -44,8 +44,7 @@ def lead_auto_assignment(payload: dict):
 
     postalcode = utils.format_postalcode(postalcode)
 
-    logger.debug(f"POLYGON SEARCH PARAMETERS: CITY - {city}; PROVINCE - {
-                 province}; POSTALCODE - {postalcode}")
+    logger.debug(f"POLYGON SEARCH PARAMETERS: CITY - {city}; PROVINCE - {province}; POSTALCODE - {postalcode}")
 
     # evaluate buyer name
     sql_result = mysql.execute_with_connection(

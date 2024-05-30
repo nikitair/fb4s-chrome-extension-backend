@@ -80,7 +80,7 @@ async def mailwizz_webhook_view(request: MailWizzWebhook) -> MailWizzWebhookResp
     logger.info(f"PAYLOAD RECEIVED - {payload}")
 
     campaign_special_id = payload["campaign_special_id"]
-    to_phone_number = payload["phone_number"]
+    to_phone_number = payload["to_phone_number"]
     campaign_day = payload["campaign_day"]
 
     # Jerk Realtors Logic
