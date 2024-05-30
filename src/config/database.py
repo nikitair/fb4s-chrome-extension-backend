@@ -2,9 +2,9 @@ import os
 
 from dotenv import load_dotenv
 
-from db.mysql.mysql_handler import MySQLHandler
-from db.mysql.mysql_sql import MySQLQueries
-from db.postgres.postgres_handler import PostgresHandler
+from database.mysql.mysql_handler import MySQLHandler
+from database.mysql.mysql_sql import MySQLQueries
+from database.postgres.postgres_handler import PostgresHandler
 
 load_dotenv()
 
@@ -22,13 +22,11 @@ POSTGRES_HOST = os.getenv("POSTGRES_HOST", "")
 POSTGRES_PORT = int(os.getenv("POSTGRES_PORT", 0))
 POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "")
 
-
 MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "")
 MYSQL_USER = os.getenv("MYSQL_USER", "")
 MYSQL_HOST = os.getenv("MYSQL_HOST", "")
 MYSQL_PORT = int(os.getenv("MYSQL_PORT", 0))
 MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
-
 
 postgres = PostgresHandler(
     database=POSTGRES_DATABASE,
@@ -47,18 +45,3 @@ mysql = MySQLHandler(
 )
 
 mysql_queries = MySQLQueries
-
-
-if __name__ == "__main__":
-    postgres.connect(
-        ssh_mode=SSH_TUNNEL_MODE,
-        ssh_key_path=SSH_KEY_PATH,
-        ssh_server_host=SSH_TUNNEL_SERVER_HOST,
-        ssh_server_port=SSH_TUNNEL_SERVER_PORT
-    )
-
-
-    postgres.select_executor(
-        query="SELECT * FROM fub.fub_users LIMIT 1"
-    )
-    postgres.disconnect()

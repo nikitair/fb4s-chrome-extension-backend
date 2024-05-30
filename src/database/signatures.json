@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "fub_id": 1,
+    "fub_email": "manoj@movewithmanoj.ca",
+    "signature": "\nManoj Kukreja\nRealtor®\nRe/Max Premier Inc., Brokerage",
+    "created_at": "2024-03-07T14:32:59.406Z"
+  },
+  {
+    "id": 2,
+    "fub_id": 13,
+    "fub_email": "willow@fb4s.com",
+    "signature": "\nFB4S Team",
+    "created_at": "2024-03-07T14:35:22.422Z"
+  },
+  {
+    "id": 3,
+    "fub_id": 27,
+    "fub_email": "amit@fb4s.com",
+    "signature": "\nAmit Muthreja\nRealtor®\nFind Businesses 4 Sale",
+    "created_at": "2024-03-07T14:36:38.187Z"
+  },
+  {
+    "id": 4,
+    "fub_id": 20,
+    "fub_email": "carlo@fb4s.com",
+    "signature": "\nCarlo Giusto\nRealtor®\nRE/MAX Kelowna",
+    "created_at": "2024-03-07T14:37:27.681Z"
+  },
+  {
+    "id": 5,
+    "fub_id": 12,
+    "fub_email": "drew@fb4s.com",
+    "signature": "\nDrew Tofin\nRealtor®\nRE/MAX Saskatoon",
+    "created_at": "2024-03-07T14:39:00.574Z"
+  },
+  {
+    "id": 6,
+    "fub_id": 11,
+    "fub_email": "harman@fb4s.com",
+    "signature": "\nHarman Dhanoa\nRealtor®\nFind Businesses 4 Sale",
+    "created_at": "2024-03-07T14:41:12.808Z"
+  },
+  {
+    "id": 7,
+    "fub_id": 18,
+    "fub_email": "harminder@fb4s.com",
+    "signature": "\nHarminder Sainin\nRealtor®\nFind Businesses 4 Sale",
+    "created_at": "2024-03-07T14:41:54.614Z"
+  },
+  {
+    "id": 8,
+    "fub_id": 9,
+    "fub_email": "jack@fb4s.com",
+    "signature": "\nJack Yan\nRealtor®\nFind Businesses 4 Sale",
+    "created_at": "2024-03-07T14:50:59.842Z"
+  },
+  {
+    "id": 9,
+    "fub_id": 17,
+    "fub_email": "lauren@fb4s.com",
+    "signature": "\nLauren Poon\nRealtor®\neXp Realty Kelowna",
+    "created_at": "2024-03-07T14:52:38.107Z"
+  },
+  {
+    "id": 10,
+    "fub_id": 29,
+    "fub_email": "manoj@fb4s.com",
+    "signature": "\nManoj Kukreja\nRealtor®\nRe/Max Premier Inc., Brokerage",
+    "created_at": "2024-03-07T14:53:41.669Z"
+  },
+  {
+    "id": 11,
+    "fub_id": 25,
+    "fub_email": "oscar@fb4s.com",
+    "signature": "\nOscar Ngo\nRealtor®\nRE/MAX Hallmark Realty Group",
+    "created_at": "2024-03-07T14:55:00.659Z"
+  },
+  {
+    "id": 12,
+    "fub_id": 32,
+    "fub_email": "paul@fb4s.com",
+    "signature": "\nPaul Hague\nRealtor®\nFind Businesses 4 Sale",
+    "created_at": "2024-03-07T14:56:07.478Z"
+  },
+  {
+    "id": 14,
+    "fub_id": 21,
+    "fub_email": "raj@fb4s.com",
+    "signature": "\nRaj Sidhu\nRealtor®\nRoyal LePage Summit Realty",
+    "created_at": "2024-03-07T14:58:51.614Z"
+  },
+  {
+    "id": 15,
+    "fub_id": 14,
+    "fub_email": "soraia@fb4s.com",
+    "signature": "\nSoraia Kader\nRealtor®\nRE/MAX Real Estate Center inc. Brokerage",
+    "created_at": "2024-03-07T15:01:07.346Z"
+  },
+  {
+    "id": 16,
+    "fub_id": 33,
+    "fub_email": "Upneet@fb4s.com",
+    "signature": "\nUpneet Ubhi\nRealtor®\nMaxWell Central",
+    "created_at": "2024-03-07T15:02:11.347Z"
+  },
+  {
+    "id": 17,
+    "fub_id": 34,
+    "fub_email": "grant@fb4s.com",
+    "signature": "\nGrant Kelba\nRealtor®\nCentury 21 Bravo Realty",
+    "created_at": ""
+  },
+  {
+    "id": 18,
+    "fub_id": 38,
+    "fub_email": "reg@fb4s.com",
+    "signature": "\nReg Kotlar\nRealtor®\nRoyal LePage Varsity",
+    "created_at": ""
+  },
+  {
+    "id": 19,
+    "fub_id": 37,
+    "fub_email": "atul@fb4s.com",
+    "signature": "\nAtul Khosla\nRealtor®\nThe Canadian Home Realty Inc.",
+    "created_at": ""
+  },
+  {
+    "id": 20,
+    "fub_id": 36,
+    "fub_email": "dave@fb4s.com",
+    "signature": "\nDave Anderson\nRealtor®\nBoyes Group Realty",
+    "created_at": ""
+  },
+  {
+    "id": 21,
+    "fub_id": 35,
+    "fub_email": "stevef@fb4s.com",
+    "signature": "\nSteve Fylypchuk\nRealtor®\nFind Businesses 4 Sale",
+    "created_at": ""
+  }
+]

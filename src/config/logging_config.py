@@ -1,37 +1,34 @@
+import logging
 import os
-import time
-from datetime import datetime
-from loguru import logger
 
-from . import ROOT_DIR
+from logtail import LogtailHandler
 
-app_log_config = {
-            "sink": f"{ROOT_DIR}/src/logs/app.log",
-            "format": "{time:YYYY-MM-DD HH:mm} UTC - {level} - {name}:{function}:{line} - {message}",
-            "level": "DEBUG",
-            "rotation": "100 MB",
-            "enqueue": True,
-            "catch": True,
-        }
+from . import LOGTRAIL_API_KEY, ROOT_DIR
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
-server_log_config = {
+formatter = logging.Formatter(
+    '%(asctime)s UTC - %(levelname)s - %(module)s:%(funcName)s:%(lineno)d - %(message)s')
 
-            "sink": f"{ROOT_DIR}/src/logs/server.log",
-            "format": "{time:YYYY-MM-DD HH:mm} UTC - {level} - {name}:{function}:{line} - {message}",
-            "level": "INFO",
-            "rotation": "50 MB",
-            "enqueue": True,
-            "catch": True
-        }
+logs_file_path = os.path.join(ROOT_DIR, "src", "logs", "app.log")
 
+# handlers
+terminal_handler = logging.StreamHandler()
+file_handler = logging.FileHandler(logs_file_path)
+logtrail_handler = LogtailHandler(source_token=LOGTRAIL_API_KEY)
 
-def configure_logger():
-    logger.remove()
-    logger.add(**app_log_config)
-    logger.debug("LOGGER CONFIGURED")
+# Terminal output
+terminal_handler.setLevel(logging.DEBUG)
+terminal_handler.setFormatter(formatter)
+logger.addHandler(terminal_handler)
 
+# File output
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
-# def configure_server_logger():
-#     logger.remove()
-#     logger.add(**server_log_config)
+# Logtrail output
+logtrail_handler.setLevel(logging.DEBUG)
+logtrail_handler.setFormatter(formatter)
+logger.addHandler(logtrail_handler)

@@ -1,9 +1,10 @@
 # server
-fastapi
+fastapi~=0.111.0
 
 # configurations
-python-dotenv
-loguru
+python-dotenv~=1.0.1
+loguru~=0.7.2
+logtail-python
 
 # clean code
 isort
@@ -16,8 +17,17 @@ pytest-asyncio
 pytest-cov
 
 # database
-sshtunnel
+sshtunnel~=0.4.0
 psycopg2-binary
-asyncpg
-pymysql
-aiomysql
+asyncpg~=0.29.0
+pymysql~=1.1.0
+aiomysql~=0.2.0
+
+pytest~=8.2.0
+starlette~=0.37.2
+uvicorn~=0.29.0
+pydantic~=2.7.1
+requests~=2.31.0
+twilio
+phonenumbers
+Jinja2

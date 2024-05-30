@@ -3,21 +3,25 @@ import time
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
-from config.logging_config import logger, configure_logger
+from fastapi.templating import Jinja2Templates
+from starlette.middleware.base import BaseHTTPMiddleware
+
+# from config.loguru_logger import configure_logger, logger
+from config.logging_config import logger
 from config.middleware import log_middleware
 from routers.fub import fub_router
+from routers.lead_auto_assignment import las_router
 from routers.textingduncan import td_router
-from routers.leadautoassignment import las_router
 
-from starlette.middleware.base import BaseHTTPMiddleware
+from . import ROOT_DIR
+
 
 # FastAPI Server Start / Shutdown lifespan manager
 @asynccontextmanager
 async def server_lifespan(app: FastAPI):
     """
-    Logs FastAPI server Start and Shutdown events
+    FastAPI server Start and Shutdown events handler
     """
-    configure_logger()
 
     # set timezone to UTC
     os.environ['TZ'] = 'UTC'
@@ -36,14 +40,20 @@ app = FastAPI(
 )
 
 # middleware registration
-app.add_middleware(middleware_class=BaseHTTPMiddleware, dispatch=log_middleware)
+app.add_middleware(middleware_class=BaseHTTPMiddleware,
+                   dispatch=log_middleware)
 
 # include routers
 app.include_router(fub_router)
 
-
 # routers registration
 app.include_router(router=fub_router, prefix='/fub', tags=['fub'])
-app.include_router(router=td_router, prefix='/textingduncan', tags=['textingduncan'])
-app.include_router(router=las_router, prefix='/leadAutoAssignment', tags=['leadAutoAssignment'])
+app.include_router(router=td_router, prefix='/textingduncan',
+                   tags=['Texting Duncan'])
+app.include_router(router=las_router, prefix='/las',
+                   tags=['Lead Auto Assignment'])
 
+
+# register templates
+templates_dir = os.path.join(ROOT_DIR, "templates")
+templates = Jinja2Templates(directory=templates_dir)
