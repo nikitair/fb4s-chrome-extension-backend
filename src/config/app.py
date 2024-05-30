@@ -47,7 +47,7 @@ app.add_middleware(middleware_class=BaseHTTPMiddleware,
 app.include_router(fub_router)
 
 # routers registration
-app.include_router(router=fub_router, prefix='/fub', tags=['fub'])
+app.include_router(router=fub_router, prefix='/fub', tags=['FUB'])
 app.include_router(router=td_router, prefix='/textingduncan',
                    tags=['Texting Duncan'])
 app.include_router(router=las_router, prefix='/las',
