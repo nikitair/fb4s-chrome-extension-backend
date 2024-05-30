@@ -10,7 +10,7 @@ las_router = APIRouter()
 
 
 @las_router.get("/", response_model=DefaultResponse)
-async def las_index_view():
+async def las_index():
     return {
         "success": True,
         "service": "FB4S Automations",
@@ -19,7 +19,7 @@ async def las_index_view():
 
 
 @las_router.post("/assign_lead", response_model=LASResponse)
-async def las_assign_lead_view(request: LASRequest):
+async def las_assign_lead(request: LASRequest):
     raw_payload: dict = request.dict()
     logger.debug(f"RAW PAYLOAD - {raw_payload}")
 

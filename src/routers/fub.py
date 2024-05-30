@@ -6,7 +6,7 @@ fub_router = APIRouter()
 
 
 @fub_router.get("/", response_model=DefaultResponse)
-async def fub_index_view():
+async def fub_index():
     return {
         "success": True,
         "service": "FB4S Automations",

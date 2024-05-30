@@ -11,8 +11,8 @@ from config.app import app
 # from config.logging_confe3ig import logger
 
 
-@app.get('/', tags=['index'])
-async def index_view():
+@app.get('/', tags=['root'])
+async def root_index():
     return {
         "success": True,
         "service": "FB4S Automations",
@@ -20,8 +20,8 @@ async def index_view():
     }
 
 
-@app.get('/.env', tags=['index'])
-async def feel_free_view(request: Request):
+@app.get('/.env', tags=['root'])
+async def feel_free(request: Request):
     template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
     templates = Jinja2Templates(directory=template_dir)
     return templates.TemplateResponse("feel_free.html", {"request": request}, status_code=402)
