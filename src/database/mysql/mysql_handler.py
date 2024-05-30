@@ -98,7 +98,7 @@ class MySQLHandler:
         query example: SELECT * FROM table_name WHERE id IN %s AND value = %s;
         params example: [(1, 2, 3), 'a']
         """
-        logger.info(
+        logger.debug(
             f"({self.__class__.__name__}) - EXECUTING SELECT QUERY: {query} - PARAMS: {params}")
 
         data = None

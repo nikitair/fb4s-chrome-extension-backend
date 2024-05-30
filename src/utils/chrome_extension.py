@@ -6,7 +6,7 @@ demo_buyer = "c3RscnZua0BnbWFpbC5jb20="
 demo_buyer_id = "Mjc2OTY="
 
 
-def decode_base64_item(encoded_item: str) -> str | None:
+def decode_base64_item(encoded_item: str) -> str | int | None:
     decoded_item = None
     try:
         decoded_item = base64.b64decode(encoded_item).decode()

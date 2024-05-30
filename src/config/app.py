@@ -41,8 +41,8 @@ app = FastAPI(
 )
 
 # middleware registration
-app.add_middleware(middleware_class=BaseHTTPMiddleware,
-                   dispatch=log_middleware)
+# app.add_middleware(middleware_class=BaseHTTPMiddleware,
+#                    dispatch=log_middleware)
 
 # include routers
 app.include_router(fub_router)
