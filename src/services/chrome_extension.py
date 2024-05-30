@@ -36,6 +36,41 @@ def sql_get_buyer(buyer_email: str, buyer_customer_id: int):
             "buyer_first_name": raw_result[-1][3],
             "buyer_last_name": raw_result[-1][4]
         }
+        
+        
+def check_if_viewer_is_admin(viewer_email: str) -> bool:
+    logger.info(f"CHECKING IF VIEWER IS ADMIN - {viewer_email}")
+    admin_emails_path = os.path.join(ROOT_DIR, "src", "database", "admins.json")
+    admin_emails = []
+    
+    with open(admin_emails_path, "r") as f:
+        admin_emails = json.load(f)
+        
+    return viewer_email in admin_emails
+    
+        
+
+def sql_check_if_rca_signed(viewer_email: str, buyer_email: str) -> bool:
+    query=f"""
+    SELECT
+        id
+    FROM
+        tbl_agreement_details
+    WHERE
+        receiving_broker_email = '{viewer_email}'
+    AND
+        referred_buyer_email = '{buyer_email}'
+    AND
+        type IN (2, 3)
+    LIMIT
+        1
+    """
+    logger.info(f"CHECKING IF RCA SIGNED: VIEWER - {viewer_email}; BUYER - {buyer_email}")
+    raw_result = mysql.execute_with_connection(
+        func=mysql.select_executor,
+        query=query
+    )
+    return True if raw_result else False
   
 
 
@@ -49,7 +84,6 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
     logger.info(f"BUYER DATA - {buyer_data}")
     
     if buyer_data:
-        
         result = {
             "buyer_id": buyer_data["buyer_id"],
             "buyer_email": buyer_data["buyer_email"],
@@ -59,13 +93,10 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
             "show_contacts": False
         }
         
-        # get viewer data
-        admin_emails_path = os.path.join(ROOT_DIR, "src", "database", "admins.json")
-        admin_emails = []
-        with open(admin_emails_path, "r") as f:
-            admin_emails = json.load(f)
-        if viewer_email in admin_emails:
+        if check_if_viewer_is_admin(viewer_email):
             result["show_contacts"] = True
             logger.info("VIEWER IS ADMIN")
+        else:
+            result["show_contacts"] = sql_check_if_rca_signed(viewer_email, buyer_email)
     
         return result
