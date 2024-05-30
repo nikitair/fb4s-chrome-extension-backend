@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Query
-from fastapi.responses import Response
-import json
+from fastapi.exceptions import HTTPException
 from schemas import chrome_extension as schemas
 from schemas.index import DefaultResponse
 from services import chrome_extension as services
@@ -24,18 +23,9 @@ async def get_buyer_profile(
     profile_ekey: str = Query(None, description="base64(buyer@mail.com)"), 
     profile_ikey: str = Query(None, description="base64(buyer_customer_id)")
     ):
-    
-    status_code = 404
-    response_data = {
-        "success": False,
-        "data": None,
-        "message": "Buyer NOT found"
-    }
-    
     result = services.get_buyer_profile(access_level_key, profile_ekey, profile_ikey)
     
-    if result:
-        ...
-        
+    if not result:
+        raise HTTPException(status_code=404, detail="Buyer NOT found")
         
     return result
