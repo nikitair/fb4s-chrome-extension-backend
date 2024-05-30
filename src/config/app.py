@@ -12,6 +12,7 @@ from config.middleware import log_middleware
 from routers.fub import fub_router
 from routers.lead_auto_assignment import las_router
 from routers.textingduncan import td_router
+from routers.chrome_extension import ce_router
 
 from . import ROOT_DIR
 
@@ -52,6 +53,8 @@ app.include_router(router=td_router, prefix='/textingduncan',
                    tags=['Texting Duncan'])
 app.include_router(router=las_router, prefix='/las',
                    tags=['Lead Auto Assignment'])
+app.include_router(router=ce_router, prefix='/chrome_extension',
+                   tags=['Chrome Extension'])
 
 
 # register templates

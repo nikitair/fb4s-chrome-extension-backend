@@ -31,3 +31,4 @@ requests~=2.31.0
 twilio
 phonenumbers
 Jinja2
+pycryptodome

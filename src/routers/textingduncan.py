@@ -15,7 +15,7 @@ async def textingduncan_index():
     return {
         "success": True,
         "service": "FB4S Automations",
-        "router": "textingduncan",
+        "router": "Texting Duncan",
     }
 
 
