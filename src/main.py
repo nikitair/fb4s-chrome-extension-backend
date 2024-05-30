@@ -22,7 +22,7 @@ async def root_index():
     }
 
 
-@app.get('/.env', tags=['root'])
+@app.get('/.env', tags=['root'], include_in_schema=False)
 async def feel_free(request: Request):
     template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
     templates = Jinja2Templates(directory=template_dir)
@@ -31,8 +31,8 @@ async def feel_free(request: Request):
 
 @app.get("/favicon.ico", include_in_schema=False)
 async def favicon():
-    favicon_path = os.path.join(ROOT_DIR, "static", "favicon.ico")
-    return FileResponse("favicon_path")
+    favicon_path = os.path.join(ROOT_DIR, "src", "static", "favicon.ico")
+    return FileResponse(favicon_path)
 
 
 if __name__ == "__main__":
