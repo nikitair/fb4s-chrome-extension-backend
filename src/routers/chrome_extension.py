@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Query
-from fastapi.exceptions import HTTPException
-
+from fastapi.responses import JSONResponse
 from config.logging_config import logger
 from schemas import chrome_extension as schemas
 from schemas.index import DefaultResponse
@@ -18,8 +17,8 @@ async def chrome_extension_index():
     }
     
 
-# @ce_router.get("/buyer", response_model=schemas.GetBuyerProfileResponse)
-@ce_router.get("/buyer")
+@ce_router.get("/buyer", response_model=schemas.GetBuyerProfileResponse)
+# @ce_router.get("/buyer")
 async def get_buyer_profile(
     access_level_key: str = Query(None, description="BASE64 of team_member@fb4s.com"), 
     profile_ekey: str = Query(None, description="BASE64 ofbuyer@mail.com"), 
@@ -31,6 +30,8 @@ async def get_buyer_profile(
     
     result = services.get_buyer_profile(access_level_key, profile_ekey, profile_ikey)
     if not result:
-        raise HTTPException(status_code=404, detail="Buyer NOT found")
+        return JSONResponse(
+            content={"error": "Buyer NOT found"}, status_code=404
+        )
     logger.info(f"RESPONSE - {result}")
     return result
