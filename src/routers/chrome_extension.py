@@ -19,7 +19,7 @@ async def chrome_extension_index():
     
 
 @ce_router.get(
-    "/buyer",
+    "/profiles/buyer",
     responses={
         200: {"model": schemas.GetBuyerProfileResponse, "description": "Buyer Profile"},
         404: {"model": schemas.BuyerNotFoundResponse, "description": "Buyer NOT Found"}
@@ -46,9 +46,9 @@ async def get_buyer_profile(
 
 
 @ce_router.get(
-    "/demo-buyer",
+    "/profiles/demo-buyer",
     responses={
-        200: {"model": schemas.GetBuyerProfileResponse, "description": "Buyer Profile"},
+        200: {"model": schemas.BuyerProfileResponse, "description": "Buyer Profile"},
         404: {"model": schemas.BuyerNotFoundResponse, "description": "Buyer NOT Found"}
     },
 )

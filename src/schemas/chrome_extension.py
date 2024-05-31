@@ -7,7 +7,7 @@ class ProfileCompletedLevels(BaseModel):
     supplemental: bool = False
     
 
-class GetBuyerProfileResponse(BaseModel):
+class BuyerProfileResponse(BaseModel):
     id: int
     email: str
     phone_number: str
