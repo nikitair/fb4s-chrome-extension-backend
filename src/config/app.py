@@ -1,6 +1,7 @@
 import os
 import time
 from contextlib import asynccontextmanager
+from fastapi.middleware.cors import CORSMiddleware
 
 from fastapi import FastAPI
 from fastapi.templating import Jinja2Templates
@@ -14,7 +15,7 @@ from routers.lead_auto_assignment import las_router
 from routers.textingduncan import td_router
 from routers.chrome_extension import ce_router
 
-from . import ROOT_DIR
+from . import ROOT_DIR, CORS_ORIGINS
 
 
 # FastAPI Server Start / Shutdown lifespan manager
@@ -43,6 +44,13 @@ app = FastAPI(
 # middleware registration
 # app.add_middleware(middleware_class=BaseHTTPMiddleware,
 #                    dispatch=log_middleware)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # include routers
 app.include_router(fub_router)
