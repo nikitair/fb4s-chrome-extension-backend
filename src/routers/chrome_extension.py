@@ -18,7 +18,8 @@ async def chrome_extension_index():
     }
     
 
-@ce_router.get("/buyer", response_model=schemas.GetBuyerProfileResponse)
+# @ce_router.get("/buyer", response_model=schemas.GetBuyerProfileResponse)
+@ce_router.get("/buyer")
 async def get_buyer_profile(
     access_level_key: str = Query(None, description="BASE64 of team_member@fb4s.com"), 
     profile_ekey: str = Query(None, description="BASE64 ofbuyer@mail.com"), 
