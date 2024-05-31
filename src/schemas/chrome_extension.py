@@ -17,7 +17,7 @@ class GetBuyerProfileResponse(BaseModel):
     province: str | None = None
     fub_stage: str = "Not a FUB Buyer"
     registration_time: str | None = None
-    buyer_time_zone: int = 0
+    buyer_time_zone: int | None = None
     lead_score: float = 0.0
     assigned_realtor_name: str | None = None
     assigned_realtor_email: str | None = None
