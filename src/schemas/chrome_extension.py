@@ -9,3 +9,5 @@ class GetBuyerProfileResponse(BaseModel):
     buyer_last_name: str
     show_contacts: bool = Field(True, description="Hide contact information (email, phone_number) if false")
 
+class BuyerNotFoundResponse(BaseModel):
+    error: str = "Buyer NOT Found"
