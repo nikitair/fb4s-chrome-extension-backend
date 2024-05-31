@@ -1,21 +1,21 @@
 import os
 import time
 from contextlib import asynccontextmanager
-from fastapi.middleware.cors import CORSMiddleware
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.base import BaseHTTPMiddleware
 
 # from config.loguru_logger import configure_logger, logger
 from config.logging_config import logger
 from config.middleware import log_middleware
+from routers.chrome_extension import ce_router
 from routers.fub import fub_router
 from routers.lead_auto_assignment import las_router
 from routers.textingduncan import td_router
-from routers.chrome_extension import ce_router
 
-from . import ROOT_DIR, CORS_ORIGINS
+from . import CORS_ORIGINS, ROOT_DIR
 
 
 # FastAPI Server Start / Shutdown lifespan manager

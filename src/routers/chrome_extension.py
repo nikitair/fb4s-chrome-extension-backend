@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Query
 from fastapi.exceptions import HTTPException
+
+from config.logging_config import logger
 from schemas import chrome_extension as schemas
 from schemas.index import DefaultResponse
 from services import chrome_extension as services
-from config.logging_config import logger
-
 
 ce_router = APIRouter()
 

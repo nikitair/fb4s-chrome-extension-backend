@@ -1,9 +1,10 @@
-from config.logging_config import logger
-from config.database import mysql
-from utils import chrome_extension as utils
 import json
 import os
+
 from config import ROOT_DIR
+from config.database import mysql
+from config.logging_config import logger
+from utils import chrome_extension as utils
 
 
 def sql_m_get_buyer(buyer_email: str, buyer_customer_id: int):

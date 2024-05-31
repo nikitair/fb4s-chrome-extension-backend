@@ -2,11 +2,11 @@ import os
 
 import uvicorn
 from fastapi import Request
+from fastapi.responses import FileResponse
 # from config.app import templates
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import FileResponse
-from config import ROOT_DIR
 
+from config import ROOT_DIR
 from config.app import app
 
 # from config.loguru_logger import logger

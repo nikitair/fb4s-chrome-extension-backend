@@ -1,7 +1,24 @@
 from config.logging_config import logger
+from processors.fub import FUBProcessor
+from processors.retool import RetoolProcessor
+from processors.twilio import TwilioProcessor
 from utils import textingduncan as utils
 
-from . import fub, retool, twilio
+from . import (FUB_API_KEY, FUB_BASE_URL, TWILIO_AUTH_TOKEN,
+               TWILIO_FROM_NUMBER, TWILIO_SID)
+
+fub = FUBProcessor(
+    api_key=FUB_API_KEY,
+    base_url=FUB_BASE_URL
+)
+
+twilio = TwilioProcessor(
+    sid=TWILIO_SID,
+    auth_token=TWILIO_AUTH_TOKEN,
+    from_phone_number=TWILIO_FROM_NUMBER
+)
+
+retool = RetoolProcessor()
 
 
 def send_sms(to_number: str, sms_body: str):

@@ -1,4 +1,5 @@
 import base64
+
 from config.logging_config import logger
 
 demo_admin = "d2lsbG93QGZiNHMuY29t"
