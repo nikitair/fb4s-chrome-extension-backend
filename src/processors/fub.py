@@ -2,7 +2,7 @@ import base64
 
 import requests
 
-from config.loguru_logger import logger
+from config.logging_config import logger
 
 
 class FUBProcessor:
