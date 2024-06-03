@@ -1,4 +1,7 @@
 import base64
+import pytz
+import httpx
+from datetime import datetime
 
 from config.logging_config import logger
 
@@ -15,6 +18,12 @@ def decode_base64_item(encoded_item: str) -> str | int | None:
         except Exception:
             logger.exception(f"!!! FAILED DECODING - ({encoded_item}) OF TYPE ({type(encoded_item)})")
     return decoded_item
+
+
+def get_coordinates(city: str):
+    timezone = httpx.get(
+        url=f"https://api.api-ninjas.com/v1/geocoding?city={city}&country=Canada"
+    )
 
 
 if __name__ == "__main__":
