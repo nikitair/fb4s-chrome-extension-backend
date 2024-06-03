@@ -74,5 +74,6 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
             utc_offset = utils.get_utc_offset(timezone)
             buyer_profile["buyer_time_zone"] = utc_offset
             logger.info(f"BUYER TIME ZONE - {timezone}; UTC OFFSET - {utc_offset}")
-        
+            
+    logger.info(f"BUYER PROFILE RESPONSE - {buyer_profile}")
     return buyer_profile
