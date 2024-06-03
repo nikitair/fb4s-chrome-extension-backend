@@ -2,6 +2,7 @@ import base64
 import pytz
 import httpx
 from datetime import datetime
+from . import NINJAS_KEY
 
 from config.logging_config import logger
 
@@ -20,11 +21,23 @@ def decode_base64_item(encoded_item: str) -> str | int | None:
     return decoded_item
 
 
-def get_coordinates(city: str):
-    timezone = httpx.get(
-        url=f"https://api.api-ninjas.com/v1/geocoding?city={city}&country=Canada"
+def get_utc_offset(city: str) -> int:
+    response = httpx.get(
+        url=f"https://api.api-ninjas.com/v1/timezone?city={city}&country=Canada",
+        headers={"X-Api-Key": NINJAS_KEY}
     )
-
+    status_code = response.status_code
+    data = response.json()
+    logger.debug(f"NINJA API RESPONSE - {status_code} - {data}")
+    
+    if status_code == 200:
+        timezone = data["timezone"]
+        utc_now = datetime.now(pytz.utc)
+        city_timezone = pytz.timezone(timezone)
+        local_time = utc_now.astimezone(city_timezone)
+        utc_offset = int(local_time.utcoffset().total_seconds() / 3600)
+        return utc_offset
+        
 
 if __name__ == "__main__":
-    print(decode_base64_item(None))
+    print(get_utc_offset("Toronto"))
