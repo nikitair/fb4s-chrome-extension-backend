@@ -11,16 +11,16 @@ td_router = APIRouter()
 
 
 @td_router.get("/", response_model=DefaultResponse)
-async def td_index_view():
+async def textingduncan_index():
     return {
         "success": True,
         "service": "FB4S Automations",
-        "router": "textingduncan",
+        "router": "Texting Duncan",
     }
 
 
 @td_router.post("/sms/send-sms/", response_model=SendSMSResponse)
-async def send_sms_view(request: SendSMS):
+async def send_sms(request: SendSMS):
     payload = dict(request)
     logger.debug(f"PAYLOAD RECEIVED - {payload}")
     to_number = payload.get("to_number")
@@ -69,7 +69,7 @@ async def fub_note_created_webhook(request: FUBNoteCreated):
 
 
 @td_router.post("/sms/mailwizz")
-async def mailwizz_webhook_view(request: MailWizzWebhook) -> MailWizzWebhookResponse:
+async def mailwizz_webhook(request: MailWizzWebhook) -> MailWizzWebhookResponse:
 
     result = {
         "success": False,
@@ -80,7 +80,7 @@ async def mailwizz_webhook_view(request: MailWizzWebhook) -> MailWizzWebhookResp
     logger.info(f"PAYLOAD RECEIVED - {payload}")
 
     campaign_special_id = payload["campaign_special_id"]
-    to_phone_number = payload["phone_number"]
+    to_phone_number = payload["to_phone_number"]
     campaign_day = payload["campaign_day"]
 
     # Jerk Realtors Logic

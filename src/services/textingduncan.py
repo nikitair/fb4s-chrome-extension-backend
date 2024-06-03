@@ -1,10 +1,19 @@
 from config.logging_config import logger
+from processors.fub import FUBProcessor
+from processors.retool import RetoolProcessor
+from processors.twilio import TwilioProcessor
 from utils import textingduncan as utils
 
-from . import fub, retool, twilio
+from . import (FUB_API_KEY, FUB_BASE_URL, TWILIO_AUTH_TOKEN,
+               TWILIO_FROM_NUMBER, TWILIO_SID)
 
 
 def send_sms(to_number: str, sms_body: str):
+    twilio = TwilioProcessor(
+        sid=TWILIO_SID,
+        auth_token=TWILIO_AUTH_TOKEN,
+        from_phone_number=TWILIO_FROM_NUMBER
+    )
     sms_sending_result = twilio.send_sms(to_number, sms_body)
     return sms_sending_result.get("success", False)
 
@@ -20,6 +29,10 @@ def fub_note_created(note_id: int) -> dict:
     }
 
     # get note data
+    fub = FUBProcessor(
+        api_key=FUB_API_KEY,
+        base_url=FUB_BASE_URL
+    )
     note_data = fub.get_note(note_id)
 
     if note_data:
@@ -79,6 +92,7 @@ def send_mailwizz_campaign_sms(campaign_special_id: int,
     logger.info(f"PROCESSING MAILWIZZ CAMPAIGN DATA")
 
     # getting sms template if exists
+    retool = RetoolProcessor()
     retool_response = retool.get_sms_template(
         campaign_special_id, campaign_day)
 

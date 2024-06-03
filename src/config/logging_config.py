@@ -6,12 +6,12 @@ from logtail import LogtailHandler
 from . import LOGTRAIL_API_KEY, ROOT_DIR
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 formatter = logging.Formatter(
     '%(asctime)s UTC - %(levelname)s - %(module)s:%(funcName)s:%(lineno)d - %(message)s')
 
-logs_file_path = os.path.join(ROOT_DIR, "src", "logs", "app.log")
+logs_file_path = os.path.join(ROOT_DIR, "src", "logs", "logs.log")
 
 # handlers
 terminal_handler = logging.StreamHandler()

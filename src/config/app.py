@@ -3,17 +3,19 @@ import time
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.base import BaseHTTPMiddleware
 
 # from config.loguru_logger import configure_logger, logger
 from config.logging_config import logger
 from config.middleware import log_middleware
+from routers.chrome_extension import ce_router
 from routers.fub import fub_router
 from routers.lead_auto_assignment import las_router
 from routers.textingduncan import td_router
 
-from . import ROOT_DIR
+from . import CORS_ORIGINS, ROOT_DIR
 
 
 # FastAPI Server Start / Shutdown lifespan manager
@@ -40,18 +42,27 @@ app = FastAPI(
 )
 
 # middleware registration
-app.add_middleware(middleware_class=BaseHTTPMiddleware,
-                   dispatch=log_middleware)
+# app.add_middleware(middleware_class=BaseHTTPMiddleware,
+#                    dispatch=log_middleware)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # include routers
 app.include_router(fub_router)
 
 # routers registration
-app.include_router(router=fub_router, prefix='/fub', tags=['fub'])
+app.include_router(router=fub_router, prefix='/fub', tags=['FUB'])
 app.include_router(router=td_router, prefix='/textingduncan',
                    tags=['Texting Duncan'])
 app.include_router(router=las_router, prefix='/las',
                    tags=['Lead Auto Assignment'])
+app.include_router(router=ce_router, prefix='/chrome_extension',
+                   tags=['Chrome Extension'])
 
 
 # register templates
