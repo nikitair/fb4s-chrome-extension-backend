@@ -1,8 +1,6 @@
 import base64
 import pytz
-import httpx
 from datetime import datetime
-from . import NINJAS_KEY
 
 from config.logging_config import logger
 
@@ -12,6 +10,7 @@ demo_buyer_id = "Mjc2OTY="
 
 
 def decode_base64_item(encoded_item: str) -> str | int | None:
+    logger.info(f"DECODE BASE64 - {encoded_item}")
     decoded_item = None
     if encoded_item:
         try:
@@ -21,18 +20,9 @@ def decode_base64_item(encoded_item: str) -> str | int | None:
     return decoded_item
 
 
-def get_utc_offset(city: str) -> int:
-    logger.debug(f"GETTING TIMEZONE OF - {city}")
-    response = httpx.get(
-        url=f"https://api.api-ninjas.com/v1/timezone?city={city}&country=Canada",
-        headers={"X-Api-Key": NINJAS_KEY}
-    )
-    status_code = response.status_code
-    data = response.json()
-    logger.debug(f"NINJA API RESPONSE - {status_code} - {data}")
-    
-    if status_code == 200:
-        timezone = data["timezone"]
+def get_utc_offset(timezone: str) -> int | None:
+    logger.info(f"GET UTC OFFSET - {timezone}")
+    if timezone:
         utc_now = datetime.now(pytz.utc)
         city_timezone = pytz.timezone(timezone)
         local_time = utc_now.astimezone(city_timezone)

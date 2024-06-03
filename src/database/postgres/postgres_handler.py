@@ -115,7 +115,7 @@ class PostgresHandler:
             self.disconnect()
 
     def select_executor(self, query: str, params: list = []):
-        logger.info(
+        logger.debug(
             f"({self.__class__.__name__}) - EXECUTING SELECT QUERY: {query} - PARAMS: {params}")
 
         data = None

@@ -30,4 +30,5 @@ async def get_buyer_profile(
     profile_ekey: str = Query(None, description="BASE64 of buyer@mail.com"),
     profile_ikey: str = Query(None, description="BASE64 of buyer_customer_id")
 ):
+    logger.info("== GET BUYER PROFILE TRIGGERED")
     return services.get_buyer_profile(access_level_key, profile_ekey, profile_ikey)
