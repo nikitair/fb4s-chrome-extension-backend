@@ -22,6 +22,7 @@ def decode_base64_item(encoded_item: str) -> str | int | None:
 
 
 def get_utc_offset(city: str) -> int:
+    logger.debug(f"GETTING TIMEZONE OF - {city}")
     response = httpx.get(
         url=f"https://api.api-ninjas.com/v1/timezone?city={city}&country=Canada",
         headers={"X-Api-Key": NINJAS_KEY}

@@ -294,6 +294,12 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
         if assigned_reator_data:
             buyer_profile["assigned_realtor_email"] = assigned_reator_data["assigned_realtor_email"]
             buyer_profile["assigned_realtor_name"] = assigned_reator_data["assigned_realtor_name"]
-
+            
+        # get buyer UTC offset 
+        buyer_utc_offset = utils.get_utc_offset(buyer_profile["city"])
+        logger.info(f"BUYER UTC OFFSET - {buyer_utc_offset}")
+        buyer_profile["buyer_time_zone"] = buyer_utc_offset
+        
+        
     response = buyer_profile
     return response
