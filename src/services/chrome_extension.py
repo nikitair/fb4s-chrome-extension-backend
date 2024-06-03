@@ -256,28 +256,27 @@ def sql_p_get_predefigned_location(buyer_id: int):
 
 def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, profile_ikey: str = None) -> dict | None:
     logger.info(f"GET BUYER PROFILE")
-    response = schemas.BuyerProfileResponse
-    # buyer_profile = {
-    #     "id": None,
-    #     "email": None,
-    #     "phone_number": None,
-    #     "first_name": None,
-    #     "last_name": None,
-    #     "city": None,
-    #     "province": None,
-    #     "fub_stage": "Not a FUB Buyer",
-    #     "registration_time": None,
-    #     "buyer_time_zone": 0,
-    #     "lead_score": None,
-    #     "assigned_realtor_name": None,
-    #     "assigned_realtor_email": None,
-    #     "profile_completed_levels": {
-    #         "intro": False,
-    #         "complete": False,
-    #         "supplemental": False
-    #     },
-    #     "show_contacts": False
-    # }
+    buyer_profile = {
+        "id": None,
+        "email": None,
+        "phone_number": None,
+        "first_name": None,
+        "last_name": None,
+        "city": None,
+        "province": None,
+        "fub_stage": "Not a FUB Buyer",
+        "registration_time": None,
+        "buyer_time_zone": 0,
+        "lead_score": None,
+        "assigned_realtor_name": None,
+        "assigned_realtor_email": None,
+        "profile_completed_levels": {
+            "intro": False,
+            "complete": False,
+            "supplemental": False
+        },
+        "show_contacts": False
+    }
     
     viewer_email = utils.decode_base64_item(access_level_key)
     buyer_email = utils.decode_base64_item(profile_ekey)
@@ -292,47 +291,40 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
     logger.info(f"BUYER DATA - {buyer_data}")
     
     if buyer_data:
-        response.id = buyer_data["id"]
-        response.first_name = buyer_data["first_name"]
-        response.last_name = buyer_data["last_name"]
-        response.email = buyer_data["email"]
-        response.phone_number = buyer_data["phone_number"]
-        response.city = buyer_data["city"]
-        response.province = buyer_data["province"]
-        response.registration_time = buyer_data["registration_time"]
+        buyer_profile.update(buyer_data)
     
         # checking viewer permission
         viewer_is_admin = check_if_viewer_is_admin(viewer_email)
         if viewer_is_admin:
-            response.show_contacts = True
+            buyer_profile["show_contacts"] = True
         else:
             rca_signed = sql_m_check_if_rca_signed(viewer_email, buyer_email)
-            response.show_contacts = rca_signed
+            buyer_profile["show_contacts"] = rca_signed
             logger.info(f"RCA SIGNED - {rca_signed}")
             
         # evaluating buyer lead score
         lead_score = sql_p_get_buyer_lead_score(buyer_email)
-        response.lead_score = lead_score
+        buyer_profile["lead_score"] = lead_score
         logger.info(f"BUYER LEAD SCORE - {lead_score}")
         
         # get fub stage
         buyer_fub_stage = get_buyer_fub_stage(buyer_email)
-        response.fub_stage = buyer_fub_stage
+        buyer_profile["fub_stage"] = buyer_fub_stage
         logger.info(f"BUYER FUB STAGE - {buyer_fub_stage}")
         
         # get assigned realtor
         assigned_reator_data = sql_m_get_buyer_assigned_realtor(buyer_email)
         logger.info(f"ASSIGNED REATOR - {assigned_reator_data}")
         if assigned_reator_data:
-            response.assigned_realtor_email = assigned_reator_data["assigned_realtor_email"]
-            response.assigned_realtor_name = assigned_reator_data["assigned_realtor_name"]
+            buyer_profile["assigned_realtor_email"] = assigned_reator_data["assigned_realtor_email"]
+            buyer_profile["assigned_realtor_name"] = assigned_reator_data["assigned_realtor_name"]
             
         # get buyer UTC offset 
-        buyer_predefigned_location = sql_p_get_predefigned_location(response.id)
+        buyer_predefigned_location = sql_p_get_predefigned_location(buyer_profile["id"])
         if buyer_predefigned_location:
             timezone = buyer_predefigned_location["timezone"]
             utc_offset = utils.get_utc_offset(timezone)
-            response.buyer_time_zone = utc_offset
+            buyer_profile["buyer_time_zone"] = utc_offset
             logger.info(f"BUYER TIME ZONE - {timezone}; UTC OFFSET - {utc_offset}")
         
-    return response
+    return buyer_profile
