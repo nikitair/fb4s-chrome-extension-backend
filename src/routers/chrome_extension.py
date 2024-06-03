@@ -21,8 +21,7 @@ async def chrome_extension_index():
 @ce_router.get(
     "/profiles/buyer",
     responses={
-        200: {"model": schemas.BuyerProfileResponse, "description": "Buyer Profile"},
-        404: {"model": schemas.BuyerNotFoundResponse, "description": "Buyer NOT Found"}
+        200: {"model": schemas.BuyerProfileResponse, "description": "Buyer Profile"}
     },
 )
 async def get_buyer_profile(
@@ -31,27 +30,13 @@ async def get_buyer_profile(
     profile_ekey: str = Query(None, description="BASE64 of buyer@mail.com"),
     profile_ikey: str = Query(None, description="BASE64 of buyer_customer_id")
 ):
-    logger.debug(f"access_level_key: {access_level_key}")
-    logger.debug(f"profile_ekey: {profile_ekey}")
-    logger.debug(f"profile_ikey: {profile_ikey}")
-
-    result = services.get_buyer_profile(
-        access_level_key, profile_ekey, profile_ikey)
-    if not result:
-        logger.error("Buyer not found")
-        return JSONResponse(
-            content={"error": "Buyer NOT found"}, status_code=404
-        )
-
-    logger.info(f"RESPONSE - {result}")
-    return result
+    return services.get_buyer_profile(access_level_key, profile_ekey, profile_ikey)
 
 
 @ce_router.get(
     "/profiles/demo-buyer",
     responses={
-        200: {"model": schemas.BuyerProfileResponse, "description": "Buyer Profile"},
-        404: {"model": schemas.BuyerNotFoundResponse, "description": "Buyer NOT Found"}
+        200: {"model": schemas.BuyerProfileResponse, "description": "Buyer Profile"}
     },
 )
 async def get_demo_buyer_profile(

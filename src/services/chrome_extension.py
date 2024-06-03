@@ -1,10 +1,14 @@
 import json
 import os
 
+from fastapi.responses import JSONResponse
+
 from config import ROOT_DIR
 from config.database import mysql
 from config.logging_config import logger
 from utils import chrome_extension as utils
+
+from schemas import chrome_extension as schemas
 
 
 def sql_m_get_buyer(buyer_email: str, buyer_customer_id: int):
@@ -14,7 +18,10 @@ def sql_m_get_buyer(buyer_email: str, buyer_customer_id: int):
         email,
         contact_no,
         firstname,
-        lastname
+        lastname,
+        city,
+        province,
+        registered_at
     FROM 
         tbl_customers
     WHERE 
@@ -35,7 +42,10 @@ def sql_m_get_buyer(buyer_email: str, buyer_customer_id: int):
             "buyer_email": raw_result[-1][1],
             "buyer_phone_number": raw_result[-1][2],
             "buyer_first_name": raw_result[-1][3],
-            "buyer_last_name": raw_result[-1][4]
+            "buyer_last_name": raw_result[-1][4],
+            "buyer_city": raw_result[-1][5],
+            "buyer_province": raw_result[-1][6],
+            "buyer_registered_at": raw_result[-1][7]
         }
         
         
@@ -48,8 +58,7 @@ def check_if_viewer_is_admin(viewer_email: str) -> bool:
         admin_emails = json.load(f)
         
     return viewer_email in admin_emails
-    
-        
+     
 
 def sql_m_check_if_rca_signed(viewer_email: str, buyer_email: str) -> bool:
     query=f"""
@@ -178,24 +187,55 @@ def sql_p_get_buyer_lead_score(buyer_email: str):
 
 
 def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, profile_ikey: str = None) -> dict | None:
+    response = schemas.BuyerProfileResponse
+    buyer_profile = {
+        "id": None,
+        "email": None,
+        "phone_number": None,
+        "first_name": None,
+        "last_name": None,
+        "city": None,
+        "province": None,
+        "fub_stage": "Not a FUB Buyer",
+        "registration_time": None,
+        "buyer_time_zone": 0,
+        "lead_score": None,
+        "assigned_realtor_name": None,
+        "assigned_realtor_email": None,
+        "profile_completed_levels": {
+            "intro": False,
+            "complete": False,
+            "supplemental": False
+        },
+        "show_contacts": False
+    }
+    
     viewer_email = utils.decode_base64_item(access_level_key)
     buyer_email = utils.decode_base64_item(profile_ekey)
     buyer_customer_id = utils.decode_base64_item(profile_ikey)
+    
+    logger.debug(f"access_level_key = {access_level_key} -> {viewer_email}")
+    logger.debug(f"profile_ekey = {profile_ekey} -> {buyer_email}")
+    logger.debug(f"profile_ikey = {profile_ikey} -> {buyer_customer_id}")
     
     # getting buyer data
     buyer_data = sql_m_get_buyer(buyer_email, buyer_customer_id)
     logger.info(f"BUYER DATA - {buyer_data}")
     
     if buyer_data:
+    
         result = {
-            "buyer_id": buyer_data["buyer_id"],
-            "buyer_email": buyer_data["buyer_email"],
-            "buyer_phone_number": buyer_data["buyer_phone_number"],
-            "buyer_first_name": buyer_data["buyer_first_name"],
-            "buyer_last_name": buyer_data["buyer_last_name"],
+            "id": buyer_data["buyer_id"],
+            "email": buyer_data["buyer_email"],
+            "phone_number": buyer_data["buyer_phone_number"],
+            "first_name": buyer_data["buyer_first_name"],
+            "last_name": buyer_data["buyer_last_name"],
+            "city": buyer_data["buyer_city"],
+            "province": buyer_data["buyer_province"],
+            "registration_time": buyer_data["buyer_registered_at"],
             "show_contacts": False
         }
-        
+    
         # checking viewer permission
         if check_if_viewer_is_admin(viewer_email):
             result["show_contacts"] = True
@@ -206,5 +246,6 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
         # evaluating buyer lead score
         # lead_score = sql_p_get_buyer_lead_score(buyer_email)
         # logger.info(f"BUYER LEAD SCORE - {lead_score}")
-    
-        return result
+
+    response = buyer_profile
+    return response

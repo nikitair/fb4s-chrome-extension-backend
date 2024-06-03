@@ -8,17 +8,17 @@ class ProfileCompletedLevels(BaseModel):
     
 
 class BuyerProfileResponse(BaseModel):
-    id: int
-    email: str
-    phone_number: str
-    first_name: str
-    last_name: str
+    id: int | None = None
+    email: str | None = None
+    phone_number: str | None = None
+    first_name: str | None = None
+    last_name: str | None = None
     city: str | None = None
     province: str | None = None
     fub_stage: str = "Not a FUB Buyer"
     registration_time: str | None = None
     buyer_time_zone: int | None = None
-    lead_score: float = 0.0
+    lead_score: float | None = None
     assigned_realtor_name: str | None = None
     assigned_realtor_email: str | None = None
     profile_completed_levels: ProfileCompletedLevels
