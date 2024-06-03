@@ -200,6 +200,35 @@ def get_buyer_fub_stage(buyer_email):
         return fub_stage
     else:
         return "Not a FUB Buyer"
+    
+
+def sql_m_get_buyer_assigned_realtor(buyer_email: str):
+    query = f"""
+        SELECT
+            agreement.receiving_broker_first_name as realtor_first_name,
+            agreement.receiving_broker_last_name as realtor_last_name,
+            agreement.receiving_broker_email as realtor_email
+        FROM
+            tbl_agreement_details agreement
+        LEFT JOIN tbl_customers customers 
+            ON agreement.receiving_broker_email = customers.email
+        LEFT JOIN tbl_external_crm_leads fub 
+            ON fub.broker_id = customers.id
+        WHERE
+            agreement.referred_buyer_email = 'drewkuhn96@gmail.com'
+        ORDER BY agreement.date_referral_agreement DESC
+            LIMIT 1
+    """
+    logger.info(f"GETTING ASSIGNED REALTOR OF BUYER - {buyer_email}")
+    raw_result = mysql.execute_with_connection(
+        func=mysql.select_executor,
+        query=query
+    )
+    if raw_result:
+        return {
+            "assigned_realtor_name": (raw_result[-1][0] + raw_result[-1][1]),
+            "assigned_realtor_email": raw_result[-1][2]
+        }
   
 
 
@@ -258,6 +287,13 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
         buyer_fub_stage = get_buyer_fub_stage(buyer_email)
         logger.info(f"BUYER FUB STAGE - {buyer_fub_stage}")
         buyer_profile["fub_stage"] = buyer_fub_stage
+        
+        # get assigned realtor
+        assigned_reator_data = sql_m_get_buyer_assigned_realtor(buyer_email)
+        logger.info(f"ASSIGNED REATOR - {assigned_reator_data}")
+        if assigned_reator_data:
+            buyer_profile["assigned_realtor_email"] = assigned_reator_data["assigned_realtor_email"]
+            buyer_profile["assigned_realtor_name"] = assigned_reator_data["assigned_realtor_name"]
 
     response = buyer_profile
     return response
