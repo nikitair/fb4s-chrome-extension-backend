@@ -9,10 +9,11 @@ demo_buyer_id = "Mjc2OTY="
 
 def decode_base64_item(encoded_item: str) -> str | int | None:
     decoded_item = None
-    try:
-        decoded_item = base64.b64decode(encoded_item).decode()
-    except Exception:
-        logger.exception(f"!!! FAILED DECODING - ({encoded_item}) OF TYPE ({type(encoded_item)})")
+    if encoded_item:
+        try:
+            decoded_item = base64.b64decode(encoded_item).decode()
+        except Exception:
+            logger.exception(f"!!! FAILED DECODING - ({encoded_item}) OF TYPE ({type(encoded_item)})")
     return decoded_item
 
 
