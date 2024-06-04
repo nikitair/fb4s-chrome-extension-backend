@@ -29,6 +29,7 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
     viewer_email = utils.decode_base64_item(access_level_key)
     buyer_email = utils.decode_base64_item(profile_ekey)
     buyer_chat_id = utils.decode_base64_item(profile_ikey)
+    logger.warning(type(buyer_chat_id))
     
     logger.info(f"access_level_key = {access_level_key} -> {viewer_email}")
     logger.info(f"profile_ekey = {profile_ekey} -> {buyer_email}")
@@ -68,7 +69,6 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
             buyer_profile["assigned_realtor_name"] = assigned_reator_data["assigned_realtor_name"]
             
         # get buyer UTC offset
-        
         buyer_city = buyer_profile["city"]
         if not buyer_city:
             buyer_predefigned_location = utils.sql_p_get_predefigned_location(buyer_profile["id"])

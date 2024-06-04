@@ -21,6 +21,7 @@ demo_buyer_id = "Mjc2OTY="
 
 def sql_m_get_buyer(buyer_email: str, buyer_chat_id: int):
     logger.info(f"GET BUYER DATA: EMAIL - {buyer_email}; CHAT ID - {buyer_chat_id}")
+    # logger.warning(type(buyer_chat_id))
     query = f"""
     SELECT
         id,
@@ -34,23 +35,23 @@ def sql_m_get_buyer(buyer_email: str, buyer_chat_id: int):
     FROM 
         tbl_customers
     WHERE
-        (email = {buyer_email})
+        (email = '{buyer_email}')
     OR (
-            {buyer_chat_id} IS NOT NULL
+            '{buyer_chat_id}' IS NOT NULL
             AND id = (
             SELECT
                 sender_id
             FROM
                 tbl_chat
             WHERE
-                id = {buyer_chat_id}
+                id = '{buyer_chat_id}'
             LIMIT
                 1
             )
         )
         OR (
-            {buyer_email} IS NOT NULL
-            AND email = {buyer_email}
+            '{buyer_email}' IS NOT NULL
+            AND email = '{buyer_email}'
         )
     ORDER BY id DESC
     LIMIT 1
