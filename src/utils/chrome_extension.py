@@ -1,9 +1,9 @@
 import base64
 import json
 import os
-import httpx
 from datetime import date, datetime, timedelta
 
+import httpx
 import pytz
 
 from config import ROOT_DIR
@@ -308,6 +308,96 @@ def get_timezone(city: str) -> str | None:
         logger.info(f"NINJA API RESPONSE - {status_code} - {data}")
         if status_code == 200:
             return data["timezone"]
+        
+        
+def sql_m_get_intro_fields(buyer_email) -> dict | None:
+    logger.info(f"GET INTRO FIELDS - {buyer_email}")
+    query = f"""
+    select
+        firstname,
+        lastname,
+        email,
+        contact_no,
+        city,
+        province
+    from
+        tbl_customers
+    where 
+        email = '{buyer_email}'
+    limit 1
+    """
+    raw_result = mysql.execute_with_connection(
+        func=mysql.select_executor,
+        query=query
+    )
+    if raw_result:
+        return {
+            "first_name": raw_result[-1][0],
+            "last_name": raw_result[-1][1],
+            "email": raw_result[-1][2],
+            "phone_number": raw_result[-1][3],
+            "city": raw_result[-1][4],
+            "province": raw_result[-1][5],
+        }
+    
+
+def sql_m_get_complete_fields(buyer_email) -> dict | None:
+    logger.info(f"GET COMPLETE FIELDS - {buyer_email}")
+    query = f"""
+    SELECT
+        cd.area_of_intrest,
+        cd.LookingBuyerType,
+        cd.inteadBuy,
+        cd.CashOnhand,
+        cd.Location
+    FROM tbl_customers c
+        LEFT JOIN tbl_company_details cd
+    ON c.id = cd.cust_id
+        WHERE
+        c.email = '{buyer_email}'
+    LIMIT 1;
+    """
+    raw_result = mysql.execute_with_connection(
+        func=mysql.select_executor,
+        query=query
+    )
+    if raw_result:
+        return {
+            "area_of_interest": raw_result[-1][0],
+            "buyer_type": raw_result[-1][1],
+            "purchase_time_frame": raw_result[-1][2],
+            "cash_on_hand": raw_result[-1][3],
+            "location": raw_result[-1][4],
+        }
+           
+
+def get_profile_completed_levels(buyer_email: str) -> dict:
+    logger.info(f"GET PROFILE COMPLETED LEVELS - {buyer_email}")
+    completed_levels = {
+        "intro": False,
+        "complete": False,
+        "supplemental": False
+    }
+    
+    # intro level
+    intro_fields = sql_m_get_intro_fields(buyer_email)
+    logger.info(f"INTRO FIELDS - {intro_fields}")
+    if intro_fields:
+        intro_completed = all(intro_fields.values())
+        completed_levels["intro"] = intro_completed
+        logger.info(f"INTRO COMPLTED - {intro_completed}")
+        
+    # complete level
+    completed_fields = sql_m_get_complete_fields(buyer_email)
+    logger.info(f"COMPLETE FIELDS - {completed_fields}")   
+    if completed_fields:
+        complete_completed = all(completed_fields.values())
+        completed_levels["complete"] = complete_completed
+        logger.info(f"COMPLETE COMPLTED - {complete_completed}")
+        
+    # TODO: supplemental
+    
+    return completed_levels
     
         
 if __name__ == "__main__":

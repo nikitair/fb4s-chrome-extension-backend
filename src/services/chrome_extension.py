@@ -29,8 +29,7 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
     viewer_email = utils.decode_base64_item(access_level_key)
     buyer_email = utils.decode_base64_item(profile_ekey)
     buyer_chat_id = utils.decode_base64_item(profile_ikey)
-    logger.warning(type(buyer_chat_id))
-    
+
     logger.info(f"access_level_key = {access_level_key} -> {viewer_email}")
     logger.info(f"profile_ekey = {profile_ekey} -> {buyer_email}")
     logger.info(f"profile_ikey = {profile_ikey} -> {buyer_chat_id}")
@@ -41,6 +40,7 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
     
     if buyer_data:
         buyer_profile.update(buyer_data)
+        buyer_email = buyer_data["email"]
     
         # checking viewer permission
         viewer_is_admin = utils.check_if_viewer_is_admin(viewer_email)
@@ -80,6 +80,11 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
         utc_offset = utils.get_utc_offset(timezone)
         buyer_profile["buyer_time_zone"] = utc_offset
         logger.info(f"BUYER TIME ZONE - {timezone}; UTC OFFSET - {utc_offset}")
+        
+        # get profile completed levels
+        profile_completed_levels = utils.get_profile_completed_levels(buyer_email)
+        buyer_profile["profile_completed_levels"] = profile_completed_levels
+        logger.info(f"PROFILE COMPLETED LEVELS - {profile_completed_levels}")
             
     logger.info(f"BUYER PROFILE RESPONSE - {buyer_profile}")
     return buyer_profile
