@@ -19,8 +19,8 @@ demo_buyer = "c3RscnZua0BnbWFpbC5jb20="
 demo_buyer_id = "Mjc2OTY="
 
 
-def sql_m_get_buyer(buyer_email: str, buyer_customer_id: int):
-    logger.info(f"GET BUYER DATA: EMAIL - {buyer_email}; ID - {buyer_customer_id}")
+def sql_m_get_buyer(buyer_email: str, buyer_chat_id: int):
+    logger.info(f"GET BUYER DATA: EMAIL - {buyer_email}; CHAT ID - {buyer_chat_id}")
     query = f"""
     SELECT
         id,
@@ -33,10 +33,25 @@ def sql_m_get_buyer(buyer_email: str, buyer_customer_id: int):
         registered_at
     FROM 
         tbl_customers
-    WHERE 
-        email = '{buyer_email}'
-    OR 
-        id = '{buyer_customer_id}'
+    WHERE
+        (email = {buyer_email})
+    OR (
+            {buyer_chat_id} IS NOT NULL
+            AND id = (
+            SELECT
+                sender_id
+            FROM
+                tbl_chat
+            WHERE
+                id = {buyer_chat_id}
+            LIMIT
+                1
+            )
+        )
+        OR (
+            {buyer_email} IS NOT NULL
+            AND email = {buyer_email}
+        )
     ORDER BY id DESC
     LIMIT 1
     """
@@ -260,7 +275,7 @@ def sql_p_get_predefigned_location(buyer_id: int):
 
 
 def decode_base64_item(encoded_item: str) -> str | int | None:
-    logger.info(f"DECODE BASE64 - {encoded_item}")
+    logger.debug(f"DECODE BASE64 - {encoded_item}")
     decoded_item = None
     if encoded_item:
         try:
