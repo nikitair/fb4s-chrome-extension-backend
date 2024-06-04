@@ -13,7 +13,7 @@ class FUBProcessor:
         logger.debug(f"({self.__class__.__name__}) - CLASS INITIALIZED")
 
     def get_people_list(self):
-        logger.info(f"({self.__class__.__name__}) - GETTING PEOPLE LIST")
+        logger.info(f"({self.__class__.__name__}) - GET PEOPLE LIST")
         url = f"{self.base_url}people?sort=created&limit=10&offset=0&includeTrash=false&includeUnclaimed=false"
         headers = {
             "accept": "application/json",
@@ -37,7 +37,7 @@ class FUBProcessor:
         return data
 
     def get_person_by_id(self, person_id: int) -> dict | None:
-        logger.info(f"({self.__class__.__name__}) - GETTING PERSON WITH ID: {person_id}")
+        logger.info(f"({self.__class__.__name__}) - GET PEOPLE WITH ID: {person_id}")
         url = f"{self.base_url}people/{person_id}"
         headers = {
             "accept": "application/json",
@@ -58,7 +58,7 @@ class FUBProcessor:
         return data
     
     def get_person_by_email(self, person_email: str) -> dict | None:
-        logger.info(f"({self.__class__.__name__}) - GETTING PERSON WITH EMAIL: {person_email}")
+        logger.info(f"({self.__class__.__name__}) - GET PEOPLE WITH EMAIL: {person_email}")
         url = f"{self.base_url}people?sort=created&limit=10&offset=0&includeTrash=false&includeUnclaimed=false&email={person_email}"
         headers = {
             "accept": "application/json",
@@ -79,7 +79,7 @@ class FUBProcessor:
         return data
 
     def get_note(self, note_id: int):
-        logger.info(f"({self.__class__.__name__}) - GETTING NOTE WITH ID: {note_id}")
+        logger.info(f"({self.__class__.__name__}) - GET NOTE WITH ID: {note_id}")
         url = f"{self.base_url}notes/{note_id}"
         headers = {
             "accept": "application/json",
