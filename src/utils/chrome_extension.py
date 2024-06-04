@@ -1,6 +1,7 @@
 import base64
 import json
 import os
+import httpx
 from datetime import date, datetime, timedelta
 
 import pytz
@@ -11,7 +12,7 @@ from config.logging_config import logger
 from processors.fub import FUBProcessor
 from utils import chrome_extension as utils
 
-from . import FUB_API_KEY, FUB_BASE_URL
+from . import FUB_API_KEY, FUB_BASE_URL, NINJAS_API_KEY
 
 demo_admin = "d2lsbG93QGZiNHMuY29t"
 demo_buyer = "c3RscnZua0BnbWFpbC5jb20="
@@ -277,7 +278,21 @@ def get_utc_offset(timezone: str) -> int | None:
         local_time = utc_now.astimezone(city_timezone)
         utc_offset = int(local_time.utcoffset().total_seconds() / 3600)
         return utc_offset
+    
+    
+def get_timezone(city: str) -> str | None:
+    logger.info(f"GET TIMEZONE FOR - {city}")
+    if city:
+        response = httpx.get(
+            f"https://api.api-ninjas.com/v1/timezone?city={city}&country=Canada",
+            headers = {"X-Api-Key": NINJAS_API_KEY}
+        )
+        status_code = response.status_code
+        data = response.json()
+        logger.info(f"NINJA API RESPONSE - {status_code} - {data}")
+        if status_code == 200:
+            return data["timezone"]
+    
         
-
 if __name__ == "__main__":
     print(get_utc_offset("Toronto"))

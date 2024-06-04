@@ -67,13 +67,19 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
             buyer_profile["assigned_realtor_email"] = assigned_reator_data["assigned_realtor_email"]
             buyer_profile["assigned_realtor_name"] = assigned_reator_data["assigned_realtor_name"]
             
-        # get buyer UTC offset 
-        buyer_predefigned_location = utils.sql_p_get_predefigned_location(buyer_profile["id"])
-        if buyer_predefigned_location:
-            timezone = buyer_predefigned_location["timezone"]
-            utc_offset = utils.get_utc_offset(timezone)
-            buyer_profile["buyer_time_zone"] = utc_offset
-            logger.info(f"BUYER TIME ZONE - {timezone}; UTC OFFSET - {utc_offset}")
+        # get buyer UTC offset
+        
+        buyer_city = buyer_profile["city"]
+        if not buyer_city:
+            buyer_predefigned_location = utils.sql_p_get_predefigned_location(buyer_profile["id"])
+            logger.info(f"BUYER PREDEFIGNED LOCATION - {buyer_predefigned_location}")
+            if buyer_predefigned_location:
+                buyer_city = buyer_predefigned_location["city"]
+                
+        timezone = utils.get_timezone(buyer_city)  
+        utc_offset = utils.get_utc_offset(timezone)
+        buyer_profile["buyer_time_zone"] = utc_offset
+        logger.info(f"BUYER TIME ZONE - {timezone}; UTC OFFSET - {utc_offset}")
             
     logger.info(f"BUYER PROFILE RESPONSE - {buyer_profile}")
     return buyer_profile
