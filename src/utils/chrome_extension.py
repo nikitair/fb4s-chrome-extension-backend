@@ -461,9 +461,9 @@ def sql_m_get_profile_completed_levels(buyer_email: str) -> dict | None:
     )
     if raw_result:
         return {
-            "intro": raw_result[-1][0],
-            "complete": raw_result[-1][1],
-            "supplemental": raw_result[-1][2],
+            "intro": bool(raw_result[-1][0]),
+            "complete": bool(raw_result[-1][1]),
+            "supplemental": bool(raw_result[-1][2]),
         }
 
         
