@@ -2,9 +2,9 @@ version: '3'
 
 services:
   fastapi_server:
-    image: fb4s_automations_server:tag 
+    image: fb4s_automations_server:latest
     ports:
       - "5003:5003"
     volumes:
-      - ./src/logs:/app/logs 
+      - ./src/logs:/app/logs
     restart: always
