@@ -13,7 +13,7 @@ las_router = APIRouter()
 async def las_index():
     return {
         "success": True,
-        "service": "FB4S Automations",
+        "service": "fb4s-automations",
         "router": "leadAutoAssignment",
     }
 

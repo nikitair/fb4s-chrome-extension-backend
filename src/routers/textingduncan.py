@@ -14,7 +14,7 @@ td_router = APIRouter()
 async def textingduncan_index():
     return {
         "success": True,
-        "service": "FB4S Automations",
+        "service": "fb4s-automations",
         "router": "Texting Duncan",
     }
 

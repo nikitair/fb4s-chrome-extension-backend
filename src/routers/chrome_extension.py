@@ -15,7 +15,7 @@ ce_router = APIRouter()
 async def chrome_extension_index():
     return {
         "success": True,
-        "service": "FB4S Automations",
+        "service": "fb4s-automations",
         "router": "Chrome Extension",
     }
 
