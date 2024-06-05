@@ -17,7 +17,7 @@ from config.app import app
 async def root_index():
     return {
         "success": True,
-        "service": "FB4S Automations",
+        "service": "fb4s-automations",
         "router": "root"
     }
 

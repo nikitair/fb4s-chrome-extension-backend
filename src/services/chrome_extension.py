@@ -1,5 +1,6 @@
 from config.logging_config import logger
 from utils import chrome_extension as utils
+from schemas import chrome_extension as schemas
 
 
 def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, profile_ikey: str = None) -> dict:
@@ -14,7 +15,7 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
         "province": None,
         "fub_stage": "Not a FUB Buyer",
         "registration_time": None,
-        "buyer_time_zone": 0,
+        "buyer_time_zone": None,
         "lead_score": None,
         "assigned_realtor_name": None,
         "assigned_realtor_email": None,
@@ -28,18 +29,19 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
     
     viewer_email = utils.decode_base64_item(access_level_key)
     buyer_email = utils.decode_base64_item(profile_ekey)
-    buyer_customer_id = utils.decode_base64_item(profile_ikey)
-    
+    buyer_chat_id = utils.decode_base64_item(profile_ikey)
+
     logger.info(f"access_level_key = {access_level_key} -> {viewer_email}")
     logger.info(f"profile_ekey = {profile_ekey} -> {buyer_email}")
-    logger.info(f"profile_ikey = {profile_ikey} -> {buyer_customer_id}")
+    logger.info(f"profile_ikey = {profile_ikey} -> {buyer_chat_id}")
     
     # get buyer data
-    buyer_data = utils.sql_m_get_buyer(buyer_email, buyer_customer_id)
+    buyer_data = utils.sql_m_get_buyer(buyer_email, buyer_chat_id)
     logger.info(f"BUYER DATA - {buyer_data}")
     
     if buyer_data:
         buyer_profile.update(buyer_data)
+        buyer_email = buyer_data["email"]
     
         # checking viewer permission
         viewer_is_admin = utils.check_if_viewer_is_admin(viewer_email)
@@ -67,13 +69,24 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
             buyer_profile["assigned_realtor_email"] = assigned_reator_data["assigned_realtor_email"]
             buyer_profile["assigned_realtor_name"] = assigned_reator_data["assigned_realtor_name"]
             
-        # get buyer UTC offset 
-        buyer_predefigned_location = utils.sql_p_get_predefigned_location(buyer_profile["id"])
-        if buyer_predefigned_location:
-            timezone = buyer_predefigned_location["timezone"]
-            utc_offset = utils.get_utc_offset(timezone)
-            buyer_profile["buyer_time_zone"] = utc_offset
-            logger.info(f"BUYER TIME ZONE - {timezone}; UTC OFFSET - {utc_offset}")
+        # get buyer UTC offset
+        buyer_city = buyer_profile["city"]
+        if not buyer_city:
+            buyer_predefigned_location = utils.sql_p_get_predefigned_location(buyer_profile["id"])
+            logger.info(f"BUYER PREDEFIGNED LOCATION - {buyer_predefigned_location}")
+            if buyer_predefigned_location:
+                buyer_city = buyer_predefigned_location["city"]
+                
+        timezone = utils.get_timezone(buyer_city)  
+        utc_offset = utils.get_utc_offset(timezone)
+        buyer_profile["buyer_time_zone"] = utc_offset
+        logger.info(f"BUYER TIME ZONE - {timezone}; UTC OFFSET - {utc_offset}")
+        
+        # get profile completed levels
+        profile_completed_levels = utils.sql_m_get_profile_completed_levels(buyer_email)
+        if profile_completed_levels:
+            buyer_profile["profile_completed_levels"] = profile_completed_levels
+            logger.info(f"PROFILE COMPLETED LEVELS - {profile_completed_levels}")
             
     logger.info(f"BUYER PROFILE RESPONSE - {buyer_profile}")
     return buyer_profile
