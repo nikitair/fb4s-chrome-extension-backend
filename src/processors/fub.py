@@ -50,12 +50,35 @@ class FUBProcessor:
         logger.info(f"({self.__class__.__name__}) - FUB API STATUS CODE - {status_code}")
 
         if status_code == 200:
-            data = response.json()["people"]
+            data = response.json()
             logger.debug(f"({self.__class__.__name__}) - FUB API DATA - {data}")
         else:
             logger.error(f"({self.__class__.__name__}) - !!! FUB API ERROR - {response.text}")
 
         return data
+    
+    
+    def get_user_by_id(self, user_id: int) -> dict | None:
+        logger.info(f"({self.__class__.__name__}) - GET USER WITH ID: {user_id}")
+        url = f"{self.base_url}users/{user_id}"
+        headers = {
+            "accept": "application/json",
+            "authorization": f"Basic {self.api_key}"
+        }
+        data = None
+
+        response = requests.get(url, headers=headers)
+        status_code = response.status_code
+        logger.info(f"({self.__class__.__name__}) - FUB API STATUS CODE - {status_code}")
+
+        if status_code == 200:
+            data = response.json()
+            logger.debug(f"({self.__class__.__name__}) - FUB API DATA - {data}")
+        else:
+            logger.error(f"({self.__class__.__name__}) - !!! FUB API ERROR - {response.text}")
+
+        return data
+
     
     def get_person_by_email(self, person_email: str) -> dict | None:
         logger.info(f"({self.__class__.__name__}) - GET PEOPLE WITH EMAIL: {person_email}")
