@@ -15,7 +15,7 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
         "province": None,
         "fub_stage": "Not a FUB Buyer",
         "registration_time": None,
-        "buyer_time_zone": 0,
+        "buyer_time_zone": None,
         "lead_score": None,
         "assigned_realtor_name": None,
         "assigned_realtor_email": None,
