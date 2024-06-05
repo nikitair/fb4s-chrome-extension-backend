@@ -1,5 +1,6 @@
 from config.logging_config import logger
 from utils import chrome_extension as utils
+from schemas import chrome_extension as schemas
 
 
 def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, profile_ikey: str = None) -> dict:
@@ -82,9 +83,10 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
         logger.info(f"BUYER TIME ZONE - {timezone}; UTC OFFSET - {utc_offset}")
         
         # get profile completed levels
-        profile_completed_levels = utils.get_profile_completed_levels(buyer_email)
-        buyer_profile["profile_completed_levels"] = profile_completed_levels
-        logger.info(f"PROFILE COMPLETED LEVELS - {profile_completed_levels}")
+        profile_completed_levels = utils.sql_m_get_profile_completed_levels(buyer_email)
+        if profile_completed_levels:
+            buyer_profile["profile_completed_levels"] = profile_completed_levels
+            logger.info(f"PROFILE COMPLETED LEVELS - {profile_completed_levels}")
             
     logger.info(f"BUYER PROFILE RESPONSE - {buyer_profile}")
     return buyer_profile
