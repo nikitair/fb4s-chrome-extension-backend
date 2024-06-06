@@ -29,7 +29,7 @@ async def decode_from_base64(
         item = Query(description="Item to be decoded")
     ) -> Base64Response:
     logger.info("*** DECODE FROM BASE64 TRIGGERED")
-    return services.encode_to_base64(item)
+    return services.decode_from_base64(item)
 
 
 
