@@ -297,9 +297,7 @@ def get_utc_offset(timezone: str) -> int | None:
     
     
 def get_timezone(city: str) -> str | None:
-    logger.warning("&&&&&&&")
     logger.info(f"GET TIMEZONE FOR - {city}")
-    logger.warning("&&&&&&&")
     if city:
         response = httpx.get(
             f"https://api.api-ninjas.com/v1/timezone?city={city}&country=Canada",
