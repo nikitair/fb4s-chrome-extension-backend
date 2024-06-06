@@ -16,14 +16,14 @@ async def eblast_index() -> DefaultResponse:
     )
     
 
-@eblast_router.post(
-    path='/submit',
-    responses={
-        200: schemas.EBlastFormResponse
-    }
-)
-async def eblast_submit(request: schemas.EBlastForm):
-    logger.info("*** E-Blast SUBMISSION TRIGGERED")
-    return {
-        "message": "Under Development"
-    }
+# @eblast_router.post(
+#     path='/submit',
+#     responses={
+#         200: schemas.EBlastFormResponse
+#     }
+# )
+# async def eblast_submit(request: schemas.EBlastForm):
+#     logger.info("*** E-Blast SUBMISSION TRIGGERED")
+#     return {
+#         "message": "Under Development"
+#     }
