@@ -14,6 +14,7 @@ def encode_to_base64(item) -> str:
     
     try:
         encoded_item = base64.b64encode(item.encode()).decode()
+        response_dict["data"] = encoded_item
         logger.info(f"BASE64 ENCODING RESULT - {encoded_item}")
     except (TypeError, ValueError) as ex:
         response_dict["success"] = False
@@ -37,6 +38,7 @@ def decode_from_base64(item) -> str:
     
     try:
         decoded_item = base64.b64decode(item).decode()
+        response_dict["data"] = decoded_item
         logger.info(f"BASE64 DECODING RESULT - {decoded_item}")
     except (TypeError, ValueError) as ex:
         response_dict["success"] = False
