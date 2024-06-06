@@ -23,6 +23,7 @@ class BuyerProfileResponse(BaseModel):
     assigned_realtor_email: str | None = None
     profile_completed_levels: ProfileCompletedLevels
     show_contacts: bool = True
+    sign_rca_form_url: str = 'https://www.findbusinesses4sale.com/'
 
 
 class BuyerNotFoundResponse(BaseModel):
