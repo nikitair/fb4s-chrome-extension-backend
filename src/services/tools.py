@@ -17,7 +17,8 @@ def encode_to_base64(item) -> str:
         logger.exception(f"!!! FAILED ENCODING TO BASE64 - {ex}")
     
     # TODO: find better solution
-    return response
+    response_dict = dict(response.model_dump())
+    return response_dict
 
 
 
@@ -35,4 +36,5 @@ def decode_from_base64(item) -> str:
         logger.exception(f"!!! FAILED DECODING FROM BASE64 - {ex}")
     
     # TODO: find better solution
-    return response
+    response_dict = dict(response.model_dump())
+    return response_dict
