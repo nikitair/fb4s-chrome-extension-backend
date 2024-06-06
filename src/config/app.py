@@ -61,7 +61,7 @@ app.add_middleware(
 app.include_router(router=ce_router, prefix='/chrome_extension',
                    tags=['Chrome Extension'])
 app.include_router(router=tools_router, prefix='/eblast', tags=['E-Blast'])
-app.include_router(router=fub_router, prefix='/fub', tags=['FUB'])
+# app.include_router(router=fub_router, prefix='/fub', tags=['FUB'])
 app.include_router(router=td_router, prefix='/textingduncan',
                    tags=['Texting Duncan'])
 app.include_router(router=las_router, prefix='/las',
