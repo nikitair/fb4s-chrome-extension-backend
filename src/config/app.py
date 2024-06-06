@@ -55,7 +55,7 @@ app.add_middleware(
 )
 
 # include routers
-app.include_router(fub_router)
+# app.include_router(fub_router)
 
 # routers registration
 app.include_router(router=ce_router, prefix='/chrome_extension',
