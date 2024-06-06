@@ -505,7 +505,7 @@ def prepare_sign_rca_link(buyer_id) -> str:
             base64_lead_id = base64.b64encode(jsonstr_lead_id.encode()).decode()
             sign_rca_url += f"rca/{base64_lead_id}"
         except (TypeError, ValueError) as e:
-            logger.exception(f"FAILED ENCODING LEAD_ID - {e}")
+            logger.exception(f"!!! FAILED ENCODING LEAD_ID - {e}")
     return sign_rca_url
 
         
