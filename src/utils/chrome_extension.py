@@ -304,10 +304,14 @@ def get_timezone(city: str) -> str | None:
             headers = {"X-Api-Key": NINJAS_API_KEY}
         )
         status_code = response.status_code
-        data = response.json()
-        logger.info(f"NINJA API RESPONSE - {status_code} - {data}")
+        logger.info(f"STATUS CODE - {status_code}")
         if status_code == 200:
-            return data["timezone"]
+            data = response.json()
+            logger.info(f"NINJA API RESPONSE - {data}")
+            if status_code == 200:
+                return data["timezone"]
+        else:
+            logger.error(f"NINJA API ERROR - {response.text}")
         
         
 def sql_m_get_intro_fields(buyer_email) -> dict | None:
