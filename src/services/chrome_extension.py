@@ -46,10 +46,10 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
     
         # checking viewer permission
         viewer_is_admin = utils.check_if_viewer_is_admin(viewer_email)
+        rca_signed = utils.sql_m_check_if_rca_signed(viewer_email, buyer_email)
         if viewer_is_admin:
             buyer_profile["show_contacts"] = True
         else:
-            rca_signed = utils.sql_m_check_if_rca_signed(viewer_email, buyer_email)
             buyer_profile["show_contacts"] = rca_signed
             logger.info(f"RCA SIGNED - {rca_signed}")
             
