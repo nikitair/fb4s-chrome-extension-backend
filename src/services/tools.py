@@ -18,6 +18,7 @@ def encode_to_base64(item) -> str:
     
     # TODO: find better solution
     response_dict = dict(response.model_dump())
+    logger.info(f"RESPONSE - {response_dict}")
     return response_dict
 
 
@@ -37,4 +38,5 @@ def decode_from_base64(item) -> str:
     
     # TODO: find better solution
     response_dict = dict(response.model_dump())
+    logger.info(f"RESPONSE - {response_dict}")
     return response_dict
