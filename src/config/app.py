@@ -11,11 +11,11 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from config.logging_config import logger
 from config.middleware import log_middleware
 from routers.chrome_extension import ce_router
-from routers.fub import fub_router
+# from routers.fub import fub_router
 from routers.lead_auto_assignment import las_router
 from routers.textingduncan import td_router
 from routers.tools import tools_router
-from routers.eblast import eblast_router
+# from routers.eblast import eblast_router
 
 from . import CORS_ORIGINS, ROOT_DIR
 
