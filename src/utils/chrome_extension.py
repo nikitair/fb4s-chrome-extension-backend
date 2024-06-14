@@ -223,12 +223,16 @@ def get_buyer_fub_stage(buyer_email):
     
 
 def sql_m_get_buyer_assigned_realtor(buyer_email: str):
-    logger.info(f"GET ASSIGNED REALTOR - {buyer_email}")
+    logger.info(f"GET ASSIGNED REALTOR OF - {buyer_email}")
     query = f"""
         SELECT
-            agreement.receiving_broker_first_name as realtor_first_name,
-            agreement.receiving_broker_last_name as realtor_last_name,
-            agreement.receiving_broker_email as realtor_email
+            agreement.receiving_broker_first_name,
+            agreement.receiving_broker_last_name,
+            agreement.receiving_broker_email,
+            customers.email,
+            customers.id as customers_id,
+            fub.broker_id,
+            fub.broker_external_id
         FROM
             tbl_agreement_details agreement
         LEFT JOIN tbl_customers customers 
@@ -236,9 +240,11 @@ def sql_m_get_buyer_assigned_realtor(buyer_email: str):
         LEFT JOIN tbl_external_crm_leads fub 
             ON fub.broker_id = customers.id
         WHERE
-            agreement.referred_buyer_email = 'drewkuhn96@gmail.com'
-        ORDER BY agreement.date_referral_agreement DESC
-            LIMIT 1
+            agreement.referred_buyer_email = {buyer_email}
+        ORDER BY 
+            agreement.date_referral_agreement DESC
+        LIMIT 1
+
     """
     raw_result = mysql.execute_with_connection(
         func=mysql.select_executor,
