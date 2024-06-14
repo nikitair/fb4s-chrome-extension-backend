@@ -240,7 +240,7 @@ def sql_m_get_buyer_assigned_realtor(buyer_email: str):
         LEFT JOIN tbl_external_crm_leads fub 
             ON fub.broker_id = customers.id
         WHERE
-            agreement.referred_buyer_email = {buyer_email}
+            agreement.referred_buyer_email = '{buyer_email}'
         ORDER BY 
             agreement.date_referral_agreement DESC
         LIMIT 1
