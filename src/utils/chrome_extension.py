@@ -223,12 +223,16 @@ def get_buyer_fub_stage(buyer_email):
     
 
 def sql_m_get_buyer_assigned_realtor(buyer_email: str):
-    logger.info(f"GET ASSIGNED REALTOR - {buyer_email}")
+    logger.info(f"GET ASSIGNED REALTOR OF - {buyer_email}")
     query = f"""
         SELECT
-            agreement.receiving_broker_first_name as realtor_first_name,
-            agreement.receiving_broker_last_name as realtor_last_name,
-            agreement.receiving_broker_email as realtor_email
+            agreement.receiving_broker_first_name,
+            agreement.receiving_broker_last_name,
+            agreement.receiving_broker_email,
+            customers.email,
+            customers.id as customers_id,
+            fub.broker_id,
+            fub.broker_external_id
         FROM
             tbl_agreement_details agreement
         LEFT JOIN tbl_customers customers 
@@ -236,9 +240,11 @@ def sql_m_get_buyer_assigned_realtor(buyer_email: str):
         LEFT JOIN tbl_external_crm_leads fub 
             ON fub.broker_id = customers.id
         WHERE
-            agreement.referred_buyer_email = 'drewkuhn96@gmail.com'
-        ORDER BY agreement.date_referral_agreement DESC
-            LIMIT 1
+            agreement.referred_buyer_email = '{buyer_email}'
+        ORDER BY 
+            agreement.date_referral_agreement DESC
+        LIMIT 1
+
     """
     raw_result = mysql.execute_with_connection(
         func=mysql.select_executor,
@@ -304,10 +310,14 @@ def get_timezone(city: str) -> str | None:
             headers = {"X-Api-Key": NINJAS_API_KEY}
         )
         status_code = response.status_code
-        data = response.json()
-        logger.info(f"NINJA API RESPONSE - {status_code} - {data}")
+        logger.info(f"STATUS CODE - {status_code}")
         if status_code == 200:
-            return data["timezone"]
+            data = response.json()
+            logger.info(f"NINJA API RESPONSE - {data}")
+            if status_code == 200:
+                return data["timezone"]
+        else:
+            logger.error(f"NINJA API ERROR - {response.text}")
         
         
 def sql_m_get_intro_fields(buyer_email) -> dict | None:
@@ -465,6 +475,48 @@ def sql_m_get_profile_completed_levels(buyer_email: str) -> dict | None:
             "complete": bool(raw_result[-1][1]),
             "supplemental": bool(raw_result[-1][2])
         }
+        
+        
+def sql_m_get_chat_id(buyer_id: int) -> int | None:
+    logger.info(f"GET CHAT ID FOR - {buyer_id}")
+    query = f"""
+    SELECT
+        id
+    FROM
+        tbl_chat
+    WHERE
+        sender_id = {buyer_id}
+    AND 
+        message_flag = "first_message"
+    ORDER BY 
+        created_at ASC
+    LIMIT 1
+    """
+    raw_result = mysql.execute_with_connection(
+        func=mysql.select_executor,
+        query=query
+    )
+    if raw_result:
+        return raw_result[-1][0]
+    
+    
+def prepare_sign_rca_link(buyer_id) -> str:
+    logger.info(f"PREPARE SIGN RCA FORM URL FOR - {buyer_id}")
+    sign_rca_url = "https://www.findbusinesses4sale.com/"
+    chat_id = sql_m_get_chat_id(buyer_id)
+    logger.info(f"BUYER CHAT ID - {chat_id}")
+    if chat_id:
+        lead_id = {
+            "chat_id":chat_id,
+            "connection_owner_id":"18705"
+        }
+        try:
+            jsonstr_lead_id = json.dumps(lead_id)
+            base64_lead_id = base64.b64encode(jsonstr_lead_id.encode()).decode()
+            sign_rca_url += f"rca/{base64_lead_id}"
+        except (TypeError, ValueError) as e:
+            logger.exception(f"!!! FAILED ENCODING LEAD_ID - {e}")
+    return sign_rca_url
 
         
 if __name__ == "__main__":

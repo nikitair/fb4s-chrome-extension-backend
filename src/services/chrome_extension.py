@@ -24,7 +24,8 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
             "complete": False,
             "supplemental": False
         },
-        "show_contacts": False
+        "show_contacts": False,
+        "sign_rca_form_url": "https://www.findbusinesses4sale.com/"
     }
     
     viewer_email = utils.decode_base64_item(access_level_key)
@@ -45,10 +46,10 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
     
         # checking viewer permission
         viewer_is_admin = utils.check_if_viewer_is_admin(viewer_email)
+        rca_signed = utils.sql_m_check_if_rca_signed(viewer_email, buyer_email)
         if viewer_is_admin:
             buyer_profile["show_contacts"] = True
         else:
-            rca_signed = utils.sql_m_check_if_rca_signed(viewer_email, buyer_email)
             buyer_profile["show_contacts"] = rca_signed
             logger.info(f"RCA SIGNED - {rca_signed}")
             
@@ -87,6 +88,13 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
         if profile_completed_levels:
             buyer_profile["profile_completed_levels"] = profile_completed_levels
             logger.info(f"PROFILE COMPLETED LEVELS - {profile_completed_levels}")
+            
+        # RCA link
+        if not rca_signed:
+            buyer_id = buyer_profile["id"]
+            sign_rca_link = utils.prepare_sign_rca_link(buyer_id)
+            logger.info(f"SIGN RCA LINK - {sign_rca_link}")
+            buyer_profile["sign_rca_form_url"] = sign_rca_link
             
     logger.info(f"BUYER PROFILE RESPONSE - {buyer_profile}")
     return buyer_profile

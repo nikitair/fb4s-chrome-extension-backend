@@ -1,5 +1,6 @@
 from config.logging_config import logger
 from processors.fub import FUBProcessor
+from schemas import fub as schemas
 from . import FUB_API_KEY, FUB_BASE_URL
 
 
@@ -10,7 +11,11 @@ def get_person(person_id: str) -> dict | None:
     )
     person = fub.get_person_by_id(person_id)
     logger.info(f"PERSON DATA - {person}")
-    return person
+    if person:
+        return schemas.FUBItemResponse(
+            data=person
+        )
+    return schemas.NoFoundResponse()
 
 
 def get_user(user_id: str) -> dict | None:
