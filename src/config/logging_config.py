@@ -11,7 +11,7 @@ logger.setLevel(logging.INFO)
 formatter = logging.Formatter(
     '%(asctime)s UTC - %(levelname)s - %(module)s:%(funcName)s:%(lineno)d - %(message)s')
 
-logs_file_path = os.path.join(ROOT_DIR, "src", "logs", "logs.log")
+logs_file_path = os.path.join(ROOT_DIR, "logs", "logs.log")
 
 # handlers
 terminal_handler = logging.StreamHandler()

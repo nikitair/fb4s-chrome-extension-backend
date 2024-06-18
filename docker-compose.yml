@@ -6,5 +6,5 @@ services:
     ports:
       - "5003:5003"
     volumes:
-      - ./src/logs:/app/src/logs
+      - ./logs:/app/logs
     restart: always
