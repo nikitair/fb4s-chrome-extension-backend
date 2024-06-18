@@ -7,6 +7,7 @@ from config.logging_config import logger
 from schemas import chrome_extension as schemas
 from schemas.index import DefaultResponse
 from services import chrome_extension as services
+from utils import chrome_extension as utils
 
 ce_router = APIRouter()
 
@@ -34,3 +35,14 @@ async def get_buyer_profile(
 ):
     logger.info("*** GET BUYER PROFILE TRIGGERED")
     return services.get_buyer_profile(access_level_key, profile_ekey, profile_ikey)
+
+
+@ce_router.get("profiles/buyer/location")
+async def get_buyer_location():
+    # result = utils.get_location_of_buyer(buyer_id)
+    result = {"hello": "test"}
+    return result
+
+
+
+

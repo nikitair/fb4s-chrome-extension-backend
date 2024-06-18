@@ -518,6 +518,33 @@ def prepare_sign_rca_link(buyer_id) -> str:
             logger.exception(f"!!! FAILED ENCODING LEAD_ID - {e}")
     return sign_rca_url
 
+
+def get_location_of_buyer(buyer_id):
+    logger.info(f"TESTINF ATTEMPT GET BUYER LOCATION FOR - {buyer_id}")
+    query = f"""
+    SELECT
+        tbl_advertisement.search_city AS `city`,
+        tbl_advertisement.search_province AS `province`,
+        tbl_advertisement.askingpricesorting AS `price`,
+        tbl_advertisement.DDF_ID AS `MLS`
+    FROM
+        tbl_chat
+    INNER JOIN tbl_advertisement ON tbl_chat.listing_id = tbl_advertisement.id
+    WHERE
+        sender_id = {buyer_id}
+    AND message_flag = 'first_message'
+    ORDER BY
+        tbl_advertisement.askingpricesorting DESC;
+    """
+    raw_result = mysql.execute_with_connection(
+    func=mysql.select_executor,
+    query=query 
+    )
+    return raw_result    
+
+
+
         
 if __name__ == "__main__":
     print(get_utc_offset("Toronto"))
+
