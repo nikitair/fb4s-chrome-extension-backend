@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   fastapi_server:
@@ -6,5 +6,5 @@ services:
     ports:
       - "5003:5003"
     volumes:
-      - ./src/logs:/app/logs
+      - ./src/logs:/app/src/logs
     restart: always
