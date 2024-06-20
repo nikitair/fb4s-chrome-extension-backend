@@ -59,6 +59,7 @@ def sql_m_get_buyer(buyer_email: str, buyer_chat_id: int) -> dict | None:
         func=mysql.select_executor,
         query=query
     )
+    logger.debug(f"SQL RAW RESPONSE - ({raw_result})")
     if raw_result:
         return {
             "id": raw_result[-1][0],
@@ -103,6 +104,7 @@ def sql_m_check_if_rca_signed(viewer_email: str, buyer_email: str) -> bool:
         func=mysql.select_executor,
         query=query
     )
+    logger.debug(f"SQL RAW RESPONSE - ({raw_result})")
     return True if raw_result else False
 
 
@@ -207,6 +209,7 @@ def sql_p_get_buyer_lead_score(buyer_email: str):
         func=postgres.select_executor,
         query=query
     )
+    logger.debug(f"SQL RAW RESPONSE - ({raw_result})")
     return raw_result[-1][0] if raw_result else 0
 
 
@@ -249,6 +252,7 @@ def sql_m_get_buyer_assigned_realtor(buyer_email: str):
         func=mysql.select_executor,
         query=query
     )
+    logger.debug(f"SQL RAW RESPONSE - ({raw_result})")
     if raw_result:
         return {
             "assigned_realtor_name": (raw_result[-1][0] + ' ' + raw_result[-1][1]),
@@ -272,6 +276,7 @@ def sql_p_get_predefigned_location(buyer_id: int):
         func=postgres.select_executor,
         query=query
     )
+    logger.debug(f"SQL RAW RESPONSE - ({raw_result})")
     if raw_result:
         return {
             "city": raw_result[-1][0],
@@ -339,6 +344,7 @@ def sql_m_get_intro_fields(buyer_email) -> dict | None:
         func=mysql.select_executor,
         query=query
     )
+    logger.debug(f"SQL RAW RESPONSE - ({raw_result})")
     if raw_result:
         return {
             "first_name": raw_result[-1][0],
@@ -370,6 +376,7 @@ def sql_m_get_complete_fields(buyer_email) -> dict | None:
         func=mysql.select_executor,
         query=query
     )
+    logger.debug(f"SQL RAW RESPONSE - ({raw_result})")
     if raw_result:
         return {
             "area_of_interest": raw_result[-1][0],
@@ -400,6 +407,7 @@ def sql_m_get_supplemental_business_fields(buyer_email) -> dict | None:
         func=mysql.select_executor,
         query=query
     )
+    logger.debug(f"SQL RAW RESPONSE - ({raw_result})")
     if raw_result:
         return {
             "area_of_interest": raw_result[-1][0],
@@ -468,6 +476,7 @@ def sql_m_get_profile_completed_levels(buyer_email: str) -> dict | None:
         func=mysql.select_executor,
         query=query
     )
+    logger.debug(f"SQL RAW RESPONSE - ({raw_result})")
     if raw_result:
         return {
             "intro": bool(raw_result[-1][0]),
@@ -495,6 +504,7 @@ def sql_m_get_chat_id(buyer_id: int) -> int | None:
         func=mysql.select_executor,
         query=query
     )
+    logger.debug(f"SQL RAW RESPONSE - ({raw_result})")
     if raw_result:
         return raw_result[-1][0]
     
@@ -551,7 +561,7 @@ def sql_m_get_buyer_leads(buyer_id: int) -> list:
         func=mysql.select_executor,
         query=query
     )
-    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    logger.debug(f"SQL RAW RESPONSE - ({raw_response})")
     if raw_response:
         for item in raw_response:
             leads.append(
@@ -593,7 +603,7 @@ def sql_p_get_in_person_evaluation(buyer_email: str) -> list:
         func=postgres.select_executor,
         query=query
     )
-    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    logger.debug(f"SQL RAW RESPONSE - ({raw_response})")
     if raw_response:
         for item in raw_response:
             evaluations.append(
@@ -706,7 +716,7 @@ def sql_p_get_leads_score_events(buyer_email: str) -> list:
         func=postgres.select_executor,
         query=query
     )
-    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    logger.debug(f"SQL RAW RESPONSE - ({raw_response})")
     if raw_response:
         for item in raw_response:
             events.append(
@@ -723,6 +733,10 @@ def sql_p_get_leads_score_events(buyer_email: str) -> list:
 
 def sql_m_get_mls_data(mls_list: list) -> dict:
     logger.info(f"SQL GET MLS DATA - ({mls_list})")
+    
+    # Convert the list to a comma-separated string of quoted values
+    mls_str = ', '.join(f"'{mls}'" for mls in mls_list)
+    
     query = f"""
         SELECT
             tbl_advertisement.DDF_ID AS `MLS`,
@@ -741,15 +755,14 @@ def sql_m_get_mls_data(mls_list: list) -> dict:
             tbl_customers realtor 
                 ON realtor.id = tbl_advertisement.user_id
             WHERE
-        DDF_ID in %s
+        DDF_ID in ({mls_str})
     """
     mls_data = {}
     raw_response = mysql.execute_with_connection(
         func=mysql.select_executor,
-        query=query,
-        params = tuple(mls_list)
+        query=query
     )
-    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    logger.debug(f"SQL RAW RESPONSE - ({raw_response})")
     if raw_response:
         for item in raw_response:
             mls_data[item[0]] = {
@@ -771,6 +784,10 @@ def sql_m_get_mls_data(mls_list: list) -> dict:
 
 def sql_m_get_mls_data_archive(mls_list: list) -> dict:
     logger.info(f"SQL GET ARCHIVE MLS DATA - ({mls_list})")
+    
+    # Convert the list to a comma-separated string of quoted values
+    mls_str = ', '.join(f"'{mls}'" for mls in mls_list)
+    
     query = f"""
         SELECT
             tbl_advertisement.DDF_ID AS `MLS`,
@@ -789,15 +806,14 @@ def sql_m_get_mls_data_archive(mls_list: list) -> dict:
             tbl_customers realtor 
                 ON realtor.id = tbl_advertisement.user_id
             WHERE
-        DDF_ID in %s
+        DDF_ID in ({mls_str})
     """
     mls_data = {}
     raw_response = mysql.execute_with_connection(
         func=mysql.select_executor,
-        query=query,
-        params = tuple(mls_list)
+        query=query
     )
-    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    logger.debug(f"SQL RAW RESPONSE - ({raw_response})")
     if raw_response:
         for item in raw_response:
             mls_data[item[0]] = {
@@ -831,7 +847,7 @@ def sql_p_get_buyer_mixpanel_email(buyer_email: str) -> str | None:
         func=postgres.select_executor,
         query=query
     )
-    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    logger.debug(f"SQL RAW RESPONSE - ({raw_response})")
     if raw_response:
         return raw_response[0][0]
 
@@ -855,7 +871,7 @@ def sql_p_get_contacted_seller_events(buyer_email: str) -> list:
         func=postgres.select_executor,
         query=query
     )
-    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    logger.debug(f"SQL RAW RESPONSE - ({raw_response})")
     if raw_response:
         for item in raw_response:
             contacted_seller_events.append(
@@ -895,7 +911,7 @@ def sql_p_get_all_green_button_click_events(buyer_email: str) -> list:
         func=postgres.select_executor,
         query=query
     )
-    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    logger.debug(f"SQL RAW RESPONSE - ({raw_response})")
     if raw_response:
         for item in raw_response:
             events.append(
@@ -933,7 +949,7 @@ def sql_p_get_view_listing_events(buyer_email: str) -> list:
         func=postgres.select_executor,
         query=query
     )
-    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    logger.debug(f"SQL RAW RESPONSE - ({raw_response})")
     if raw_response:
         for item in raw_response:
             events.append(
@@ -948,6 +964,10 @@ def sql_p_get_view_listing_events(buyer_email: str) -> list:
 
 def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
     logger.info(f"SQL GET BUYER CATEGORIES - ({buyer_mls_list})")
+    
+    # Convert the list to a comma-separated string of quoted values
+    buyer_mls_str = ', '.join(f"'{mls}'" for mls in buyer_mls_list)
+
     query = f"""
         SELECT
             `Category`,
@@ -966,11 +986,11 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
             (
                 SELECT
                     compiled_category_name AS `Category`,
-                AskingPriceSorting AS `Price`
+                    AskingPriceSorting AS `Price`
                 FROM
                     tbl_advertisement
                 WHERE
-                DDF_ID in %s
+                    DDF_ID in ({buyer_mls_str})
             ) res
             GROUP BY
             `Category`,
@@ -1000,11 +1020,11 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
             (
                 SELECT
                     compiled_category_name AS `Category`,
-                AskingPriceSorting AS `Price`
+                    AskingPriceSorting AS `Price`
                 FROM
                     tbl_archive_listings
                 WHERE
-                DDF_ID in %s
+                    DDF_ID in ({buyer_mls_str})
             ) res
             GROUP BY
             `Category`,
@@ -1018,10 +1038,9 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
     categories = []
     raw_response = mysql.execute_with_connection(
         func=mysql.select_executor,
-        query=query,
-        params = tuple(buyer_mls_list)
+        query=query
     )
-    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    logger.debug(f"SQL RAW RESPONSE - ({raw_response})")
     if raw_response:
         for item in raw_response:
             categories.append(
@@ -1035,3 +1054,4 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
             )
             
     return categories
+
