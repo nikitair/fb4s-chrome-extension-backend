@@ -28,3 +28,7 @@ class BuyerProfileResponse(BaseModel):
 
 class BuyerNotFoundResponse(BaseModel):
     error: str = "Buyer NOT Found"
+
+
+class BuyerLeads(BaseModel):
+    leads: list[dict] | list = []

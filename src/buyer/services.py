@@ -96,3 +96,7 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
             
     logger.info(f"BUYER PROFILE RESPONSE - {buyer_profile}")
     return buyer_profile
+
+
+def get_buyer_leads_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
+    ...

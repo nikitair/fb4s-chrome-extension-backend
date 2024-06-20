@@ -19,5 +19,19 @@ async def get_buyer_profile(
     profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
     profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
 ):
-    logger.info("*** GET BUYER PROFILE TRIGGERED")
+    logger.info("*** API GET BUYER PROFILE TRIGGERED")
     return services.get_buyer_profile(access_level_key, profile_ekey, profile_ikey)
+
+
+@router.get(
+    "/leads",
+    responses={
+        200: {"model": schemas.BuyerLeads, "description": "Buyer Leads"}
+    }
+)
+async def get_buyer_leads(
+    profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
+    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
+):
+    logger.info("*** API GET BUYER LEADS LOCATIONS")
+    return services.get_buyer_leads_service(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
