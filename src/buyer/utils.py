@@ -583,7 +583,7 @@ def sql_m_get_in_person_evaluation(buyer_email: str) -> list:
         FROM
             statistics.retool_person_evaluation
         WHERE
-            email = '{{user_be_profile.data.Email['0']}}'
+            email = '{buyer_email}'
         ORDER BY
             evaluating_datetime 
         DESC
