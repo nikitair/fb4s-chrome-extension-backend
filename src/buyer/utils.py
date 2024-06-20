@@ -905,3 +905,42 @@ def sql_p_get_all_green_button_click_events(buyer_email: str) -> list:
                 }
             )
     return events
+
+
+def sql_p_get_view_listing_events(buyer_email: str) -> list:
+    logger.info(f"SQL GET VIEW LISTING EVENTS - ({buyer_email})")
+    query = f"""
+        SELECT
+            "MLS",
+            COUNT("MLS") AS "Views Amount",
+            MAX(time) AS "Last View Time"
+        FROM
+            marketing_ecosystem.mixpanel_to_aws.export
+        WHERE
+            event = 'View Listing'
+        AND (
+            id = '{buyer_email}'
+        OR
+            distinct_id = '{buyer_email}'
+            )
+        GROUP BY
+            "MLS"
+        ORDER BY
+            "Views Amount" DESC
+    """
+    events = []
+    raw_response = postgres.execute_with_connection(
+        func=postgres.select_executor,
+        query=query
+    )
+    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    if raw_response:
+        for item in raw_response:
+            events.append(
+                {
+                    "mls": item[0],
+                    "views_amount": item[1],
+                    "event_date": item[2]
+                }
+            )
+    return events
