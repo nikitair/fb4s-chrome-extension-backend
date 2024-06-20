@@ -744,8 +744,8 @@ def sql_m_get_mls_data(mls_list: list) -> dict:
         DDF_ID in %s
     """
     mls_data = {}
-    raw_response = postgres.execute_with_connection(
-        func=postgres.select_executor,
+    raw_response = mysql.execute_with_connection(
+        func=mysql.select_executor,
         query=query,
         params = tuple(mls_list)
     )
@@ -792,8 +792,8 @@ def sql_m_get_mls_data_archive(mls_list: list) -> dict:
         DDF_ID in %s
     """
     mls_data = {}
-    raw_response = postgres.execute_with_connection(
-        func=postgres.select_executor,
+    raw_response = mysql.execute_with_connection(
+        func=mysql.select_executor,
         query=query,
         params = tuple(mls_list)
     )
@@ -944,3 +944,94 @@ def sql_p_get_view_listing_events(buyer_email: str) -> list:
                 }
             )
     return events
+
+
+def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
+    logger.info(f"SQL GET BUYER CATEGORIES - ({buyer_mls_list})")
+    query = f"""
+        SELECT
+            `Category`,
+            SUM(`Amount`) AS `Listings Amount`,
+            ROUND(MIN(`Price`), 0) AS `Minimum Price`,
+            ROUND(SUM(`Total`) / SUM(`Amount`), 0) AS `Average Price`,
+            ROUND(MAX(`Price`), 0) AS `Maximum Price`
+        FROM
+        (
+            SELECT
+            `Category`,
+            `Price`,
+            COUNT(*) AS `Amount`,
+            `Price` * COUNT(*) AS `Total`
+            FROM
+            (
+                SELECT
+                    compiled_category_name AS `Category`,
+                AskingPriceSorting AS `Price`
+                FROM
+                    tbl_advertisement
+                WHERE
+                DDF_ID in %s
+            ) res
+            GROUP BY
+            `Category`,
+            `Price`
+        ) res2
+        GROUP BY
+        `Category`
+        ORDER BY
+        `Listings Amount` DESC
+        
+        UNION
+        
+        SELECT
+            `Category`,
+            SUM(`Amount`) AS `Listings Amount`,
+            ROUND(MIN(`Price`), 0) AS `Minimum Price`,
+            ROUND(SUM(`Total`) / SUM(`Amount`), 0) AS `Average Price`,
+            ROUND(MAX(`Price`), 0) AS `Maximum Price`
+        FROM
+        (
+            SELECT
+            `Category`,
+            `Price`,
+            COUNT(*) AS `Amount`,
+            `Price` * COUNT(*) AS `Total`
+            FROM
+            (
+                SELECT
+                    compiled_category_name AS `Category`,
+                AskingPriceSorting AS `Price`
+                FROM
+                    tbl_archive_listings
+                WHERE
+                DDF_ID in %s
+            ) res
+            GROUP BY
+            `Category`,
+            `Price`
+        ) res2
+        GROUP BY
+        `Category`
+        ORDER BY
+        `Listings Amount` DESC
+    """
+    categories = []
+    raw_response = mysql.execute_with_connection(
+        func=mysql.select_executor,
+        query=query,
+        params = tuple(buyer_mls_list)
+    )
+    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    if raw_response:
+        for item in raw_response:
+            categories.append(
+                {
+                    "category": item[0],
+                    "listings_amount": item[1],
+                    "min_price": item[2],
+                    "avg_price": item[3],
+                    "max_price": item[4]
+                }
+            )
+            
+    return categories

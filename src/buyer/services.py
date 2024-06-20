@@ -164,3 +164,46 @@ def get_buyer_lead_score_events(profile_ekey: str = None, profile_ikey: str = No
     return {"events": events}
 
 
+def get_buyer_categories(profile_ekey: str = None, profile_ikey: str = None) -> list:
+    categories = []
+    
+    buyer_email = utils.decode_base64_item(profile_ekey)
+    buyer_chat_id = utils.decode_base64_item(profile_ikey)
+
+    logger.info(f"profile_ekey = {profile_ekey} -> {buyer_email}")
+    logger.info(f"profile_ikey = {profile_ikey} -> {buyer_chat_id}")
+    
+    # get buyer data
+    buyer_data = utils.sql_m_get_buyer(buyer_email=buyer_email, buyer_chat_id=buyer_chat_id)
+    if buyer_data:
+        logger.info(f"BUYER DATA - ({buyer_data})")
+        buyer_email = buyer_data["email"]
+        
+        buyer_mls_list = []
+        
+        # get viewed listings
+        viewed_listings = utils.sql_p_get_view_listing_events(buyer_email=buyer_email)
+        logger.info(f"VIEWED LISTINGS - ({viewed_listings})")
+        if viewed_listings:
+            buyer_mls_list.extend([item["mls"] for item in viewed_listings])
+            
+        # get contact seller listings
+        contact_seller_listings = utils.sql_p_get_contacted_seller_events(buyer_email)
+        logger.info(f"CONTACT SELLER LISTINGS - ({contact_seller_listings})")
+        if contact_seller_listings:
+            buyer_mls_list.extend([item["mls"] for item in contact_seller_listings])
+            
+        # get all green button listings
+        all_green_button_listings = utils.sql_p_get_all_green_button_click_events(buyer_email)
+        logger.info(f"ALL GREEN BUTTON LISTINGS - ({all_green_button_listings})")
+        if all_green_button_listings:
+            buyer_mls_list.extend([item["mls"] for item in all_green_button_listings])
+            
+        buyer_mls_list = list(set(buyer_mls_list))
+        logger.info(f"BUYER MLS LIST - ({buyer_mls_list})")
+        
+        if buyer_mls_list:
+            categories = utils.sql_m_get_buyer_categories(buyer_mls_list)
+            
+    logger.info(f"BUYER CATEGORIES FOUND - ({categories})")
+    return {"categories": categories}

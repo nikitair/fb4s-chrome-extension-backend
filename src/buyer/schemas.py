@@ -69,3 +69,17 @@ class LeadScoreEvent(BaseModel):
 
 class BuyerLeadScoreEvents(BaseModel):
     events: List[LeadScoreEvent]
+    
+    
+class Category(BaseModel):
+    category: str
+    listings_amount: int
+    min_price: int
+    avg_price: int
+    max_price: int
+
+
+class BuyerCategories(BaseModel):
+    categories: List[Category]
+
+    

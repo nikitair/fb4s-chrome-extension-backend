@@ -63,3 +63,17 @@ def get_buyer_in_person_evaluations(
 ):
     logger.info("*** API GET BUYER LEAD SCORE EVENTS")
     return services.get_buyer_lead_score_events(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
+
+
+@router.get(
+    "/categories",
+    responses={
+        200: {"model": schemas.BuyerCategories, "description": "Buyer Categories"}
+    }
+)
+def get_buyer_categories(
+    profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
+    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
+):
+    logger.info("*** API GET BUYER CATEGORIES")
+    return services.get_buyer_categories(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
