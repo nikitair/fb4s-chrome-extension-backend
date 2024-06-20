@@ -67,5 +67,5 @@ class LeadScoreEvent(BaseModel):
     total_score: int
 
 
-class BuyerLeadScoreEvents(LeadScoreEvent):
-    events: List[InPersonEvaluation]
+class BuyerLeadScoreEvents(BaseModel):
+    events: List[LeadScoreEvent]
