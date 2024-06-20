@@ -669,8 +669,7 @@ def sql_p_get_leads_score_events(buyer_email: str) -> list:
                     INNER JOIN marketing_ecosystem.mixpanel_to_aws.export AS events ON fb4s_users.id = events.id
                     INNER JOIN marketing_ecosystem.statistics.lead_scoring AS scoring ON events.event = scoring.event_name
                     WHERE
-                    fb4s_users.id = '{{user_be_profile.data.Email[0]}}'
-                    AND events.time BETWEEN '{{dateRange3.value.start}}' AND '{{dateRange3.value.end}}'
+                    fb4s_users.id = '{buyer_email}'
                 ) res
                 GROUP BY
                 "Event Name",
