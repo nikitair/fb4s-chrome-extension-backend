@@ -44,3 +44,16 @@ class Lead(BaseModel):
 
 class BuyerLeads(BaseModel):
     leads: List[Lead]
+    
+    
+class InPersonEvaluation(BaseModel):
+    call_event: str
+    evaluator_type: str
+    evaluator_name: str
+    mark: int
+    comment: str | None
+    date: str
+
+
+class BuyerInPersonEvaluations(BaseModel):
+    evaluations: List[InPersonEvaluation]

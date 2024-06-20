@@ -570,5 +570,43 @@ def sql_m_get_buyer_leads(buyer_id: int) -> list:
     return leads
 
 
+def sql_m_get_in_person_evaluation(buyer_email: str) -> list:
+    logger.info(f"SQL GET IN PERSON EVALUATIONS - ({buyer_email})")
+    query = f"""
+        SELECT
+            call_event,
+            evaluator_type,
+            evaluating_person as evaluator_name,
+            mark,
+            comment,
+            evaluating_datetime as date
+        FROM
+            statistics.retool_person_evaluation
+        WHERE
+            email = '{{user_be_profile.data.Email['0']}}'
+        ORDER BY
+            evaluating_datetime 
+        DESC
+    """
+    evaluations = []
+    raw_response = mysql.execute_with_connection(
+        func=mysql.select_executor,
+        query=query
+    )
+    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    if raw_response:
+        for item in raw_response:
+            evaluations.append(
+                {
+                    "call_event": item[0],
+                    "evaluator_type": item[1],
+                    "evaluator_name": item[2],
+                    "mark": item[3],
+                    "comment": item[4],
+                    "date": item[5]
+                }
+            )
+    return evaluations
+
 if __name__ == "__main__":
     print(get_utc_offset("Toronto"))

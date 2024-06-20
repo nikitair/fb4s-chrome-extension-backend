@@ -119,3 +119,25 @@ def get_buyer_leads_service(profile_ekey: str = None, profile_ikey: str = None) 
     logger.info(f"LEADS FOUND - ({leads})")
     return leads
 
+
+def get_buyer_in_person_evaluations_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
+    evaluations = []
+    
+    buyer_email = utils.decode_base64_item(profile_ekey)
+    buyer_chat_id = utils.decode_base64_item(profile_ikey)
+
+    logger.info(f"profile_ekey = {profile_ekey} -> {buyer_email}")
+    logger.info(f"profile_ikey = {profile_ikey} -> {buyer_chat_id}")
+    
+    # get buyer data
+    buyer_data = utils.sql_m_get_buyer(buyer_email=buyer_email, buyer_chat_id=buyer_chat_id)
+    if buyer_data:
+        logger.info(f"BUYER DATA - ({buyer_data})")
+        buyer_email = buyer_data["email"]
+
+        # get buyer in-person evaluations
+        evaluations = utils.sql_m_get_in_person_evaluation(buyer_email=buyer_email)
+    
+    logger.info(f"In-Person EVALUATION FOUND - ({evaluations})")
+    return evaluations
+
