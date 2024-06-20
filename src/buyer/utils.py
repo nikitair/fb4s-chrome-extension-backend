@@ -570,7 +570,7 @@ def sql_m_get_buyer_leads(buyer_id: int) -> list:
     return leads
 
 
-def sql_m_get_in_person_evaluation(buyer_email: str) -> list:
+def sql_p_get_in_person_evaluation(buyer_email: str) -> list:
     logger.info(f"SQL GET IN PERSON EVALUATIONS - ({buyer_email})")
     query = f"""
         SELECT
@@ -589,8 +589,8 @@ def sql_m_get_in_person_evaluation(buyer_email: str) -> list:
         DESC
     """
     evaluations = []
-    raw_response = mysql.execute_with_connection(
-        func=mysql.select_executor,
+    raw_response = postgres.execute_with_connection(
+        func=postgres.select_executor,
         query=query
     )
     logger.info(f"SQL RAW RESPONSE - ({raw_response})")
