@@ -13,7 +13,7 @@ router = APIRouter()
         200: {"model": schemas.BuyerProfileResponse, "description": "Buyer Profile"}
     },
 )
-async def get_buyer_profile(
+def get_buyer_profile(
     access_level_key: str = Query(
         None, description="BASE64 of team_member@fb4s.com"),
     profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
@@ -29,7 +29,7 @@ async def get_buyer_profile(
         200: {"model": schemas.BuyerLeads, "description": "Buyer Leads"}
     }
 )
-async def get_buyer_leads(
+def get_buyer_leads(
     profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
     profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
 ):
@@ -43,7 +43,7 @@ async def get_buyer_leads(
         200: {"model": schemas.BuyerInPersonEvaluations, "description": "Buyer In-Person Evaluations"}
     }
 )
-async def get_buyer_in_person_evaluations(
+def get_buyer_in_person_evaluations(
     profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
     profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
 ):
@@ -57,7 +57,7 @@ async def get_buyer_in_person_evaluations(
         200: {"model": schemas.BuyerLeadScoreEvents, "description": "Buyer Lead Score Events"}
     }
 )
-async def get_buyer_in_person_evaluations(
+def get_buyer_in_person_evaluations(
     profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
     profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
 ):

@@ -163,3 +163,4 @@ def get_buyer_lead_score_events(profile_ekey: str = None, profile_ikey: str = No
     logger.info(f"LEAD SCORE EVENTS FOUND - ({events})")
     return {"events": events}
 
+
