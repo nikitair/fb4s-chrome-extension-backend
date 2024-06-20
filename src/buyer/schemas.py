@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-
+from typing import List
 
 class ProfileCompletedLevels(BaseModel):
     intro: bool = False
@@ -43,4 +43,4 @@ class Lead(BaseModel):
 
 
 class BuyerLeads(BaseModel):
-    leads: list[Lead] = []
+    leads: List[Lead] | list = []
