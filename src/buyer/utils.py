@@ -719,3 +719,130 @@ def sql_p_get_leads_score_events(buyer_email: str) -> list:
                 }
             )
     return events
+
+
+def sql_m_get_mls_data(mls_list: list) -> dict:
+    logger.info(f"SQL GET MLS DATA - ({mls_list})")
+    query = f"""
+        SELECT
+            tbl_advertisement.DDF_ID AS `MLS`,
+            tbl_advertisement.city AS `City`,
+            tbl_advertisement.province AS `Province`,
+            tbl_advertisement.compiled_category_name AS `Category`,
+            ListingCategories AS `Tags`,
+            tbl_advertisement.AskingPriceSorting AS `Price`,
+            CONCAT(realtor.firstname, ' ', realtor.lastname) AS `Assigned Realtor Full Name`,
+            realtor.email AS `Assigned Realtor Email`,
+            realtor.contact_no AS `Assigned Realtor Phone`,
+            internal_url AS listing_url
+        FROM
+            tbl_advertisement
+        LEFT JOIN 
+            tbl_customers realtor 
+                ON realtor.id = tbl_advertisement.user_id
+            WHERE
+        DDF_ID in %s
+    """
+    mls_data = {}
+    raw_response = postgres.execute_with_connection(
+        func=postgres.select_executor,
+        query=query,
+        params = tuple(mls_list)
+    )
+    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    if raw_response:
+        for item in raw_response:
+            mls_data[item[0]] = {
+                    "mls": item[0],
+                    "city": item[1],
+                    "province": item[2],
+                    "category": item[3],
+                    "tags": item[4],
+                    "price": item[5],
+                    "assigned_realtor_name": item[6],
+                    "assigned_realtor_email": item[7],
+                    "assigned_realtor_phone": item[8],
+                    "listing_url": item[9],
+                    "image_url": f"https://cdn.repliers.io/crea2/IMG-{item[0]}_1.jpg?w=730&f=webp",
+                }
+            
+    return mls_data
+
+
+def sql_m_get_mls_data_archive(mls_list: list) -> dict:
+    logger.info(f"SQL GET ARCHIVE MLS DATA - ({mls_list})")
+    query = f"""
+        SELECT
+            tbl_advertisement.DDF_ID AS `MLS`,
+            tbl_advertisement.city AS `City`,
+            tbl_advertisement.province AS `Province`,
+            tbl_advertisement.compiled_category_name AS `Category`,
+            ListingCategories AS `Tags`,
+            tbl_advertisement.AskingPriceSorting AS `Price`,
+            CONCAT(realtor.firstname, ' ', realtor.lastname) AS `Assigned Realtor Full Name`,
+            realtor.email AS `Assigned Realtor Email`,
+            realtor.contact_no AS `Assigned Realtor Phone`,
+            internal_url AS listing_url
+        FROM
+            tbl_archive_listings
+        LEFT JOIN 
+            tbl_customers realtor 
+                ON realtor.id = tbl_advertisement.user_id
+            WHERE
+        DDF_ID in %s
+    """
+    mls_data = {}
+    raw_response = postgres.execute_with_connection(
+        func=postgres.select_executor,
+        query=query,
+        params = tuple(mls_list)
+    )
+    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    if raw_response:
+        for item in raw_response:
+            mls_data[item[0]] = {
+                    "mls": item[0],
+                    "city": item[1],
+                    "province": item[2],
+                    "category": item[3],
+                    "tags": item[4],
+                    "price": item[5],
+                    "assigned_realtor_name": item[6],
+                    "assigned_realtor_email": item[7],
+                    "assigned_realtor_phone": item[8],
+                    "listing_url": item[9],
+                    "image_url": f"https://cdn.repliers.io/crea2/IMG-{item[0]}_1.jpg?w=730&f=webp",
+                }
+            
+    return mls_data
+
+
+def sql_p_get_contacted_seller_events(buyer_email: str) -> list:
+    logger.info(f"SQL GET CONTACTED SELLER - ({buyer_email})")
+    query = f"""
+        SELECT
+            "MLS",
+            MAX(time) AS "Time"
+        FROM
+            marketing_ecosystem.mixpanel_to_aws.export
+        WHERE
+            event = 'Contact Seller'
+        AND id = '{buyer_email}'
+        GROUP BY
+            "MLS"
+    """
+    contacted_seller_events = []
+    raw_response = postgres.execute_with_connection(
+        func=postgres.select_executor,
+        query=query
+    )
+    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    if raw_response:
+        for item in raw_response:
+            contacted_seller_events.append(
+                {
+                    "mls": item[0],
+                    "event_date": item[1]
+                }
+            )
+    return contacted_seller_events
