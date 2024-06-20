@@ -1,7 +1,7 @@
 import logging
 import os
 
-from logtail import LogtailHandler
+# from logtail import LogtailHandler
 
 from . import LOGTRAIL_API_KEY, ROOT_DIR
 
@@ -16,7 +16,7 @@ logs_file_path = os.path.join(ROOT_DIR, "logs", "logs.log")
 # handlers
 terminal_handler = logging.StreamHandler()
 file_handler = logging.FileHandler(logs_file_path)
-logtrail_handler = LogtailHandler(source_token=LOGTRAIL_API_KEY)
+# logtrail_handler = LogtailHandler(source_token=LOGTRAIL_API_KEY)
 
 # Terminal output
 terminal_handler.setLevel(logging.DEBUG)
@@ -29,6 +29,6 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 # Logtrail output
-logtrail_handler.setLevel(logging.DEBUG)
-logtrail_handler.setFormatter(formatter)
-logger.addHandler(logtrail_handler)
+# logtrail_handler.setLevel(logging.DEBUG)
+# logtrail_handler.setFormatter(formatter)
+# logger.addHandler(logtrail_handler)
