@@ -28,7 +28,19 @@ class BuyerProfileResponse(BaseModel):
 
 class BuyerNotFoundResponse(BaseModel):
     error: str = "Buyer NOT Found"
+    
+    
+class Lead(BaseModel):
+    mls: str
+    city: str
+    province: str
+    postal_code: str
+    category: str
+    address: str
+    price: int
+    latitude: float | None
+    longitude: float | None
 
 
 class BuyerLeads(BaseModel):
-    leads: list[dict] | list = []
+    leads: list[Lead] | list = []
