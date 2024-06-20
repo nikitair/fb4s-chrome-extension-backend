@@ -990,7 +990,7 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
                 FROM
                     tbl_advertisement
                 WHERE
-                    DDF_ID IN ({buyer_mls_list})
+                    DDF_ID IN ({buyer_mls_str})
             ) res
             GROUP BY
                 category,
@@ -1022,7 +1022,7 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
                 FROM
                     tbl_archive_listings
                 WHERE
-                    DDF_ID IN ({buyer_mls_list})
+                    DDF_ID IN ({buyer_mls_str})
             ) res
             GROUP BY
                 category,
