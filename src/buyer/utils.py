@@ -970,70 +970,70 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
 
     query = f"""
         SELECT
-            `Category`,
-            SUM(`Amount`) AS `Listings Amount`,
-            ROUND(MIN(`Price`), 0) AS `Minimum Price`,
-            ROUND(SUM(`Total`) / SUM(`Amount`), 0) AS `Average Price`,
-            ROUND(MAX(`Price`), 0) AS `Maximum Price`
+            category,
+            SUM(amount) AS listings_amount,
+            ROUND(MIN(price), 0) AS min_price,
+            ROUND(SUM(total) / SUM(`Amount`), 0) AS avg_price,
+            ROUND(MAX(price), 0) AS max_price
         FROM
         (
             SELECT
-                `Category`,
-                `Price`,
-                COUNT(*) AS `Amount`,
-                `Price` * COUNT(*) AS `Total`
+                category,
+                price,
+                COUNT(*) AS amount,
+                price * COUNT(*) AS total
             FROM
             (
                 SELECT
-                    compiled_category_name AS `Category`,
-                    AskingPriceSorting AS `Price`
+                    compiled_category_name AS category,
+                    AskingPriceSorting AS price
                 FROM
                     tbl_advertisement
                 WHERE
                     DDF_ID IN ({buyer_mls_str})
             ) res
             GROUP BY
-                `Category`,
-                `Price`
+                category,
+                price
         ) res2
         GROUP BY
-            `Category`
+            category
         ORDER BY
-            `Listings Amount` DESC
+            listings_amount DESC
         
-        UNION ALL
+        UNION
         
         SELECT
-            `Category`,
-            SUM(`Amount`) AS `Listings Amount`,
-            ROUND(MIN(`Price`), 0) AS `Minimum Price`,
-            ROUND(SUM(`Total`) / SUM(`Amount`), 0) AS `Average Price`,
-            ROUND(MAX(`Price`), 0) AS `Maximum Price`
+            category,
+            SUM(amount) AS listings_amount,
+            ROUND(MIN(price), 0) AS min_price,
+            ROUND(SUM(total) / SUM(`Amount`), 0) AS avg_price,
+            ROUND(MAX(price), 0) AS max_price
         FROM
         (
             SELECT
-                `Category`,
-                `Price`,
-                COUNT(*) AS `Amount`,
-                `Price` * COUNT(*) AS `Total`
+                category,
+                price,
+                COUNT(*) AS amount,
+                price * COUNT(*) AS total
             FROM
             (
                 SELECT
-                    compiled_category_name AS `Category`,
-                    AskingPriceSorting AS `Price`
+                    compiled_category_name AS category,
+                    AskingPriceSorting AS price
                 FROM
                     tbl_archive_listings
                 WHERE
                     DDF_ID IN ({buyer_mls_str})
             ) res
             GROUP BY
-                `Category`,
-                `Price`
+                category,
+                price
         ) res2
         GROUP BY
-            `Category`
+            category
         ORDER BY
-            `Listings Amount` DESC
+            listings_amount DESC
     """
     
     categories = []
