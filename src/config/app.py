@@ -9,7 +9,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 # from config.loguru_logger import configure_logger, logger
 from config.logging_config import logger
-from routers.chrome_extension import ce_router
+from buyer.routers import router as buyer_router
 
 from . import CORS_ORIGINS, ROOT_DIR
 
@@ -52,8 +52,8 @@ app.add_middleware(
 # app.include_router(fub_router)
 
 # routers registration
-app.include_router(router=ce_router, prefix='/chrome_extension',
-                   tags=['Chrome Extension'])
+app.include_router(router=buyer_router, prefix='/chrome_extension/profiles/buyer',
+                   tags=['Buyer'])
 
 
 # register templates
