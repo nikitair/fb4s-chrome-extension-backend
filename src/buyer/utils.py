@@ -528,10 +528,10 @@ def sql_m_get_buyer_leads(buyer_id: int) -> list:
             tbl_advertisement.search_province AS province,
             tbl_advertisement.zip_code AS postal_code,
             tbl_advertisement.compiled_category_name AS category,
-            tbl_advertisement.address AS address
+            tbl_advertisement.address AS address,
             tbl_advertisement.askingpricesorting AS price,
             tbl_advertisement.latitude_val AS latitude,
-            tbl_advertisement.longitude_val AS longitude,
+            tbl_advertisement.longitude_val AS longitude
         FROM
             tbl_chat
         INNER JOIN 
