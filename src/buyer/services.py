@@ -182,22 +182,25 @@ def get_buyer_categories(profile_ekey: str = None, profile_ikey: str = None) -> 
         buyer_mls_list = []
         
         # get viewed listings
-        viewed_listings = utils.sql_p_get_view_listing_events(buyer_email=buyer_email)
-        logger.info(f"VIEWED LISTINGS - ({viewed_listings})")
-        if viewed_listings:
-            buyer_mls_list.extend([item["mls"] for item in viewed_listings])
+        viewed_listings_data = utils.sql_p_get_view_listing_events(buyer_email=buyer_email)
+        if viewed_listings_data:
+            viewed_listings = [item["mls"] for item in viewed_listings_data]
+            logger.info(f"VIEWED LISTINGS - ({viewed_listings})")
+            buyer_mls_list.extend(viewed_listings)
             
         # get contact seller listings
-        contact_seller_listings = utils.sql_p_get_contacted_seller_events(buyer_email)
-        logger.info(f"CONTACT SELLER LISTINGS - ({contact_seller_listings})")
-        if contact_seller_listings:
-            buyer_mls_list.extend([item["mls"] for item in contact_seller_listings])
+        contact_seller_listings_data = utils.sql_p_get_contacted_seller_events(buyer_email)
+        if contact_seller_listings_data:
+            contact_seller_listings = [item["mls"] for item in contact_seller_listings_data]
+            logger.info(f"CONTACT SELLER LISTINGS - ({contact_seller_listings})")
+            buyer_mls_list.extend(contact_seller_listings)
             
         # get all green button listings
-        all_green_button_listings = utils.sql_p_get_all_green_button_click_events(buyer_email)
-        logger.info(f"ALL GREEN BUTTON LISTINGS - ({all_green_button_listings})")
-        if all_green_button_listings:
-            buyer_mls_list.extend([item["mls"] for item in all_green_button_listings])
+        all_green_button_listings_data = utils.sql_p_get_all_green_button_click_events(buyer_email)
+        if all_green_button_listings_data:
+            all_green_button_listings = [item["mls"] for item in all_green_button_listings_data]
+            logger.info(f"ALL GREEN BUTTON LISTINGS - ({all_green_button_listings})")
+            buyer_mls_list.extend(all_green_button_listings)
             
         buyer_mls_list = list(set(buyer_mls_list))
         logger.info(f"BUYER MLS LIST - ({buyer_mls_list})")
