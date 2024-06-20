@@ -99,4 +99,23 @@ def get_buyer_profile(access_level_key: str = None, profile_ekey: str = None, pr
 
 
 def get_buyer_leads_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
-    ...
+    leads = []
+    
+    buyer_email = utils.decode_base64_item(profile_ekey)
+    buyer_chat_id = utils.decode_base64_item(profile_ikey)
+
+    logger.info(f"profile_ekey = {profile_ekey} -> {buyer_email}")
+    logger.info(f"profile_ikey = {profile_ikey} -> {buyer_chat_id}")
+    
+    # get buyer data
+    buyer_data = utils.sql_m_get_buyer(buyer_email=buyer_email, buyer_chat_id=buyer_chat_id)
+    if buyer_data:
+        logger.info(f"BUYER DATA - ({buyer_data})")
+        buyer_id = buyer_data["id"]
+
+        # get buyer leads
+        leads = utils.sql_m_get_buyer_leads(buyer_id=buyer_id)
+    
+    logger.info(f"LEADS FOUND - ({leads})")
+    return leads
+

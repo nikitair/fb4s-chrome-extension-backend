@@ -18,7 +18,7 @@ demo_buyer = "c3RscnZua0BnbWFpbC5jb20="
 demo_buyer_id = "Mjc2OTY="
 
 
-def sql_m_get_buyer(buyer_email: str, buyer_chat_id: int):
+def sql_m_get_buyer(buyer_email: str, buyer_chat_id: int) -> dict | None:
     logger.info(f"GET BUYER DATA: EMAIL - {buyer_email}; CHAT ID - {buyer_chat_id}")
     # logger.warning(type(buyer_chat_id))
     query = f"""
@@ -518,5 +518,57 @@ def prepare_sign_rca_link(buyer_id) -> str:
     return sign_rca_url
 
         
+
+def sql_m_get_buyer_leads(buyer_id: int) -> list:
+    logger.info(f"SQL GET LEADS OF - ({buyer_id})")
+    query = f"""
+        SELECT
+            tbl_advertisement.DDF_ID AS MLS,
+            tbl_advertisement.search_city AS city,
+            tbl_advertisement.search_province AS province,
+            tbl_advertisement.zip_code AS postal_code,
+            tbl_advertisement.compiled_category_name AS category,
+            tbl_advertisement.address AS address
+            tbl_advertisement.askingpricesorting AS price,
+            tbl_advertisement.latitude_val AS latitude,
+            tbl_advertisement.longitude_val AS longitude,
+        FROM
+            tbl_chat
+        INNER JOIN 
+            tbl_advertisement 
+        ON 
+            tbl_chat.listing_id = tbl_advertisement.id
+        WHERE
+            sender_id = '{buyer_id}'
+        AND 
+            message_flag = 'first_message'
+        ORDER BY
+            tbl_advertisement.askingpricesorting 
+        DESC;
+    """
+    leads = []
+    raw_response = mysql.execute_with_connection(
+        func=mysql.select_executor,
+        query=query
+    )
+    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    if raw_response:
+        for item in raw_response:
+            leads.append(
+                {
+                    "mls": item[0],
+                    "city": item[1],
+                    "province": item[2],
+                    "postal_code": item[3],
+                    "category": item[4],
+                    "address": item[5],
+                    "price": item[6],
+                    "latitude": item[7],
+                    "longitude": item[8]
+                }
+            )
+    return leads
+
+
 if __name__ == "__main__":
     print(get_utc_offset("Toronto"))
