@@ -43,4 +43,4 @@ class Lead(BaseModel):
 
 
 class BuyerLeads(BaseModel):
-    leads: List[Lead] | list = []
+    leads: List[Lead]
