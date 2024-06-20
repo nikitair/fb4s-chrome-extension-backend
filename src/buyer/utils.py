@@ -978,10 +978,10 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
         FROM
         (
             SELECT
-            `Category`,
-            `Price`,
-            COUNT(*) AS `Amount`,
-            `Price` * COUNT(*) AS `Total`
+                `Category`,
+                `Price`,
+                COUNT(*) AS `Amount`,
+                `Price` * COUNT(*) AS `Total`
             FROM
             (
                 SELECT
@@ -990,18 +990,18 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
                 FROM
                     tbl_advertisement
                 WHERE
-                    DDF_ID in ({buyer_mls_str})
+                    DDF_ID IN ({buyer_mls_str})
             ) res
             GROUP BY
-            `Category`,
-            `Price`
+                `Category`,
+                `Price`
         ) res2
         GROUP BY
-        `Category`
+            `Category`
         ORDER BY
-        `Listings Amount` DESC
+            `Listings Amount` DESC
         
-        UNION
+        UNION ALL
         
         SELECT
             `Category`,
@@ -1012,10 +1012,10 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
         FROM
         (
             SELECT
-            `Category`,
-            `Price`,
-            COUNT(*) AS `Amount`,
-            `Price` * COUNT(*) AS `Total`
+                `Category`,
+                `Price`,
+                COUNT(*) AS `Amount`,
+                `Price` * COUNT(*) AS `Total`
             FROM
             (
                 SELECT
@@ -1024,17 +1024,18 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
                 FROM
                     tbl_archive_listings
                 WHERE
-                    DDF_ID in ({buyer_mls_str})
+                    DDF_ID IN ({buyer_mls_str})
             ) res
             GROUP BY
-            `Category`,
-            `Price`
+                `Category`,
+                `Price`
         ) res2
         GROUP BY
-        `Category`
+            `Category`
         ORDER BY
-        `Listings Amount` DESC
+            `Listings Amount` DESC
     """
+    
     categories = []
     raw_response = mysql.execute_with_connection(
         func=mysql.select_executor,
@@ -1054,4 +1055,5 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
             )
             
     return categories
+
 
