@@ -990,7 +990,7 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
                 FROM
                     tbl_advertisement
                 WHERE
-                    DDF_ID IN ({buyer_mls_str})
+                    DDF_ID IN ({buyer_mls_list})
             ) res
             GROUP BY
                 category,
@@ -998,11 +998,9 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
         ) res2
         GROUP BY
             category
-        ORDER BY
-            listings_amount DESC
-        
+
         UNION
-        
+
         SELECT
             category,
             SUM(amount) AS listings_amount,
@@ -1024,7 +1022,7 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
                 FROM
                     tbl_archive_listings
                 WHERE
-                    DDF_ID IN ({buyer_mls_str})
+                    DDF_ID IN ({buyer_mls_list})
             ) res
             GROUP BY
                 category,
@@ -1032,8 +1030,9 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
         ) res2
         GROUP BY
             category
+
         ORDER BY
-            listings_amount DESC
+            listings_amount DESC;
     """
     
     categories = []
