@@ -1,8 +1,8 @@
 version: '3.8'
 
 services:
-  fastapi_server:
-    image: fb4s_ecosystem:latest
+  server:
+    image: chrome_extension:latest
     ports:
       - "5003:5003"
     volumes:
