@@ -1,17 +1,13 @@
-from typing import Union
-
 from fastapi import APIRouter, Query
-from fastapi.responses import JSONResponse
 
 from config.logging_config import logger
 from schemas import chrome_extension as schemas
-from schemas.index import DefaultResponse
 from services import chrome_extension as services
 
 ce_router = APIRouter()
 
 
-@ce_router.get("/", response_model=DefaultResponse)
+@ce_router.get("/")
 async def chrome_extension_index():
     return {
         "success": True,
