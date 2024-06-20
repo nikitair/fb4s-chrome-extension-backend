@@ -117,7 +117,7 @@ def get_buyer_leads_service(profile_ekey: str = None, profile_ikey: str = None) 
         leads = utils.sql_m_get_buyer_leads(buyer_id=buyer_id)
     
     logger.info(f"LEADS FOUND - ({leads})")
-    return leads
+    return {"leads": leads}
 
 
 def get_buyer_in_person_evaluations_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
@@ -139,7 +139,7 @@ def get_buyer_in_person_evaluations_service(profile_ekey: str = None, profile_ik
         evaluations = utils.sql_p_get_in_person_evaluation(buyer_email=buyer_email)
     
     logger.info(f"In-Person EVALUATION FOUND - ({evaluations})")
-    return evaluations
+    return {"evaluations": evaluations}
 
 
 def get_buyer_lead_score_events(profile_ekey: str = None, profile_ikey: str = None) -> list:
@@ -161,5 +161,5 @@ def get_buyer_lead_score_events(profile_ekey: str = None, profile_ikey: str = No
         events = utils.sql_p_get_leads_score_events(buyer_email=buyer_email)
     
     logger.info(f"LEAD SCORE EVENTS FOUND - ({events})")
-    return events
+    return {"events": events}
 
