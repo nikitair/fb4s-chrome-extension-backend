@@ -571,7 +571,7 @@ def sql_m_get_buyer_leads(buyer_id: int) -> list:
 
 
 def sql_p_get_in_person_evaluation(buyer_email: str) -> list:
-    logger.info(f"SQL GET IN PERSON EVALUATIONS - ({buyer_email})")
+    logger.info(f"SQL GET IN-PERSON EVALUATIONS - ({buyer_email})")
     query = f"""
         SELECT
             call_event,
@@ -608,5 +608,115 @@ def sql_p_get_in_person_evaluation(buyer_email: str) -> list:
             )
     return evaluations
 
-if __name__ == "__main__":
-    print(get_utc_offset("Toronto"))
+
+def sql_p_get_leads_score_events(buyer_email: str) -> list:
+    logger.info(f"SQL GET LEAD SCORE EVENTS - ({buyer_email})")
+    query = f"""
+        SELECT
+            "Event Name",
+            "Events Amount",
+            "Event Score",
+            "All Events Score",
+            "Total Score",
+        MAX(conversions.five_star_value) AS "Five Star Score"
+        FROM
+        (
+        SELECT
+        *,
+        "All Events Score" + "Bonus for High Interest" + "Bonus for Price" AS "Total Score"
+        FROM
+        (
+            SELECT
+            "Event Name",
+            COUNT("Event Name") AS "Events Amount",
+            "Event Score",
+            COUNT("Event Name") * "Event Score" AS "All Events Score",
+            SUM("Event Amount > 3") * 300 AS "Bonus for High Interest",
+            ROUND(AVG("Listing Price")::numeric, 0) AS "Average Price",
+            CASE
+                WHEN ROUND(AVG("Listing Price")::numeric, 0) >= 500000
+                AND ROUND(AVG("Listing Price")::numeric, 0) < 1000000 THEN 300
+                WHEN ROUND(AVG("Listing Price")::numeric, 0) >= 1000000 THEN 500
+                ELSE 0
+            END AS "Bonus for Price"
+            FROM
+            (
+                SELECT
+                "Event Name",
+                "MLS",
+                CASE
+                    WHEN MAX("Listing Price") is not null THEN MAX("Listing Price")::DECIMAL
+                    ELSE 0
+                END AS "Listing Price",
+                COUNT("MLS") AS "Event Amount",
+                "Event Score",
+                SUM("Event Score") AS "Total Score by Event",
+                CASE
+                    WHEN COUNT("MLS") > 3 THEN 1
+                    ELSE 0
+                END AS "Event Amount > 3"
+                FROM
+                (
+                    SELECT
+                    fb4s_users.id AS "Email",
+                    fb4s_users."User Type" AS "User Type",
+                    events.event AS "Event Name",
+                    events."MLS" AS "MLS",
+                    events."Listing Price" AS "Listing Price",
+                    scoring.score AS "Event Score"
+                    FROM
+                    marketing_ecosystem.mixpanel_to_aws.engage AS fb4s_users
+                    INNER JOIN marketing_ecosystem.mixpanel_to_aws.export AS events ON fb4s_users.id = events.id
+                    INNER JOIN marketing_ecosystem.statistics.lead_scoring AS scoring ON events.event = scoring.event_name
+                    WHERE
+                    fb4s_users.id = '{{user_be_profile.data.Email[0]}}'
+                    AND events.time BETWEEN '{{dateRange3.value.start}}' AND '{{dateRange3.value.end}}'
+                ) res
+                GROUP BY
+                "Event Name",
+                "MLS",
+                "Event Score"
+            ) res_2
+            GROUP BY
+            "Event Name",
+            "Event Score"
+        ) res_3
+        ORDER BY
+        "Total Score" DESC
+        ) ts
+        INNER JOIN (
+            SELECT
+            thousand_value,
+            five_star_value
+            FROM
+            statistics.event_scoring_conversion
+            ORDER BY
+            thousand_value DESC
+        ) AS conversions ON ts."Total Score" >= conversions.thousand_value
+        GROUP BY
+        ts."Event Name",
+        ts."Events Amount",
+        ts."Event Score",
+        ts."All Events Score",
+        ts."Total Score"
+        ORDER BY
+        ts."Total Score" DESC;
+    """
+    events = []
+    raw_response = postgres.execute_with_connection(
+        func=postgres.select_executor,
+        query=query
+    )
+    logger.info(f"SQL RAW RESPONSE - ({raw_response})")
+    if raw_response:
+        for item in raw_response:
+            events.append(
+                {
+                    "event": item[0],
+                    "events_amount": item[1],
+                    "event_score": item[2],
+                    "all_events_score": item[3],
+                    "total_score": item[4]
+                }
+            )
+    return events

@@ -57,3 +57,15 @@ class InPersonEvaluation(BaseModel):
 
 class BuyerInPersonEvaluations(BaseModel):
     evaluations: List[InPersonEvaluation]
+
+
+class LeadScoreEvent(BaseModel):
+    event: str
+    events_amount: int
+    event_score: int
+    all_events_score: int
+    total_score: int
+
+
+class BuyerLeadScoreEvents(LeadScoreEvent):
+    events: List[InPersonEvaluation]

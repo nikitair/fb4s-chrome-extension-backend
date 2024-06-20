@@ -49,3 +49,17 @@ async def get_buyer_in_person_evaluations(
 ):
     logger.info("*** API GET BUYER In-Person EVALUATIONS")
     return services.get_buyer_in_person_evaluations_service(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
+
+
+@router.get(
+    "/lead-score-events",
+    responses={
+        200: {"model": schemas.BuyerLeadScoreEvents, "description": "Buyer Lead Score Events"}
+    }
+)
+async def get_buyer_in_person_evaluations(
+    profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
+    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
+):
+    logger.info("*** API GET BUYER LEAD SCORE EVENTS")
+    return services.get_buyer_lead_score_events(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
