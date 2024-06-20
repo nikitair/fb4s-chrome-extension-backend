@@ -136,7 +136,7 @@ def get_buyer_in_person_evaluations_service(profile_ekey: str = None, profile_ik
         buyer_email = buyer_data["email"]
 
         # get buyer in-person evaluations
-        evaluations = utils.sql_m_get_in_person_evaluation(buyer_email=buyer_email)
+        evaluations = utils.sql_p_get_in_person_evaluation(buyer_email=buyer_email)
     
     logger.info(f"In-Person EVALUATION FOUND - ({evaluations})")
     return evaluations
