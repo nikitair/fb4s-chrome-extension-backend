@@ -11,7 +11,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from config.logging_config import logger
 from buyer.routers import router as buyer_router
 
-from . import CORS_ORIGINS, ROOT_DIR
+from . import ROOT_DIR
 
 
 # FastAPI Server Start / Shutdown lifespan manager
@@ -40,13 +40,13 @@ app = FastAPI(
 # middleware registration
 # app.add_middleware(middleware_class=BaseHTTPMiddleware,
 #                    dispatch=log_middleware)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=CORS_ORIGINS,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=CORS_ORIGINS,
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 # include routers
 # app.include_router(fub_router)
