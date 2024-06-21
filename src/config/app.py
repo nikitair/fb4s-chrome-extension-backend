@@ -37,19 +37,14 @@ app = FastAPI(
     lifespan=server_lifespan
 )
 
-# middleware registration
-# app.add_middleware(middleware_class=BaseHTTPMiddleware,
-#                    dispatch=log_middleware)
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=CORS_ORIGINS,
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-
-# include routers
-# app.include_router(fub_router)
+# Configure CORS to allow all origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 # routers registration
 app.include_router(router=buyer_router, prefix='/chrome_extension/profiles/buyer',
