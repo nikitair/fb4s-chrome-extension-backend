@@ -812,12 +812,12 @@ def sql_m_get_mls_data_archive(mls_list: list) -> dict:
     
     query = f"""
         SELECT
-            tbl_advertisement.DDF_ID AS `MLS`,
-            tbl_advertisement.city AS `City`,
-            tbl_advertisement.province AS `Province`,
-            tbl_advertisement.compiled_category_name AS `Category`,
+            tbl_archive_listings.DDF_ID AS `MLS`,
+            tbl_archive_listings.city AS `City`,
+            tbl_archive_listings.province AS `Province`,
+            tbl_archive_listings.compiled_category_name AS `Category`,
             ListingCategories AS `Tags`,
-            tbl_advertisement.AskingPriceSorting AS `Price`,
+            tbl_archive_listings.AskingPriceSorting AS `Price`,
             CONCAT(realtor.firstname, ' ', realtor.lastname) AS `Assigned Realtor Full Name`,
             realtor.email AS `Assigned Realtor Email`,
             realtor.contact_no AS `Assigned Realtor Phone`,
