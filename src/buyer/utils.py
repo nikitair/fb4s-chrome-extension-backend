@@ -600,7 +600,7 @@ def sql_m_get_buyer_leads(buyer_id: int) -> list:
     return leads
 
 
-def sql_p_get_in_person_evaluation(buyer_email: str) -> list:
+def sql_p_get_in_person_evaluation(buyer_email: str, start_date: str, end_date: str) -> list:
     logger.info(f"SQL GET IN-PERSON EVALUATIONS - ({buyer_email})")
     query = f"""
         SELECT
@@ -614,6 +614,7 @@ def sql_p_get_in_person_evaluation(buyer_email: str) -> list:
             statistics.retool_person_evaluation
         WHERE
             email = '{buyer_email}'
+        AND evaluating_datetime BETWEEN '{start_date}' AND '{end_date}'
         ORDER BY
             evaluating_datetime 
         DESC
@@ -639,7 +640,7 @@ def sql_p_get_in_person_evaluation(buyer_email: str) -> list:
     return evaluations
 
 
-def sql_p_get_leads_score_events(buyer_email: str) -> list:
+def sql_p_get_leads_score_events(buyer_email: str, start_date: str, end_date: str) -> list:
     logger.info(f"SQL GET LEAD SCORE EVENTS - ({buyer_email})")
     query = f"""
         SELECT
@@ -700,6 +701,7 @@ def sql_p_get_leads_score_events(buyer_email: str) -> list:
                     INNER JOIN marketing_ecosystem.statistics.lead_scoring AS scoring ON events.event = scoring.event_name
                     WHERE
                     fb4s_users.id = '{buyer_email}'
+                    AND events.time BETWEEN '{start_date}' AND '{end_date}'
                 ) res
                 GROUP BY
                 "Event Name",
@@ -878,7 +880,7 @@ def sql_p_get_buyer_mixpanel_email(buyer_email: str) -> str | None:
         return raw_response[0][0]
 
 
-def sql_p_get_contacted_seller_events(buyer_email: str) -> list:
+def sql_p_get_contacted_seller_events(buyer_email: str, start_date: str, end_date: str) -> list:
     logger.info(f"SQL GET CONTACTED SELLER EVENTS - ({buyer_email})")
     query = f"""
         SELECT
@@ -889,6 +891,7 @@ def sql_p_get_contacted_seller_events(buyer_email: str) -> list:
         WHERE
             event = 'Contact Seller'
         AND id = '{buyer_email}'
+        AND MAX(time) BETWEEN '{start_date}' AND '{end_date}'
         GROUP BY
             "MLS"
     """
@@ -909,7 +912,7 @@ def sql_p_get_contacted_seller_events(buyer_email: str) -> list:
     return contacted_seller_events
 
 
-def sql_p_get_all_green_button_click_events(buyer_email: str) -> list:
+def sql_p_get_all_green_button_click_events(buyer_email: str, start_date: str, end_date: str) -> list:
     logger.info(f"SQL GET ALL GREEN BUTTON CLICKS EVENTS - ({buyer_email})")
     query = f"""
         SELECT
@@ -930,6 +933,7 @@ def sql_p_get_all_green_button_click_events(buyer_email: str) -> list:
         OR
             distinct_id = '{buyer_email}'
             )
+        AND MIN(time) BETWEEN '{start_date}' AND '{end_date}'
         GROUP BY "MLS";
     """
     events = []
@@ -949,7 +953,7 @@ def sql_p_get_all_green_button_click_events(buyer_email: str) -> list:
     return events
 
 
-def sql_p_get_view_listing_events(buyer_email: str) -> list[dict]:
+def sql_p_get_view_listing_events(buyer_email: str, start_date: str, end_date: str) -> list[dict]:
     logger.info(f"SQL GET VIEW LISTING EVENTS - ({buyer_email})")
     query = f"""
         SELECT
@@ -965,6 +969,7 @@ def sql_p_get_view_listing_events(buyer_email: str) -> list[dict]:
         OR
             distinct_id = '{buyer_email}'
             )
+        AND MAX(time) BETWEEN '{start_date}' AND '{end_date}'
         GROUP BY
             "MLS"
         ORDER BY
@@ -1033,8 +1038,7 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
             SUM(amount) AS listings_amount,
             ROUND(MIN(price), 0) AS min_price,
             ROUND(SUM(total) / SUM(`Amount`), 0) AS avg_price,
-            ROUND(MAX(price), 0) AS max_price,
-            TRUE AS is_archived
+            ROUND(MAX(price), 0) AS max_price
         FROM
         (
             SELECT
@@ -1077,8 +1081,7 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
                     "listings_amount": item[1],
                     "min_price": item[2],
                     "avg_price": item[3],
-                    "max_price": item[4],
-                    "is_archived": item[5]
+                    "max_price": item[4]
                 }
             )
             
