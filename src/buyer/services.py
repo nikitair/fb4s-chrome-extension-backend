@@ -400,6 +400,38 @@ def get_buyer_contact_seller_listings_service(profile_ekey: str = None, profile_
     return {"listings": listings}
 
 
+def get_buyer_all_green_button_clicks_listings_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
+    listings = []
+    
+    buyer_email = utils.decode_base64_item(profile_ekey)
+    buyer_chat_id = utils.decode_base64_item(profile_ikey)
 
+    logger.info(f"profile_ekey = {profile_ekey} -> {buyer_email}")
+    logger.info(f"profile_ikey = {profile_ikey} -> {buyer_chat_id}")
+    
+    # get buyer data
+    buyer_data = utils.sql_m_get_buyer(buyer_email=buyer_email, buyer_chat_id=buyer_chat_id)
+    if buyer_data:
+        logger.info(f"BUYER DATA - ({buyer_data})")
+        buyer_email = buyer_data["email"]
+        
+        # get all green button clicks events
+        all_green_button_click_listings = utils.sql_p_get_all_green_button_click_events(buyer_email)
+        if all_green_button_click_listings:
+            all_green_button_click_mls = [item["mls"] for item in all_green_button_click_listings]
+            logger.info(f"ALL GREEN BUTTON CLICKS EVENT MLS - ({all_green_button_click_mls})")
+            
+            listings_data: dict = utils.sql_m_get_mls_data(all_green_button_click_mls)
+            listings_data_archive: dict = utils.sql_m_get_mls_data_archive(all_green_button_click_mls)
+            listings_data.update(listings_data_archive)
+            logger.info(f"LISTINGS DATA - ({listings_data})")
+            
+            # enrich all green button clicks listings with listings data
+            for listing in all_green_button_click_listings:
+                mls = listing["mls"]
+                listing.update(listings_data.get(mls, {}))
 
-
+            listings = all_green_button_click_listings
+        
+    logger.info(f"ALL GREEN BUTTON CLICKS LISTINGS FOUND - ({listings})")
+    return {"listings": listings}

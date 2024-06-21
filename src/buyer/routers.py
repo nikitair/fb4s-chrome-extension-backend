@@ -119,3 +119,17 @@ def get_buyer_contact_seller_listings(
 ):
     logger.info("*** API GET CONTACT SELLER LISTINGS")
     return services.get_buyer_contact_seller_listings_service(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
+
+
+@router.get(
+    "/all-green-buttons-listings",
+    responses={
+        200: {"model": schemas.BuyerGreenButtonListings, "description": "Buyer all Green Button clicks Listings"}
+    }
+)
+def get_buyer_all_green_button_clicks_listings(
+    profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
+    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
+):
+    logger.info("*** API GET ALL GREEN BUTTON CLICKS LISTINGS")
+    return services.get_buyer_all_green_button_clicks_listings_service(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
