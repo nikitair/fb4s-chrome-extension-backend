@@ -81,5 +81,26 @@ class Category(BaseModel):
 
 class BuyerCategories(BaseModel):
     categories: List[Category]
+    
+    
+    
+class ViewedListing(BaseModel):
+    mls: str
+    views_amount: int
+    event_date: str
+    city: str
+    province: str
+    category: str
+    tags: list
+    price: int
+    assigned_realtor_name: str
+    assigned_realtor_email: str
+    assigned_realtor_phone: str
+    listing_url: str
+    image_url: str
+
+
+class BuyerViewedListings(BaseModel):
+    categories: List[ViewedListing]
 
     

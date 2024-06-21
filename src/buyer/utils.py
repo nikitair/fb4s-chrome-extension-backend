@@ -923,7 +923,7 @@ def sql_p_get_all_green_button_click_events(buyer_email: str) -> list:
     return events
 
 
-def sql_p_get_view_listing_events(buyer_email: str) -> list:
+def sql_p_get_view_listing_events(buyer_email: str) -> list[dict]:
     logger.info(f"SQL GET VIEW LISTING EVENTS - ({buyer_email})")
     query = f"""
         SELECT

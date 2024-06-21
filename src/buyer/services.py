@@ -210,3 +210,46 @@ def get_buyer_categories(profile_ekey: str = None, profile_ikey: str = None) -> 
             
     logger.info(f"BUYER CATEGORIES FOUND - ({categories})")
     return {"categories": categories}
+
+
+def get_buyer_viewed_listings(profile_ekey: str = None, profile_ikey: str = None) -> list:
+    listings = []
+    
+    buyer_email = utils.decode_base64_item(profile_ekey)
+    buyer_chat_id = utils.decode_base64_item(profile_ikey)
+
+    logger.info(f"profile_ekey = {profile_ekey} -> {buyer_email}")
+    logger.info(f"profile_ikey = {profile_ikey} -> {buyer_chat_id}")
+    
+    # get buyer data
+    buyer_data = utils.sql_m_get_buyer(buyer_email=buyer_email, buyer_chat_id=buyer_chat_id)
+    if buyer_data:
+        logger.info(f"BUYER DATA - ({buyer_data})")
+        buyer_email = buyer_data["email"]
+        
+        mls_list = []
+        
+        # get viewed listings
+        viewed_listings_data = utils.sql_p_get_view_listing_events(buyer_email=buyer_email)
+        if viewed_listings_data:
+            viewed_listings = [item["mls"] for item in viewed_listings_data]
+            logger.info(f"VIEWED LISTINGS - ({viewed_listings})")
+            mls_list.extend(viewed_listings)
+        
+        if mls_list:
+            listings_details= utils.sql_m_get_mls_data(mls_list)
+            logger.info(f"LISTINGS DETAILS - ({listings_details})")
+            
+            if listings_details:
+                
+                for listing in viewed_listings_data:
+                    mls = listing["mls"]
+                    
+                    listing.update(
+                        listings_details[mls]
+                    )
+                    
+                    listings.append(listing)
+            
+    logger.info(f"BUYER VIEWED LISTINGS FOUND - ({listings})")
+    return {"listings": listings}

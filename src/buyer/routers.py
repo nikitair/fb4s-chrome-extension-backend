@@ -77,3 +77,17 @@ def get_buyer_categories(
 ):
     logger.info("*** API GET BUYER CATEGORIES")
     return services.get_buyer_categories(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
+
+
+@router.get(
+    "/viewed-listings",
+    responses={
+        200: {"model": schemas.BuyerViewedListings, "description": "Buyer Viewed Listings"}
+    }
+)
+def get_buyer_viewed_listings(
+    profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
+    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
+):
+    logger.info("*** API GET VIEWED LISTINGS")
+    return services.get_buyer_viewed_listings(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
