@@ -98,6 +98,7 @@ class ViewedListing(BaseModel):
     assigned_realtor_phone: str
     listing_url: str
     image_url: str
+    is_archived: bool
 
 
 class BuyerViewedListings(BaseModel):
@@ -115,6 +116,7 @@ class NotViewedListing(BaseModel):
     listing_url: str
     date_listed: str
     image_url: str
+    is_archived: bool
 
 
 class BuyerNotViewedListings(BaseModel):
@@ -135,6 +137,7 @@ class ContactSellerListing(BaseModel):
     assigned_realtor_phone: str
     listing_url: str
     image_url: str
+    is_archived: bool
 
 
 class BuyerContactSellerListingListings(BaseModel):
@@ -155,6 +158,7 @@ class GreenButtonListing(BaseModel):
     assigned_realtor_phone: str
     listing_url: str
     image_url: str
+    is_archived: bool
 
 
 class BuyerGreenButtonListings(BaseModel):

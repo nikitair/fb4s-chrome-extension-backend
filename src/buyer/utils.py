@@ -799,6 +799,7 @@ def sql_m_get_mls_data(mls_list: list) -> dict:
                     "listing_url": item[9],
                     "date_listed": item[10],
                     "image_url": f"https://cdn.repliers.io/crea2/IMG-{item[0]}_1.jpg?w=730&f=webp",
+                    "is_archived": False
                 }
             
     return mls_data
@@ -852,6 +853,7 @@ def sql_m_get_mls_data_archive(mls_list: list) -> dict:
                     "listing_url": item[9],
                     "date_listed": item[10],
                     "image_url": f"https://cdn.repliers.io/crea2/IMG-{item[0]}_1.jpg?w=730&f=webp",
+                    "is_archived": True
                 }
             
     return mls_data
@@ -998,7 +1000,8 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
             SUM(amount) AS listings_amount,
             ROUND(MIN(price), 0) AS min_price,
             ROUND(SUM(total) / SUM(`Amount`), 0) AS avg_price,
-            ROUND(MAX(price), 0) AS max_price
+            ROUND(MAX(price), 0) AS max_price,
+            FALSE AS is_archived
         FROM
         (
             SELECT
@@ -1030,7 +1033,8 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
             SUM(amount) AS listings_amount,
             ROUND(MIN(price), 0) AS min_price,
             ROUND(SUM(total) / SUM(`Amount`), 0) AS avg_price,
-            ROUND(MAX(price), 0) AS max_price
+            ROUND(MAX(price), 0) AS max_price,
+            TRUE AS is_archived
         FROM
         (
             SELECT
@@ -1073,7 +1077,8 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
                     "listings_amount": item[1],
                     "min_price": item[2],
                     "avg_price": item[3],
-                    "max_price": item[4]
+                    "max_price": item[4],
+                    "is_archived": item[5]
                 }
             )
             
@@ -1092,7 +1097,6 @@ def sql_m_get_not_viewed_listings(mls_list: list,
     mls_str = ', '.join(f"'{mls}'" for mls in mls_list)
     province_str = ', '.join(f"'{province}'" for province in province_list)
     category_str = ', '.join(f"'{category}'" for category in category_list)
-    
     
     query = f"""
         SELECT 
@@ -1166,7 +1170,7 @@ def sql_m_get_not_viewed_listings(mls_list: list,
                     "listing_url": item[7],
                     "date_listed": item[8],
                     "image_url": f"https://cdn.repliers.io/crea2/IMG-{item[0]}_1.jpg?w=730&f=webp",
+                    "is_archived": False
                 }
             )
-            
     return listings
