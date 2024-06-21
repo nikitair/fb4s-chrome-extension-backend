@@ -827,7 +827,7 @@ def sql_m_get_mls_data_archive(mls_list: list) -> dict:
             tbl_archive_listings
         LEFT JOIN 
             tbl_customers realtor 
-                ON realtor.id = tbl_advertisement.user_id
+                ON realtor.id = tbl_archive_listings.user_id
             WHERE
         DDF_ID in ({mls_str})
     """
