@@ -891,7 +891,7 @@ def sql_p_get_contacted_seller_events(buyer_email: str, start_date: str, end_dat
         WHERE
             event = 'Contact Seller'
         AND id = '{buyer_email}'
-        AND MAX(time) BETWEEN '{start_date}' AND '{end_date}'
+        AND time BETWEEN '{start_date}' AND '{end_date}'
         GROUP BY
             "MLS"
     """
@@ -933,7 +933,7 @@ def sql_p_get_all_green_button_click_events(buyer_email: str, start_date: str, e
         OR
             distinct_id = '{buyer_email}'
             )
-        AND MIN(time) BETWEEN '{start_date}' AND '{end_date}'
+        AND time BETWEEN '{start_date}' AND '{end_date}'
         GROUP BY "MLS";
     """
     events = []
@@ -969,7 +969,7 @@ def sql_p_get_view_listing_events(buyer_email: str, start_date: str, end_date: s
         OR
             distinct_id = '{buyer_email}'
             )
-        AND MAX(time) BETWEEN '{start_date}' AND '{end_date}'
+        AND time BETWEEN '{start_date}' AND '{end_date}'
         GROUP BY
             "MLS"
         ORDER BY
