@@ -18,7 +18,7 @@ demo_buyer = "c3RscnZua0BnbWFpbC5jb20="
 demo_buyer_id = "Mjc2OTY="
 
 
-def get_default_date_range():
+def default_date_range():
     # Get today's date
     today = datetime.today()
 

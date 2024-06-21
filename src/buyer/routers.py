@@ -3,6 +3,7 @@ from fastapi import APIRouter, Query
 from config.logging_config import logger
 from buyer import schemas
 from buyer import services
+from buyer import utils
 
 router = APIRouter()
 
@@ -45,10 +46,17 @@ def get_buyer_leads(
 )
 def get_buyer_in_person_evaluations(
     profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
-    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
+    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id"),
+    start_date: str = Query(utils.default_date_range()["start"], description="Search START Date (YYYY-MM-DD)"),
+    end_date: str = Query(utils.default_date_range()["end"], description="Search START Date (YYYY-MM-DD)")
 ):
     logger.info("*** API GET BUYER In-Person EVALUATIONS")
-    return services.get_buyer_in_person_evaluations_service(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
+    return services.get_buyer_in_person_evaluations_service(
+        profile_ekey=profile_ekey, 
+        profile_ikey=profile_ikey,
+        start_date=start_date,
+        end_date=end_date
+    )
 
 
 @router.get(
@@ -59,10 +67,17 @@ def get_buyer_in_person_evaluations(
 )
 def get_buyer_in_person_evaluations(
     profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
-    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
+    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id"),
+    start_date: str = Query(utils.default_date_range()["start"], description="Search START Date (YYYY-MM-DD)"),
+    end_date: str = Query(utils.default_date_range()["end"], description="Search START Date (YYYY-MM-DD)")
 ):
     logger.info("*** API GET BUYER LEAD SCORE EVENTS")
-    return services.get_buyer_lead_score_events_service(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
+    return services.get_buyer_lead_score_events_service(
+        profile_ekey=profile_ekey, 
+        profile_ikey=profile_ikey,
+        start_date=start_date,
+        end_date=end_date
+    )
 
 
 @router.get(
@@ -73,10 +88,17 @@ def get_buyer_in_person_evaluations(
 )
 def get_buyer_categories(
     profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
-    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
+    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id"),
+    start_date: str = Query(utils.default_date_range()["start"], description="Search START Date (YYYY-MM-DD)"),
+    end_date: str = Query(utils.default_date_range()["end"], description="Search START Date (YYYY-MM-DD)")
 ):
     logger.info("*** API GET BUYER CATEGORIES")
-    return services.get_buyer_categories_service(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
+    return services.get_buyer_categories_service(
+        profile_ekey=profile_ekey, 
+        profile_ikey=profile_ikey,
+        start_date=start_date,
+        end_date=end_date
+    )
 
 
 @router.get(
@@ -87,10 +109,17 @@ def get_buyer_categories(
 )
 def get_buyer_viewed_listings(
     profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
-    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
+    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id"),
+    start_date: str = Query(utils.default_date_range()["start"], description="Search START Date (YYYY-MM-DD)"),
+    end_date: str = Query(utils.default_date_range()["end"], description="Search START Date (YYYY-MM-DD)")
 ):
     logger.info("*** API GET VIEWED LISTINGS")
-    return services.get_buyer_viewed_listings_service(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
+    return services.get_buyer_viewed_listings_service(
+        profile_ekey=profile_ekey, 
+        profile_ikey=profile_ikey,
+        start_date=start_date,
+        end_date=end_date
+    )
 
 
 @router.get(
@@ -101,11 +130,17 @@ def get_buyer_viewed_listings(
 )
 def get_buyer_not_viewed_listings(
     profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
-    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
+    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id"),
+    start_date: str = Query(utils.default_date_range()["start"], description="Search START Date (YYYY-MM-DD)"),
+    end_date: str = Query(utils.default_date_range()["end"], description="Search START Date (YYYY-MM-DD)")
 ):
     logger.info("*** API GET NOT VIEWED LISTINGS")
-    return services.get_buyer_not_viewed_listings_service(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
-
+    return services.get_buyer_not_viewed_listings_service(
+        profile_ekey=profile_ekey, 
+        profile_ikey=profile_ikey,
+        start_date=start_date,
+        end_date=end_date
+    )
 
 @router.get(
     "/contact-seller-listings",
@@ -115,10 +150,17 @@ def get_buyer_not_viewed_listings(
 )
 def get_buyer_contact_seller_listings(
     profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
-    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
+    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id"),
+    start_date: str = Query(utils.default_date_range()["start"], description="Search START Date (YYYY-MM-DD)"),
+    end_date: str = Query(utils.default_date_range()["end"], description="Search START Date (YYYY-MM-DD)")
 ):
     logger.info("*** API GET CONTACT SELLER LISTINGS")
-    return services.get_buyer_contact_seller_listings_service(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
+    return services.get_buyer_contact_seller_listings_service(
+        profile_ekey=profile_ekey, 
+        profile_ikey=profile_ikey,
+        start_date=start_date,
+        end_date=end_date
+    )
 
 
 @router.get(
@@ -129,7 +171,14 @@ def get_buyer_contact_seller_listings(
 )
 def get_buyer_all_green_button_clicks_listings(
     profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
-    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
+    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id"),
+    start_date: str = Query(utils.default_date_range()["start"], description="Search START Date (YYYY-MM-DD)"),
+    end_date: str = Query(utils.default_date_range()["end"], description="Search START Date (YYYY-MM-DD)")
 ):
     logger.info("*** API GET ALL GREEN BUTTON CLICKS LISTINGS")
-    return services.get_buyer_all_green_button_clicks_listings_service(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
+    return services.get_buyer_all_green_button_clicks_listings_service(
+        profile_ekey=profile_ekey, 
+        profile_ikey=profile_ikey,
+        start_date=start_date,
+        end_date=end_date
+        )
