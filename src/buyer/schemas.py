@@ -91,7 +91,7 @@ class ViewedListing(BaseModel):
     city: str
     province: str
     category: str
-    tags: str
+    tags: list
     price: int
     assigned_realtor_name: str
     assigned_realtor_email: str
@@ -107,7 +107,7 @@ class BuyerViewedListings(BaseModel):
 class NotViewedListing(BaseModel):
     mls: str
     category: str
-    tags: str
+    tags: list
     price: str
     city: str
     province: str
