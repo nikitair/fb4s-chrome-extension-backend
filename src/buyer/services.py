@@ -397,14 +397,12 @@ def get_buyer_not_viewed_listings_service(profile_ekey: str,
         
         if buyer_mls_list and (buyer_category_list or buyer_province_list):
             
-            default_date_range = utils.get_default_date_range()
-            
             listings = utils.sql_m_get_not_viewed_listings(
                 mls_list=buyer_mls_list,
                 province_list=buyer_province_list,
                 category_list=buyer_category_list,
-                start_date=default_date_range["start"],
-                end_date=default_date_range["end"]
+                start_date=start_date,
+                end_date=end_date
                 )
             
     logger.info(f"BUYER NOT VIEWED LISTINGS FOUND - ({listings})")
