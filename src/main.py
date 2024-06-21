@@ -2,6 +2,7 @@ import os
 
 import uvicorn
 from fastapi import Request, HTTPException
+from fastapi.responses import PlainTextResponse
 from fastapi.templating import Jinja2Templates
 import aiofiles
 from config.logging_config import logs_file_path
@@ -23,7 +24,7 @@ def feel_free(request: Request):
     return templates.TemplateResponse("feel_free.html", {"request": request}, status_code=402)
 
 
-@app.get("/logs", include_in_schema=False)
+@app.get("/logs", include_in_schema=False, response_class=PlainTextResponse)
 async def get_logs():
     try:
         async with aiofiles.open(logs_file_path, "r") as logs_file:
