@@ -360,3 +360,46 @@ def get_buyer_not_viewed_listings_service(profile_ekey: str = None, profile_ikey
             
     logger.info(f"BUYER NOT VIEWED LISTINGS FOUND - ({listings})")
     return {"listings": listings}
+
+
+
+def get_buyer_contact_seller_listings_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
+    listings = []
+    
+    buyer_email = utils.decode_base64_item(profile_ekey)
+    buyer_chat_id = utils.decode_base64_item(profile_ikey)
+
+    logger.info(f"profile_ekey = {profile_ekey} -> {buyer_email}")
+    logger.info(f"profile_ikey = {profile_ikey} -> {buyer_chat_id}")
+    
+    # get buyer data
+    buyer_data = utils.sql_m_get_buyer(buyer_email=buyer_email, buyer_chat_id=buyer_chat_id)
+    if buyer_data:
+        logger.info(f"BUYER DATA - ({buyer_data})")
+        buyer_email = buyer_data["email"]
+        
+        # get contact seller events
+        contact_seller_listings = utils.sql_p_get_contacted_seller_events(buyer_email)
+        if contact_seller_listings:
+            contact_seller_mls = [item["mls"] for item in contact_seller_listings]
+            logger.info(f"CONTACT SELLER EVENT MLS - ({contact_seller_mls})")
+            
+            listings_data: dict = utils.sql_m_get_mls_data(contact_seller_mls)
+            listings_data_archive: dict = utils.sql_m_get_mls_data_archive(contact_seller_mls)
+            listings_data.update(listings_data_archive)
+            logger.info(f"LISTINGS DATA - ({listings_data})")
+            
+            # enrich contact seller listings with listings data
+            for listing in contact_seller_listings:
+                mls = listing["mls"]
+                listing.update(listings_data.get(mls, {}))
+
+            listings = contact_seller_listings
+        
+    logger.info(f"BUYER CONTACT SELLER LISTINGS FOUND - ({listings})")
+    return {"listings": listings}
+
+
+
+
+

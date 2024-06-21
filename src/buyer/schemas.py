@@ -119,3 +119,23 @@ class NotViewedListing(BaseModel):
 
 class BuyerNotViewedListings(BaseModel):
     listings: List[NotViewedListing]
+
+
+class ContactSellerListing(BaseModel):
+    mls: str
+    views_amount: int
+    event_date: str
+    city: str
+    province: str
+    category: str
+    tags: str
+    price: int
+    assigned_realtor_name: str
+    assigned_realtor_email: str
+    assigned_realtor_phone: str
+    listing_url: str
+    image_url: str
+
+
+class BuyerContactSellerListingListings(BaseModel):
+    listings: List[ContactSellerListing]
