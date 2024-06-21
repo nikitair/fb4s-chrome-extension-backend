@@ -18,6 +18,26 @@ demo_buyer = "c3RscnZua0BnbWFpbC5jb20="
 demo_buyer_id = "Mjc2OTY="
 
 
+def get_default_date_range():
+    # Get today's date
+    today = datetime.today()
+
+    # Calculate tomorrow's date
+    tomorrow = today + timedelta(days=1)
+
+    # Calculate one month ago
+    one_month_ago = today - timedelta(days=30)
+
+    # Format dates as yyyy-mm-dd strings
+    tomorrow_formatted = tomorrow.strftime('%Y-%m-%d')
+    one_month_ago_formatted = one_month_ago.strftime('%Y-%m-%d')
+    
+    return {
+        "start": one_month_ago_formatted,
+        "end": tomorrow_formatted
+    }
+
+
 def sql_m_get_buyer(buyer_email: str, buyer_chat_id: int) -> dict | None:
     logger.info(f"GET BUYER DATA: EMAIL - {buyer_email}; CHAT ID - {buyer_chat_id}")
     # logger.warning(type(buyer_chat_id))
@@ -748,7 +768,8 @@ def sql_m_get_mls_data(mls_list: list) -> dict:
             CONCAT(realtor.firstname, ' ', realtor.lastname) AS `Assigned Realtor Full Name`,
             realtor.email AS `Assigned Realtor Email`,
             realtor.contact_no AS `Assigned Realtor Phone`,
-            internal_url AS listing_url
+            internal_url AS listing_url,
+            published_date
         FROM
             tbl_advertisement
         LEFT JOIN 
@@ -776,6 +797,7 @@ def sql_m_get_mls_data(mls_list: list) -> dict:
                     "assigned_realtor_email": item[7],
                     "assigned_realtor_phone": item[8],
                     "listing_url": item[9],
+                    "date_listed": item[10],
                     "image_url": f"https://cdn.repliers.io/crea2/IMG-{item[0]}_1.jpg?w=730&f=webp",
                 }
             
@@ -799,7 +821,8 @@ def sql_m_get_mls_data_archive(mls_list: list) -> dict:
             CONCAT(realtor.firstname, ' ', realtor.lastname) AS `Assigned Realtor Full Name`,
             realtor.email AS `Assigned Realtor Email`,
             realtor.contact_no AS `Assigned Realtor Phone`,
-            internal_url AS listing_url
+            internal_url AS listing_url,
+            published_date
         FROM
             tbl_archive_listings
         LEFT JOIN 
@@ -827,6 +850,7 @@ def sql_m_get_mls_data_archive(mls_list: list) -> dict:
                     "assigned_realtor_email": item[7],
                     "assigned_realtor_phone": item[8],
                     "listing_url": item[9],
+                    "date_listed": item[10],
                     "image_url": f"https://cdn.repliers.io/crea2/IMG-{item[0]}_1.jpg?w=730&f=webp",
                 }
             
@@ -1056,3 +1080,93 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
     return categories
 
 
+def sql_m_get_not_viewed_listings(mls_list: list, 
+                                  province_list: list,
+                                  category_list: list,
+                                  start_date: str,
+                                  end_date: str
+                                  ) -> list[dict]:
+    logger.info(f"SQL GET NOT VIEWED LISTINGS - (mls: {mls_list} | provinces: {province_list} | categories: {category_list})")
+    
+    # Convert the list to a comma-separated string of quoted values
+    mls_str = ', '.join(f"'{mls}'" for mls in mls_list)
+    province_str = ', '.join(f"'{province}'" for province in province_list)
+    category_str = ', '.join(f"'{category}'" for category in category_list)
+    
+    
+    query = f"""
+        SELECT 
+            *
+        FROM 
+        (
+            SELECT
+                *
+            FROM
+            (
+                SELECT
+                    DDF_ID AS `MLS`,
+                    compiled_category_name AS `Category`,
+                    ListingCategories AS `Tags`,
+                    AskingPriceSorting AS `Price`,
+                    CASE
+                        WHEN search_city IS NULL OR search_city = '' THEN 'N/A'
+                        ELSE search_city
+                    END AS `City`,
+                    CASE
+                        WHEN search_province IS NULL OR search_province = '' THEN 'N/A'
+                        ELSE search_province
+                    END AS `Province`,
+                    CASE
+                        WHEN Zip_code IS NULL OR Zip_code = '' THEN 'N/A'
+                        ELSE
+                        IF(
+                            LENGTH(Zip_code) > 5,
+                            CONCAT(
+                            UPPER(SUBSTRING(Zip_code, 1, 3)),
+                            ' ',
+                            UPPER(SUBSTRING(Zip_code, -3))
+                            ),
+                            UPPER(Zip_code)
+                        )
+                    END AS `Postal Code`,
+                    internal_url AS url,
+                    published_date AS date_listed
+                FROM
+                tbl_advertisement
+                WHERE
+                    DDF_ID NOT IN ({mls_str})
+                AND became_unavailable_at IS NULL
+            ) q1
+            WHERE
+                (
+                    q1.Province IN ('N/A', {province_str})
+                    AND 
+                    q1.Category IN ('N/A', {category_str})
+                )
+            ) q2
+            WHERE date_listed BETWEEN '{start_date}' AND '{end_date}'
+    """
+    listings = []
+    raw_response = mysql.execute_with_connection(
+        func=mysql.select_executor,
+        query=query
+    )
+    logger.debug(f"SQL RAW RESPONSE - ({raw_response})")
+    if raw_response:
+        for item in raw_response:
+            listings.append(
+                {
+                    "mls": item[0],
+                    "category": item[1],
+                    "tags": item[2],
+                    "price": item[3],
+                    "city": item[4],
+                    "province": item[5],
+                    "postalcode": item[6],
+                    "listing_url": item[7],
+                    "date_listed": item[8],
+                    "image_url": f"https://cdn.repliers.io/crea2/IMG-{item[0]}_1.jpg?w=730&f=webp",
+                }
+            )
+            
+    return listings

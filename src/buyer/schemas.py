@@ -91,7 +91,7 @@ class ViewedListing(BaseModel):
     city: str
     province: str
     category: str
-    tags: list
+    tags: str
     price: int
     assigned_realtor_name: str
     assigned_realtor_email: str
