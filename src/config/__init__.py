@@ -16,5 +16,6 @@ CORS_ORIGINS = [
     "http://localhost",
     "http://localhost:8080",
     "http://localhost:5003",
+    "chrome-extension://kephamhkieifbokkbkmjpjhnkhmcpdhj"
     "*"
 ]
