@@ -29,7 +29,7 @@ async def get_logs():
     try:
         async with aiofiles.open(logs_file_path, "r") as logs_file:
             log_lines: list = await logs_file.readlines()
-            log_lines.reverse()
+            # log_lines.reverse()
             logs = ''.join(log_lines)
             
         return logs
