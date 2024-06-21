@@ -246,7 +246,7 @@ def get_buyer_viewed_listings_service(profile_ekey: str = None, profile_ikey: st
                     mls = listing["mls"]
                     
                     listing.update(
-                        listings_details[mls]
+                        listings_details.get(mls, {})
                     )
                     
                 listings = viewed_listings_data
@@ -288,13 +288,13 @@ def get_buyer_not_viewed_listings_service(profile_ekey: str = None, profile_ikey
             if viewed_listings_details:
                 for listing in viewed_listings_data:
                     mls = listing["mls"]
-                    listing.update(viewed_listings_details[mls])
+                    listing.update(viewed_listings_details.get(mls, {}))
 
-                viewed_provinces = [item["province"] for item in viewed_listings_data]
+                viewed_provinces = [item.get('province', 'N/A') for item in viewed_listings_data]
                 logger.info(f"VIEWED PROVINCES - ({viewed_provinces})")
                 buyer_province_list.extend(viewed_provinces)
                 
-                viewed_categories = [item["category"] for item in viewed_listings_data]
+                viewed_categories = [item.get('category', 'N/A') for item in viewed_listings_data]
                 logger.info(f"VIEWED CATEGORIES - ({viewed_categories})")
                 buyer_category_list.extend(viewed_categories)
                 
@@ -311,13 +311,13 @@ def get_buyer_not_viewed_listings_service(profile_ekey: str = None, profile_ikey
             if contact_seller_listings_details:
                 for listing in contact_seller_listings_data:
                     mls = listing["mls"]
-                    listing.update(contact_seller_listings_details[mls])
+                    listing.update(contact_seller_listings_details.get(mls, {}))
 
-                contact_seller_provinces = [item["province"] for item in contact_seller_listings_data]
+                contact_seller_provinces = [item.get('province', 'N/A') for item in contact_seller_listings_data]
                 logger.info(f"CONTACT SELLER PROVINCES - ({contact_seller_provinces})")
                 buyer_province_list.extend(contact_seller_provinces)
                 
-                contact_seller_categories = [item["category"] for item in contact_seller_listings_data]
+                contact_seller_categories = [item.get('category', 'N/A') for item in contact_seller_listings_data]
                 logger.info(f"CONTACT SELLER CATEGORIES - ({contact_seller_categories})")
                 buyer_category_list.extend(contact_seller_categories)
                 
@@ -327,13 +327,13 @@ def get_buyer_not_viewed_listings_service(profile_ekey: str = None, profile_ikey
             if contact_seller_listings_details_archive:
                 for listing in contact_seller_listings_data:
                     mls = listing["mls"]
-                    listing.update(contact_seller_listings_details_archive[mls])
+                    listing.update(contact_seller_listings_details_archive.get(mls, {}))
 
-                contact_seller_provinces_archive = [item["province"] for item in contact_seller_listings_data]
+                contact_seller_provinces_archive = [item.get('province', 'N/A') for item in contact_seller_listings_data]
                 logger.info(f"CONTACT SELLER PROVINCES ARCHIVE - ({contact_seller_provinces_archive})")
                 buyer_province_list.extend(contact_seller_provinces_archive)
                 
-                contact_seller_categories_archive = [item["category"] for item in contact_seller_listings_data]
+                contact_seller_categories_archive = [item.get('category', 'N/A') for item in contact_seller_listings_data]
                 logger.info(f"CONTACT SELLER CATEGORIES ARCHIVE - ({contact_seller_categories_archive})")
                 buyer_category_list.extend(contact_seller_categories_archive)
             

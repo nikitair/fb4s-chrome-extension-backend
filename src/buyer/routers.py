@@ -103,5 +103,5 @@ def get_buyer_not_viewed_listings(
     profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
     profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
 ):
-    logger.info("*** API GET VIEWED LISTINGS")
+    logger.info("*** API GET NOT VIEWED LISTINGS")
     return services.get_buyer_not_viewed_listings_service(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
