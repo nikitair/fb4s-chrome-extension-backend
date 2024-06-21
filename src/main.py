@@ -25,20 +25,19 @@ def feel_free(request: Request):
 
 @app.get("/logs", include_in_schema=False)
 async def get_logs():
-    logs = []
     try:
         async with aiofiles.open(logs_file_path, "r") as logs_file:
-            async for line in logs_file:
-                logs.append(line)
-                logs.append('\n')
-                
-        logs.reverse()
+            log_lines: list = logs_file.readlines()
+            log_lines.reverse()
+            logs = ''.join(log_lines)
+            
+        return logs
+
     except (FileNotFoundError, FileExistsError) as e:
         raise HTTPException(status_code=404, detail={"error": f"Log file NOT found - ({e})"})
     except Exception as ex:
         raise HTTPException(status_code=500, detail={"error": f"Server Error - ({ex})"})
-    else:
-        return "".join(logs)
+
 
 
 if __name__ == "__main__":
