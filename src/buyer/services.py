@@ -120,7 +120,10 @@ def get_buyer_leads_service(profile_ekey: str = None, profile_ikey: str = None) 
     return {"leads": leads}
 
 
-def get_buyer_in_person_evaluations_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
+def get_buyer_in_person_evaluations_service(profile_ekey: str, 
+                                            profile_ikey: str,
+                                            start_date: str,
+                                            end_date: str) -> list:
     evaluations = []
     
     buyer_email = utils.decode_base64_item(profile_ekey)
@@ -136,13 +139,20 @@ def get_buyer_in_person_evaluations_service(profile_ekey: str = None, profile_ik
         buyer_email = buyer_data["email"]
 
         # get buyer in-person evaluations
-        evaluations = utils.sql_p_get_in_person_evaluation(buyer_email=buyer_email)
+        evaluations = utils.sql_p_get_in_person_evaluation(
+            buyer_email=buyer_email,
+            start_date=start_date,
+            end_date=end_date
+        )
     
     logger.info(f"In-Person EVALUATION FOUND - ({evaluations})")
     return {"evaluations": evaluations}
 
 
-def get_buyer_lead_score_events_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
+def get_buyer_lead_score_events_service(profile_ekey: str, 
+                                        profile_ikey: str,
+                                        start_date: str,
+                                        end_date: str) -> list:
     events = []
     
     buyer_email = utils.decode_base64_item(profile_ekey)
@@ -158,13 +168,20 @@ def get_buyer_lead_score_events_service(profile_ekey: str = None, profile_ikey: 
         buyer_email = buyer_data["email"]
 
         # get buyer lead score events
-        events = utils.sql_p_get_leads_score_events(buyer_email=buyer_email)
+        events = utils.sql_p_get_leads_score_events(
+            buyer_email=buyer_email,
+            start_date=start_date,
+            end_date=end_date
+        )
     
     logger.info(f"LEAD SCORE EVENTS FOUND - ({events})")
     return {"events": events}
 
 
-def get_buyer_categories_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
+def get_buyer_categories_service(profile_ekey: str, 
+                                  profile_ikey: str,
+                                  start_date: str,
+                                  end_date: str) -> list:
     categories = []
     
     buyer_email = utils.decode_base64_item(profile_ekey)
@@ -182,21 +199,33 @@ def get_buyer_categories_service(profile_ekey: str = None, profile_ikey: str = N
         buyer_mls_list = []
         
         # get viewed listings
-        viewed_listings_data = utils.sql_p_get_view_listing_events(buyer_email=buyer_email)
+        viewed_listings_data = utils.sql_p_get_view_listing_events(
+            buyer_email=buyer_email,
+            start_date=start_date,
+            end_date=end_date
+        )
         if viewed_listings_data:
             viewed_listings = [item["mls"] for item in viewed_listings_data]
             logger.info(f"VIEWED LISTINGS - ({viewed_listings})")
             buyer_mls_list.extend(viewed_listings)
             
         # get contact seller listings
-        contact_seller_listings_data = utils.sql_p_get_contacted_seller_events(buyer_email)
+        contact_seller_listings_data = utils.sql_p_get_contacted_seller_events(
+            buyer_email=buyer_email,
+            start_date=start_date,
+            end_date=end_date
+        )
         if contact_seller_listings_data:
             contact_seller_listings = [item["mls"] for item in contact_seller_listings_data]
             logger.info(f"CONTACT SELLER LISTINGS - ({contact_seller_listings})")
             buyer_mls_list.extend(contact_seller_listings)
             
         # get all green button listings
-        all_green_button_listings_data = utils.sql_p_get_all_green_button_click_events(buyer_email)
+        all_green_button_listings_data = utils.sql_p_get_all_green_button_click_events(
+            buyer_email=buyer_email,
+            start_date=start_date,
+            end_date=end_date
+        )
         if all_green_button_listings_data:
             all_green_button_listings = [item["mls"] for item in all_green_button_listings_data]
             logger.info(f"ALL GREEN BUTTON LISTINGS - ({all_green_button_listings})")
@@ -212,7 +241,11 @@ def get_buyer_categories_service(profile_ekey: str = None, profile_ikey: str = N
     return {"categories": categories}
 
 
-def get_buyer_viewed_listings_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
+def get_buyer_viewed_listings_service(profile_ekey: str, 
+                                      profile_ikey: str,
+                                      start_date: str,
+                                      end_date: str
+                                      ) -> list:
     listings = []
     
     buyer_email = utils.decode_base64_item(profile_ekey)
@@ -230,7 +263,11 @@ def get_buyer_viewed_listings_service(profile_ekey: str = None, profile_ikey: st
         mls_list = []
         
         # get viewed listings
-        viewed_listings_data = utils.sql_p_get_view_listing_events(buyer_email=buyer_email)
+        viewed_listings_data = utils.sql_p_get_view_listing_events(
+            buyer_email=buyer_email,
+            start_date=start_date,
+            end_date=end_date
+        )
         if viewed_listings_data:
             viewed_listings = [item["mls"] for item in viewed_listings_data]
             logger.info(f"VIEWED LISTINGS - ({viewed_listings})")
@@ -256,7 +293,11 @@ def get_buyer_viewed_listings_service(profile_ekey: str = None, profile_ikey: st
 
 
 
-def get_buyer_not_viewed_listings_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
+def get_buyer_not_viewed_listings_service(profile_ekey: str, 
+                                          profile_ikey: str,
+                                          start_date: str,
+                                          end_date: str
+                                          ) -> list:
     listings = []
     
     buyer_email = utils.decode_base64_item(profile_ekey)
@@ -276,7 +317,11 @@ def get_buyer_not_viewed_listings_service(profile_ekey: str = None, profile_ikey
         buyer_category_list = []
         
         # get viewed listings
-        viewed_listings_data = utils.sql_p_get_view_listing_events(buyer_email=buyer_email)
+        viewed_listings_data = utils.sql_p_get_view_listing_events(
+            buyer_email=buyer_email,
+            start_date=start_date,
+            end_date=end_date
+        )
         if viewed_listings_data:
             viewed_listings = [item["mls"] for item in viewed_listings_data]
             logger.info(f"VIEWED LISTINGS - ({viewed_listings})")
@@ -299,7 +344,11 @@ def get_buyer_not_viewed_listings_service(profile_ekey: str = None, profile_ikey
                 buyer_category_list.extend(viewed_categories)
                 
         # get contact seller listings
-        contact_seller_listings_data = utils.sql_p_get_contacted_seller_events(buyer_email=buyer_email)
+        contact_seller_listings_data = utils.sql_p_get_contacted_seller_events(
+            buyer_email=buyer_email,
+            start_date=start_date,
+            end_date=end_date
+        )
         if contact_seller_listings_data:
             contact_seller_listings = [item["mls"] for item in contact_seller_listings_data]
             logger.info(f"CONTACT SELLER LISTINGS - ({contact_seller_listings})")
@@ -363,7 +412,11 @@ def get_buyer_not_viewed_listings_service(profile_ekey: str = None, profile_ikey
 
 
 
-def get_buyer_contact_seller_listings_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
+def get_buyer_contact_seller_listings_service(profile_ekey: str, 
+                                              profile_ikey: str,
+                                              start_date: str,
+                                              end_date: str
+                                              ) -> list:
     listings = []
     
     buyer_email = utils.decode_base64_item(profile_ekey)
@@ -379,7 +432,11 @@ def get_buyer_contact_seller_listings_service(profile_ekey: str = None, profile_
         buyer_email = buyer_data["email"]
         
         # get contact seller events
-        contact_seller_listings = utils.sql_p_get_contacted_seller_events(buyer_email)
+        contact_seller_listings = utils.sql_p_get_contacted_seller_events(
+            buyer_email=buyer_email,
+            start_date=start_date,
+            end_date=end_date
+        )
         if contact_seller_listings:
             contact_seller_mls = [item["mls"] for item in contact_seller_listings]
             logger.info(f"CONTACT SELLER EVENT MLS - ({contact_seller_mls})")
@@ -400,7 +457,11 @@ def get_buyer_contact_seller_listings_service(profile_ekey: str = None, profile_
     return {"listings": listings}
 
 
-def get_buyer_all_green_button_clicks_listings_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
+def get_buyer_all_green_button_clicks_listings_service(profile_ekey: str, 
+                                                       profile_ikey: str,
+                                                       start_date: str,
+                                                       end_date: str
+                                                       ) -> list:
     listings = []
     
     buyer_email = utils.decode_base64_item(profile_ekey)
@@ -416,7 +477,11 @@ def get_buyer_all_green_button_clicks_listings_service(profile_ekey: str = None,
         buyer_email = buyer_data["email"]
         
         # get all green button clicks events
-        all_green_button_click_listings = utils.sql_p_get_all_green_button_click_events(buyer_email)
+        all_green_button_click_listings = utils.sql_p_get_all_green_button_click_events(
+            buyer_email=buyer_email,
+            start_date=start_date,
+            end_date=end_date
+        )
         if all_green_button_click_listings:
             all_green_button_click_mls = [item["mls"] for item in all_green_button_click_listings]
             logger.info(f"ALL GREEN BUTTON CLICKS EVENT MLS - ({all_green_button_click_mls})")
