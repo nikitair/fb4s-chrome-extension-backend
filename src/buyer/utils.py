@@ -1038,7 +1038,8 @@ def sql_m_get_buyer_categories(buyer_mls_list: list) -> list:
             SUM(amount) AS listings_amount,
             ROUND(MIN(price), 0) AS min_price,
             ROUND(SUM(total) / SUM(`Amount`), 0) AS avg_price,
-            ROUND(MAX(price), 0) AS max_price
+            ROUND(MAX(price), 0) AS max_price,
+            TRUE AS is_archived
         FROM
         (
             SELECT
