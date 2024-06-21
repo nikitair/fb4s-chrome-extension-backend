@@ -62,7 +62,7 @@ def get_buyer_in_person_evaluations(
     profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
 ):
     logger.info("*** API GET BUYER LEAD SCORE EVENTS")
-    return services.get_buyer_lead_score_events(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
+    return services.get_buyer_lead_score_events_service(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
 
 
 @router.get(
@@ -76,7 +76,7 @@ def get_buyer_categories(
     profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
 ):
     logger.info("*** API GET BUYER CATEGORIES")
-    return services.get_buyer_categories(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
+    return services.get_buyer_categories_service(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
 
 
 @router.get(
@@ -90,4 +90,18 @@ def get_buyer_viewed_listings(
     profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
 ):
     logger.info("*** API GET VIEWED LISTINGS")
-    return services.get_buyer_viewed_listings(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
+    return services.get_buyer_viewed_listings_service(profile_ekey=profile_ekey, profile_ikey=profile_ikey)
+
+
+@router.get(
+    "/not-viewed-listings",
+    responses={
+        200: {"model": schemas.BuyerNotViewedListings, "description": "Buyer Not Viewed Listings"}
+    }
+)
+def get_buyer_not_viewed_listings(
+    profile_ekey: str = Query(None, description="PipeDrive: BASE64 of buyer@mail.com"),
+    profile_ikey: str = Query(None, description="FUB: BASE64 of buyer_chat_id")
+):
+    logger.info("*** API GET VIEWED LISTINGS")
+    return services.get_buyer_not_viewed_listings_service(profile_ekey=profile_ekey, profile_ikey=profile_ikey)

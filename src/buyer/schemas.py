@@ -1,11 +1,12 @@
 from pydantic import BaseModel, Field
 from typing import List
 
+
 class ProfileCompletedLevels(BaseModel):
     intro: bool = False
     complete: bool = False
     supplemental: bool = False
-    
+
 
 class BuyerProfileResponse(BaseModel):
     id: int | None = None
@@ -28,8 +29,8 @@ class BuyerProfileResponse(BaseModel):
 
 class BuyerNotFoundResponse(BaseModel):
     error: str = "Buyer NOT Found"
-    
-    
+
+
 class Lead(BaseModel):
     mls: str
     city: str
@@ -44,8 +45,8 @@ class Lead(BaseModel):
 
 class BuyerLeads(BaseModel):
     leads: List[Lead]
-    
-    
+
+
 class InPersonEvaluation(BaseModel):
     call_event: str
     evaluator_type: str
@@ -69,8 +70,8 @@ class LeadScoreEvent(BaseModel):
 
 class BuyerLeadScoreEvents(BaseModel):
     events: List[LeadScoreEvent]
-    
-    
+
+
 class Category(BaseModel):
     category: str
     listings_amount: int
@@ -81,9 +82,8 @@ class Category(BaseModel):
 
 class BuyerCategories(BaseModel):
     categories: List[Category]
-    
-    
-    
+
+
 class ViewedListing(BaseModel):
     mls: str
     views_amount: int
@@ -101,6 +101,21 @@ class ViewedListing(BaseModel):
 
 
 class BuyerViewedListings(BaseModel):
-    categories: List[ViewedListing]
+    listings: List[ViewedListing]
 
-    
+
+class NotViewedListing(BaseModel):
+    mls: str
+    category: str
+    tags: str
+    price: str
+    city: str
+    province: str
+    postal_code: str
+    listing_url: str
+    date_listed: str
+    image_url: str
+
+
+class BuyerNotViewedListings(BaseModel):
+    listings: List[NotViewedListing]

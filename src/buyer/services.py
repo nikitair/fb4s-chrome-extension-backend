@@ -142,7 +142,7 @@ def get_buyer_in_person_evaluations_service(profile_ekey: str = None, profile_ik
     return {"evaluations": evaluations}
 
 
-def get_buyer_lead_score_events(profile_ekey: str = None, profile_ikey: str = None) -> list:
+def get_buyer_lead_score_events_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
     events = []
     
     buyer_email = utils.decode_base64_item(profile_ekey)
@@ -164,7 +164,7 @@ def get_buyer_lead_score_events(profile_ekey: str = None, profile_ikey: str = No
     return {"events": events}
 
 
-def get_buyer_categories(profile_ekey: str = None, profile_ikey: str = None) -> list:
+def get_buyer_categories_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
     categories = []
     
     buyer_email = utils.decode_base64_item(profile_ekey)
@@ -212,7 +212,7 @@ def get_buyer_categories(profile_ekey: str = None, profile_ikey: str = None) -> 
     return {"categories": categories}
 
 
-def get_buyer_viewed_listings(profile_ekey: str = None, profile_ikey: str = None) -> list:
+def get_buyer_viewed_listings_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
     listings = []
     
     buyer_email = utils.decode_base64_item(profile_ekey)
@@ -249,7 +249,114 @@ def get_buyer_viewed_listings(profile_ekey: str = None, profile_ikey: str = None
                         listings_details[mls]
                     )
                     
-                    listings.append(listing)
+                listings = viewed_listings_data
             
     logger.info(f"BUYER VIEWED LISTINGS FOUND - ({listings})")
+    return {"listings": listings}
+
+
+
+def get_buyer_not_viewed_listings_service(profile_ekey: str = None, profile_ikey: str = None) -> list:
+    listings = []
+    
+    buyer_email = utils.decode_base64_item(profile_ekey)
+    buyer_chat_id = utils.decode_base64_item(profile_ikey)
+
+    logger.info(f"profile_ekey = {profile_ekey} -> {buyer_email}")
+    logger.info(f"profile_ikey = {profile_ikey} -> {buyer_chat_id}")
+    
+    # get buyer data
+    buyer_data = utils.sql_m_get_buyer(buyer_email=buyer_email, buyer_chat_id=buyer_chat_id)
+    if buyer_data:
+        logger.info(f"BUYER DATA - ({buyer_data})")
+        buyer_email = buyer_data["email"]
+        
+        buyer_mls_list = []
+        buyer_province_list = []
+        buyer_category_list = []
+        
+        # get viewed listings
+        viewed_listings_data = utils.sql_p_get_view_listing_events(buyer_email=buyer_email)
+        if viewed_listings_data:
+            viewed_listings = [item["mls"] for item in viewed_listings_data]
+            logger.info(f"VIEWED LISTINGS - ({viewed_listings})")
+            buyer_mls_list.extend(viewed_listings)
+            
+            viewed_listings_details: dict = utils.sql_m_get_mls_data(viewed_listings)
+            logger.info(f"VIEWED LISTINGS DETAILS - ({viewed_listings_details})")
+            
+            if viewed_listings_details:
+                for listing in viewed_listings_data:
+                    mls = listing["mls"]
+                    listing.update(viewed_listings_details[mls])
+
+                viewed_provinces = [item["province"] for item in viewed_listings_data]
+                logger.info(f"VIEWED PROVINCES - ({viewed_provinces})")
+                buyer_province_list.extend(viewed_provinces)
+                
+                viewed_categories = [item["category"] for item in viewed_listings_data]
+                logger.info(f"VIEWED CATEGORIES - ({viewed_categories})")
+                buyer_category_list.extend(viewed_categories)
+                
+        # get contact seller listings
+        contact_seller_listings_data = utils.sql_p_get_contacted_seller_events(buyer_email=buyer_email)
+        if contact_seller_listings_data:
+            contact_seller_listings = [item["mls"] for item in contact_seller_listings_data]
+            logger.info(f"CONTACT SELLER LISTINGS - ({contact_seller_listings})")
+            buyer_mls_list.extend(contact_seller_listings)
+            
+            contact_seller_listings_details: dict = utils.sql_m_get_mls_data(contact_seller_listings)
+            logger.info(f"CONTACT SELLER LISTINGS DETAILS - ({contact_seller_listings_details})")
+            
+            if contact_seller_listings_details:
+                for listing in contact_seller_listings_data:
+                    mls = listing["mls"]
+                    listing.update(contact_seller_listings_details[mls])
+
+                contact_seller_provinces = [item["province"] for item in contact_seller_listings_data]
+                logger.info(f"CONTACT SELLER PROVINCES - ({contact_seller_provinces})")
+                buyer_province_list.extend(contact_seller_provinces)
+                
+                contact_seller_categories = [item["category"] for item in contact_seller_listings_data]
+                logger.info(f"CONTACT SELLER CATEGORIES - ({contact_seller_categories})")
+                buyer_category_list.extend(contact_seller_categories)
+                
+            contact_seller_listings_details_archive: dict = utils.sql_m_get_mls_data_archive(contact_seller_listings)
+            logger.info(f"CONTACT SELLER ARCHIVE LISTINGS DETAILS - ({contact_seller_listings_details_archive})")
+            
+            if contact_seller_listings_details_archive:
+                for listing in contact_seller_listings_data:
+                    mls = listing["mls"]
+                    listing.update(contact_seller_listings_details_archive[mls])
+
+                contact_seller_provinces_archive = [item["province"] for item in contact_seller_listings_data]
+                logger.info(f"CONTACT SELLER PROVINCES ARCHIVE - ({contact_seller_provinces_archive})")
+                buyer_province_list.extend(contact_seller_provinces_archive)
+                
+                contact_seller_categories_archive = [item["category"] for item in contact_seller_listings_data]
+                logger.info(f"CONTACT SELLER CATEGORIES ARCHIVE - ({contact_seller_categories_archive})")
+                buyer_category_list.extend(contact_seller_categories_archive)
+            
+        buyer_mls_list = list(set(buyer_mls_list))
+        logger.info(f"BUYER MLS LIST - ({buyer_mls_list})")
+        
+        buyer_province_list = list(set(buyer_province_list))
+        logger.info(f"BUYER PROVINCE LIST - ({buyer_province_list})")
+        
+        buyer_category_list = list(set(buyer_category_list))
+        logger.info(f"BUYER CATEGORY LIST - ({buyer_category_list})")
+        
+        if buyer_mls_list and (buyer_category_list or buyer_province_list):
+            
+            default_date_range = utils.get_default_date_range()
+            
+            listings = utils.sql_m_get_not_viewed_listings(
+                mls_list=buyer_mls_list,
+                province_list=buyer_province_list,
+                category_list=buyer_category_list,
+                start_date=default_date_range["start"],
+                end_date=default_date_range["end"]
+                )
+            
+    logger.info(f"BUYER NOT VIEWED LISTINGS FOUND - ({listings})")
     return {"listings": listings}
