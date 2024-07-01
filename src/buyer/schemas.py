@@ -153,9 +153,6 @@ class GreenButtonListing(BaseModel):
     category: str
     tags: str
     price: int
-    # assigned_realtor_name: str
-    # assigned_realtor_email: str
-    # assigned_realtor_phone: str
     listing_url: str
     image_url: str
     is_archived: bool

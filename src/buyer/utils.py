@@ -861,14 +861,14 @@ def sql_m_get_mls_data_archive(mls_list: list) -> dict:
     return mls_data
 
 
-def sql_p_get_buyer_mixpanel_email(buyer_email: str) -> str | None:
-    logger.info(f"SQL GET BUYER MIXPANEL EMAIL - ({buyer_email})")
+def sql_p_get_buyer_mixpanel_id(buyer_email: str) -> str | None:
+    logger.info(f"SQL GET BUYER MIXPANEL ID - ({buyer_email})")
     query = f"""
-        SELECT 
-            distinct_id as mixpanel_email 
-        FROM 
+        select 
+            distinct_id 
+        from 
             mixpanel_to_aws.engage
-        WHERE 
+        where 
             id = '{buyer_email}'
     """
     raw_response = postgres.execute_with_connection(
@@ -880,20 +880,29 @@ def sql_p_get_buyer_mixpanel_email(buyer_email: str) -> str | None:
         return raw_response[0][0]
 
 
-def sql_p_get_contacted_seller_events(buyer_email: str, start_date: str, end_date: str) -> list:
-    logger.info(f"SQL GET CONTACTED SELLER EVENTS - ({buyer_email})")
+def sql_p_get_contacted_seller_events(buyer_email: str, buyer_mixpanel_id: str, start_date: str, end_date: str) -> list:
+    logger.info(f"SQL GET CONTACTED SELLER EVENTS - (e: {buyer_email}; mp_id: {buyer_mixpanel_id})")
     query = f"""
         SELECT
             "MLS",
-            MAX(time) AS "Time"
+            MAX(time) AS "Time",
+            event
         FROM
             marketing_ecosystem.mixpanel_to_aws.export
         WHERE
-            event = 'Contact Seller'
-        AND id = '{buyer_email}'
+            event IN
+                ('Contact Seller')
+        AND 
+            (
+                id = '{buyer_email}'
+            OR
+                distinct_id = '{buyer_mixpanel_id}'
+                )
         AND time BETWEEN '{start_date}' AND '{end_date}'
         GROUP BY
-            "MLS"
+        "MLS",
+        event
+        ORDER BY MAX(time) DESC
     """
     contacted_seller_events = []
     raw_response = postgres.execute_with_connection(
@@ -912,29 +921,26 @@ def sql_p_get_contacted_seller_events(buyer_email: str, start_date: str, end_dat
     return contacted_seller_events
 
 
-def sql_p_get_all_green_button_click_events(buyer_email: str, start_date: str, end_date: str) -> list:
-    logger.info(f"SQL GET ALL GREEN BUTTON CLICKS EVENTS - ({buyer_email})")
+def sql_p_get_all_green_button_click_events(buyer_email: str, buyer_mixpanel_id: str, start_date: str, end_date: str) -> list:
+    logger.info(f"SQL GET ALL GREEN BUTTON CLICKS EVENTS - (e: {buyer_email}; mp_id: {buyer_mixpanel_id})")
     query = f"""
         SELECT
             "MLS",
-            MIN(time) AS time
+            time,
+            event
         FROM
             marketing_ecosystem.mixpanel_to_aws.export
         WHERE
+            event IN
+                ('Listing: Contact Seller button', 'Search page: Contact Seller button')
+        AND 
             (
-                event = 'Listing: Contact Seller button' 
-            OR 
-                event = 'Search page: Contact Seller button' 
-            OR 
-                event = 'Contact Seller'
-            )
-        AND (
-            id = '{buyer_email}'
-        OR
-            distinct_id = '{buyer_email}'
-            )
+                id = '{buyer_email}'
+            OR
+                distinct_id = '{buyer_mixpanel_id}'
+                )
         AND time BETWEEN '{start_date}' AND '{end_date}'
-        GROUP BY "MLS";
+        ORDER BY time DESC
     """
     events = []
     raw_response = postgres.execute_with_connection(
@@ -947,14 +953,15 @@ def sql_p_get_all_green_button_click_events(buyer_email: str, start_date: str, e
             events.append(
                 {
                     "mls": item[0],
-                    "event_date": item[1]
+                    "event_date": item[1],
+                    "event": item[2]
                 }
             )
     return events
 
 
-def sql_p_get_view_listing_events(buyer_email: str, start_date: str, end_date: str) -> list[dict]:
-    logger.info(f"SQL GET VIEW LISTING EVENTS - ({buyer_email})")
+def sql_p_get_view_listing_events(buyer_email: str, buyer_mixpanel_id: str, start_date: str, end_date: str) -> list[dict]:
+    logger.info(f"SQL GET VIEW LISTING EVENTS - (e: {buyer_email}; mp_id: {buyer_mixpanel_id})")
     query = f"""
         SELECT
             "MLS",
@@ -963,17 +970,19 @@ def sql_p_get_view_listing_events(buyer_email: str, start_date: str, end_date: s
         FROM
             marketing_ecosystem.mixpanel_to_aws.export
         WHERE
-            event = 'View Listing'
-        AND (
-            id = '{buyer_email}'
-        OR
-            distinct_id = '{buyer_email}'
+            event IN ('View Listing', 'Contact Seller')
+        AND 
+            (
+                id = '{buyer_email}'
+            OR
+                distinct_id = '{buyer_mixpanel_id}'
             )
-        AND time BETWEEN '{start_date}' AND '{end_date}'
+        AND 
+            time BETWEEN '{start_date}' AND '{end_date}'
         GROUP BY
-            "MLS"
+            
         ORDER BY
-            "Views Amount" DESC
+            MAX(time) DESC
     """
     events = []
     raw_response = postgres.execute_with_connection(
