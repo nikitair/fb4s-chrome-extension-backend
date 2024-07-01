@@ -981,7 +981,7 @@ def sql_p_get_view_listing_events(buyer_email: str, buyer_mixpanel_id: str, star
         AND 
             time BETWEEN '{start_date}' AND '{end_date}'
         GROUP BY
-            
+            "MLS"
         ORDER BY
             MAX(time) DESC
     """
