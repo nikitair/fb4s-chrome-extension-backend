@@ -915,7 +915,8 @@ def sql_p_get_contacted_seller_events(buyer_email: str, buyer_mixpanel_id: str, 
             contacted_seller_events.append(
                 {
                     "mls": item[0],
-                    "event_date": item[1]
+                    "event_date": item[1],
+                    "event": "Contact Seller"
                 }
             )
     return contacted_seller_events
@@ -1187,3 +1188,71 @@ def sql_m_get_not_viewed_listings(mls_list: list,
                 }
             )
     return listings
+
+
+
+def sql_m_get_listings(mls_list: list[str]):
+    logger.info(f"SQL: Get data for a list of MLS - ({mls_list})")
+
+    mls_str = ', '.join(f"'{mls}'" for mls in mls_list)    
+    query = f"""
+        SELECT
+            DDF_ID AS mls,
+            city,
+            province,
+            compiled_category_name as category,
+            ListingCategories AS tags,
+            AskingPriceSorting AS price,
+            internal_url as url,
+            Zip_code as postal_code,
+            published_date AS date_listed,
+            FALSE as archived
+        FROM
+            tbl_advertisement
+        WHERE
+            DDF_ID IN ({mls_str})
+
+        UNION
+
+        SELECT
+            DDF_ID AS mls,
+            city,
+            province,
+            compiled_category_name as category,
+            ListingCategories AS tags,
+            AskingPriceSorting AS price,
+            internal_url as url,
+            Zip_code as postal_code,
+            published_date AS date_listed,
+            TRUE as archived
+        FROM
+            tbl_archive_listings
+        WHERE
+            DDF_ID IN ({mls_str})
+
+    """
+    mls_data = {}
+    raw_response = mysql.execute_with_connection(
+        func=mysql.select_executor,
+        query=query
+    )
+    logger.debug(f"SQL RAW RESPONSE - ({raw_response})")
+    if raw_response:
+        for item in raw_response:
+            mls_data[item[0]] = {
+                    "mls": item[0],
+                    "city": item[1],
+                    "province": item[2],
+                    "category": item[3],
+                    "tags": item[4],
+                    "price": item[5],
+                    "listing_url": item[6],
+                    "postal_code": item[7],
+                    "date_listed": item[8],
+                    "is_archived": item[9],
+                    "image_url": f"https://cdn.repliers.io/crea2/IMG-{item[0]}_1.jpg?w=730&f=webp",
+                }
+            
+    return mls_data
+    
+    

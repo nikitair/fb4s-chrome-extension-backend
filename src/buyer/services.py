@@ -276,7 +276,7 @@ def get_buyer_viewed_listings_service(profile_ekey: str,
             mls_list.extend(viewed_listings)
         
         if mls_list:
-            listings_details= utils.sql_m_get_mls_data(mls_list)
+            listings_details= utils.sql_m_get_listings(mls_list)
             logger.info(f"LISTINGS DETAILS - ({listings_details})")
             
             if listings_details:
@@ -331,7 +331,7 @@ def get_buyer_not_viewed_listings_service(profile_ekey: str,
             logger.info(f"VIEWED LISTINGS - ({viewed_listings})")
             buyer_mls_list.extend(viewed_listings)
             
-            viewed_listings_details: dict = utils.sql_m_get_mls_data(viewed_listings)
+            viewed_listings_details: dict = utils.sql_m_get_listings(viewed_listings)
             logger.info(f"VIEWED LISTINGS DETAILS - ({viewed_listings_details})")
             
             if viewed_listings_details:
@@ -359,7 +359,7 @@ def get_buyer_not_viewed_listings_service(profile_ekey: str,
             logger.info(f"CONTACT SELLER LISTINGS - ({contact_seller_listings})")
             buyer_mls_list.extend(contact_seller_listings)
             
-            contact_seller_listings_details: dict = utils.sql_m_get_mls_data(contact_seller_listings)
+            contact_seller_listings_details: dict = utils.sql_m_get_listings(contact_seller_listings)
             logger.info(f"CONTACT SELLER LISTINGS DETAILS - ({contact_seller_listings_details})")
             
             if contact_seller_listings_details:
@@ -375,21 +375,21 @@ def get_buyer_not_viewed_listings_service(profile_ekey: str,
                 logger.info(f"CONTACT SELLER CATEGORIES - ({contact_seller_categories})")
                 buyer_category_list.extend(contact_seller_categories)
                 
-            contact_seller_listings_details_archive: dict = utils.sql_m_get_mls_data_archive(contact_seller_listings)
-            logger.info(f"CONTACT SELLER ARCHIVE LISTINGS DETAILS - ({contact_seller_listings_details_archive})")
+            # contact_seller_listings_details_archive: dict = utils.sql_m_get_mls_data_archive(contact_seller_listings)
+            # logger.info(f"CONTACT SELLER ARCHIVE LISTINGS DETAILS - ({contact_seller_listings_details_archive})")
             
-            if contact_seller_listings_details_archive:
-                for listing in contact_seller_listings_data:
-                    mls = listing["mls"]
-                    listing.update(contact_seller_listings_details_archive.get(mls, {}))
+            # if contact_seller_listings_details_archive:
+            #     for listing in contact_seller_listings_data:
+            #         mls = listing["mls"]
+            #         listing.update(contact_seller_listings_details_archive.get(mls, {}))
 
-                contact_seller_provinces_archive = [item.get('province', 'N/A') for item in contact_seller_listings_data]
-                logger.info(f"CONTACT SELLER PROVINCES ARCHIVE - ({contact_seller_provinces_archive})")
-                buyer_province_list.extend(contact_seller_provinces_archive)
+            #     contact_seller_provinces_archive = [item.get('province', 'N/A') for item in contact_seller_listings_data]
+            #     logger.info(f"CONTACT SELLER PROVINCES ARCHIVE - ({contact_seller_provinces_archive})")
+            #     buyer_province_list.extend(contact_seller_provinces_archive)
                 
-                contact_seller_categories_archive = [item.get('category', 'N/A') for item in contact_seller_listings_data]
-                logger.info(f"CONTACT SELLER CATEGORIES ARCHIVE - ({contact_seller_categories_archive})")
-                buyer_category_list.extend(contact_seller_categories_archive)
+            #     contact_seller_categories_archive = [item.get('category', 'N/A') for item in contact_seller_listings_data]
+            #     logger.info(f"CONTACT SELLER CATEGORIES ARCHIVE - ({contact_seller_categories_archive})")
+            #     buyer_category_list.extend(contact_seller_categories_archive)
             
         buyer_mls_list = list(set(buyer_mls_list))
         logger.info(f"BUYER MLS LIST - ({buyer_mls_list})")
@@ -446,9 +446,7 @@ def get_buyer_contact_seller_listings_service(profile_ekey: str,
             contact_seller_mls = [item["mls"] for item in contact_seller_listings]
             logger.info(f"CONTACT SELLER EVENT MLS - ({contact_seller_mls})")
             
-            listings_data: dict = utils.sql_m_get_mls_data(contact_seller_mls)
-            listings_data_archive: dict = utils.sql_m_get_mls_data_archive(contact_seller_mls)
-            listings_data.update(listings_data_archive)
+            listings_data: dict = utils.sql_m_get_listings(contact_seller_mls)
             logger.info(f"LISTINGS DATA - ({listings_data})")
             
             # enrich contact seller listings with listings data
@@ -493,9 +491,7 @@ def get_buyer_all_green_button_clicks_listings_service(profile_ekey: str,
             all_green_button_click_mls = [item["mls"] for item in all_green_button_click_listings]
             logger.info(f"ALL GREEN BUTTON CLICKS EVENT MLS - ({all_green_button_click_mls})")
             
-            listings_data: dict = utils.sql_m_get_mls_data(all_green_button_click_mls)
-            listings_data_archive: dict = utils.sql_m_get_mls_data_archive(all_green_button_click_mls)
-            listings_data.update(listings_data_archive)
+            listings_data: dict = utils.sql_m_get_listings(all_green_button_click_mls)
             logger.info(f"LISTINGS DATA - ({listings_data})")
             
             # enrich all green button clicks listings with listings data

@@ -86,16 +86,14 @@ class BuyerCategories(BaseModel):
 
 class ViewedListing(BaseModel):
     mls: str
-    views_amount: int
     event_date: str
+    views_amount: int
     city: str
     province: str
+    postal_code: str
     category: str
     tags: str
     price: int
-    # assigned_realtor_name: str
-    # assigned_realtor_email: str
-    # assigned_realtor_phone: str
     listing_url: str
     image_url: str
     is_archived: bool
@@ -125,16 +123,14 @@ class BuyerNotViewedListings(BaseModel):
 
 class ContactSellerListing(BaseModel):
     mls: str
-    views_amount: int
     event_date: str
+    event: str
     city: str
     province: str
+    postal_code: str
     category: str
     tags: str
     price: int
-    # assigned_realtor_name: str
-    # assigned_realtor_email: str
-    # assigned_realtor_phone: str
     listing_url: str
     image_url: str
     is_archived: bool
@@ -146,10 +142,11 @@ class BuyerContactSellerListingListings(BaseModel):
 
 class GreenButtonListing(BaseModel):
     mls: str
-    views_amount: int
     event_date: str
+    event: str
     city: str
     province: str
+    postal_code: str
     category: str
     tags: str
     price: int
