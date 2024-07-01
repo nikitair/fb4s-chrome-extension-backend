@@ -195,12 +195,14 @@ def get_buyer_categories_service(profile_ekey: str,
     if buyer_data:
         logger.info(f"BUYER DATA - ({buyer_data})")
         buyer_email = buyer_data["email"]
+        buyer_mixpanel_id = utils.sql_p_get_buyer_mixpanel_id(buyer_email)
         
         buyer_mls_list = []
         
         # get viewed listings
         viewed_listings_data = utils.sql_p_get_view_listing_events(
             buyer_email=buyer_email,
+            buyer_mixpanel_id=buyer_mixpanel_id,
             start_date=start_date,
             end_date=end_date
         )
@@ -213,6 +215,7 @@ def get_buyer_categories_service(profile_ekey: str,
         contact_seller_listings_data = utils.sql_p_get_contacted_seller_events(
             buyer_email=buyer_email,
             start_date=start_date,
+            buyer_mixpanel_id=buyer_mixpanel_id,
             end_date=end_date
         )
         if contact_seller_listings_data:
@@ -223,6 +226,7 @@ def get_buyer_categories_service(profile_ekey: str,
         # get all green button listings
         all_green_button_listings_data = utils.sql_p_get_all_green_button_click_events(
             buyer_email=buyer_email,
+            buyer_mixpanel_id=buyer_mixpanel_id,
             start_date=start_date,
             end_date=end_date
         )
