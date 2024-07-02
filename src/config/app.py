@@ -10,6 +10,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 # from config.loguru_logger import configure_logger, logger
 from config.logging_config import logger
 from buyer.routers import router as buyer_router
+from buyer_comm_panel.routers import router as buyer_comm_panel_router
 
 from . import ROOT_DIR
 
@@ -49,6 +50,8 @@ app.add_middleware(
 # routers registration
 app.include_router(router=buyer_router, prefix='/chrome_extension/profiles/buyer',
                    tags=['Buyer'])
+app.include_router(router=buyer_comm_panel_router, prefix='/chrome_extension/profiles/buyer/comm_panel',
+                   tags=['Buyer Communication Panel'])
 
 
 # register templates
