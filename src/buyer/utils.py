@@ -933,7 +933,7 @@ def sql_p_get_all_green_button_click_events(buyer_email: str, buyer_mixpanel_id:
             marketing_ecosystem.mixpanel_to_aws.export
         WHERE
             event IN
-                ('Listing: Contact Seller button', 'Search page: Contact Seller button')
+                ('Listing: Contact Seller button', 'Search page: Contact Seller button', 'Contact Seller')
         AND 
             (
                 id = '{buyer_email}'
