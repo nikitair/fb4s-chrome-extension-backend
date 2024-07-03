@@ -25,8 +25,8 @@ def default_date_range():
     # Calculate tomorrow's date
     tomorrow = today + timedelta(days=1)
 
-    # Calculate one month ago
-    one_month_ago = today - timedelta(days=30)
+    # Calculate 6 months ago
+    one_month_ago = today - timedelta(days=(30 * 6))
 
     # Format dates as yyyy-mm-dd strings
     tomorrow_formatted = tomorrow.strftime('%Y-%m-%d')
