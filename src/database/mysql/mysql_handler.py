@@ -107,7 +107,7 @@ class MySQLHandler:
             cursor = self.connection.cursor()
             cursor.execute(query, tuple(params))
             data = cursor.fetchall()
-            logger.debug(f"({self.__class__.__name__}) - SQL RESULT: {data}")
+            logger.debug(f"({self.__class__.__name__}) - SUCCESSFUL SELECT")
         except Exception as ex:
             logger.exception(
                 f"({self.__class__.__name__}) - !!! FAILED EXECUTING SQL QUERY - {ex}")

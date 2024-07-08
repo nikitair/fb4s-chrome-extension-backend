@@ -5,7 +5,7 @@ import requests
 from config.logging_config import logger
 
 
-class FUBProcessor:
+class FUBService:
 
     def __init__(self, api_key: str, base_url: str):
         self.api_key = base64.b64encode(api_key.encode()).decode()

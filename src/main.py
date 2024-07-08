@@ -1,38 +1,44 @@
 import os
 
 import uvicorn
-from fastapi import Request
-from fastapi.responses import FileResponse
-# from config.app import templates
+from fastapi import Request, HTTPException
+from fastapi.responses import PlainTextResponse
 from fastapi.templating import Jinja2Templates
+import aiofiles
+from config.logging_config import logs_file_path
 
-from config import ROOT_DIR
 from config.app import app
 
-# from config.loguru_logger import logger
-# from config.logging_confe3ig import logger
 
-
-@app.get('/', tags=['root'])
-async def root_index():
+@app.get('/', tags=['index'])
+def root_index():
     return {
-        "success": True,
-        "service": "fb4s-automations",
-        "router": "root"
+        "service": "fb4s-chrome-extension"
     }
 
 
-@app.get('/.env', tags=['root'], include_in_schema=False)
-async def feel_free(request: Request):
+@app.get('/.env', tags=['index'], include_in_schema=False)
+def feel_free(request: Request):
     template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
     templates = Jinja2Templates(directory=template_dir)
     return templates.TemplateResponse("feel_free.html", {"request": request}, status_code=402)
 
 
-@app.get("/favicon.ico", include_in_schema=False)
-async def favicon():
-    favicon_path = os.path.join(ROOT_DIR, "src", "static", "favicon.ico")
-    return FileResponse(favicon_path)
+@app.get("/logs", include_in_schema=False, response_class=PlainTextResponse)
+async def get_logs():
+    try:
+        async with aiofiles.open(logs_file_path, "r") as logs_file:
+            log_lines: list = await logs_file.readlines()
+            # log_lines.reverse()
+            logs = ''.join(log_lines)
+            
+        return logs
+
+    except (FileNotFoundError, FileExistsError) as e:
+        raise HTTPException(status_code=404, detail={"error": f"Log file NOT found - ({e})"})
+    except Exception as ex:
+        raise HTTPException(status_code=500, detail={"error": f"Server Error - ({ex})"})
+
 
 
 if __name__ == "__main__":
@@ -40,4 +46,5 @@ if __name__ == "__main__":
     # uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
 
     uvicorn.run("main:app", host="0.0.0.0", port=5003, reload=False)
+    # uvicorn.run("main:app", host="0.0.0.0", port=5007, reload=False)
 

@@ -6,7 +6,7 @@ import os
 from . import LOGTRAIL_API_KEY, ROOT_DIR
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter(
     '%(asctime)s UTC - %(levelname)s - %(module)s:%(funcName)s:%(lineno)d - %(message)s')
@@ -19,7 +19,7 @@ file_handler = logging.FileHandler(logs_file_path)
 # logtrail_handler = LogtailHandler(source_token=LOGTRAIL_API_KEY)
 
 # Terminal output
-terminal_handler.setLevel(logging.DEBUG)
+terminal_handler.setLevel(logging.INFO)
 terminal_handler.setFormatter(formatter)
 logger.addHandler(terminal_handler)
 

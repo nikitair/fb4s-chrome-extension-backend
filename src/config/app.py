@@ -9,15 +9,10 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 # from config.loguru_logger import configure_logger, logger
 from config.logging_config import logger
-from config.middleware import log_middleware
-from routers.chrome_extension import ce_router
-# from routers.fub import fub_router
-from routers.lead_auto_assignment import las_router
-from routers.textingduncan import td_router
-from routers.tools import tools_router
-# from routers.eblast import eblast_router
+from buyer.routers import router as buyer_router
+from buyer_comm_panel.routers import router as buyer_comm_panel_router
 
-from . import CORS_ORIGINS, ROOT_DIR
+from . import ROOT_DIR
 
 
 # FastAPI Server Start / Shutdown lifespan manager
@@ -43,30 +38,20 @@ app = FastAPI(
     lifespan=server_lifespan
 )
 
-# middleware registration
-# app.add_middleware(middleware_class=BaseHTTPMiddleware,
-#                    dispatch=log_middleware)
+# Configure CORS to allow all origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=CORS_ORIGINS,
+    allow_origins=["*"],  # Allows all origins
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
 )
 
-# include routers
-# app.include_router(fub_router)
-
 # routers registration
-app.include_router(router=ce_router, prefix='/chrome_extension',
-                   tags=['Chrome Extension'])
-app.include_router(router=tools_router, prefix='/eblast', tags=['E-Blast'])
-# app.include_router(router=fub_router, prefix='/fub', tags=['FUB'])
-app.include_router(router=td_router, prefix='/textingduncan',
-                   tags=['Texting Duncan'])
-app.include_router(router=las_router, prefix='/las',
-                   tags=['Lead Auto Assignment'])
-app.include_router(router=tools_router, prefix='/tools', tags=['Tools'])
+app.include_router(router=buyer_router, prefix='/chrome_extension/profiles/buyer',
+                   tags=['Buyer'])
+app.include_router(router=buyer_comm_panel_router, prefix='/chrome_extension/profiles/buyer/comm_panel',
+                   tags=['Buyer Communication Panel'])
 
 
 # register templates
