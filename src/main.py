@@ -45,6 +45,6 @@ if __name__ == "__main__":
     # module : app
     # uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
 
-    # uvicorn.run("main:app", host="0.0.0.0", port=5003, reload=False)
-    uvicorn.run("main:app", host="0.0.0.0", port=5007, reload=False)
+    uvicorn.run("main:app", host="0.0.0.0", port=5003, reload=False)
+    # uvicorn.run("main:app", host="0.0.0.0", port=5007, reload=False)
 
