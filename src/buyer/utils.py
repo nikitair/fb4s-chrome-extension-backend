@@ -192,7 +192,7 @@ def sql_p_get_buyer_lead_score(buyer_email: str):
                         INNER JOIN marketing_ecosystem.statistics.lead_scoring AS scoring ON events.event = scoring.event_name
                         WHERE
                         COALESCE(fb4s_users."User Type", fb4s_users.user_type) = 'buyer'
-                        AND events.time BETWEEN '{(date.today() - timedelta(days=30)).isoformat()}' AND '{date.today().isoformat()}'
+                        AND events.time >= NOW() - INTERVAL '1 month'
                     ) res
                     GROUP BY
                     "Email",
